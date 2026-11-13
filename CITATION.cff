@@ -1,0 +1,45 @@
+cff-version: 1.2.0
+title: "Pensunet: simulación de la red de prerrequisitos del pensum de Física"
+message: >-
+  Si usas Pensunet, cita este software y el artículo de Molontay et al. (2020)
+  en el que se basa el modelo. El software es una implementación original:
+  el artículo no publica código.
+type: software
+authors:
+  - family-names: "Nieto Parroyo"
+    given-names: "Laura Isabel"
+    affiliation: "Universidad Distrital Francisco José de Caldas"
+version: 0.1.0
+date-released: "2026-11-18"
+license: MIT
+repository-code: "https://github.com/isabelnieto900/pensunet"
+keywords:
+  - pensum
+  - prerrequisitos
+  - Física
+  - simulación Monte Carlo
+  - Universidad Distrital
+abstract: >-
+  Pensunet simula la red de prerrequisitos del programa de Física de la
+  Universidad Distrital a partir del modelo de flujo de estudiantes de
+  Molontay et al. (2020). La versión 0.1.0 construye el grafo, valida que
+  sea acíclico y calcula los indicadores topológicos del artículo. La
+  simulación Monte Carlo del tiempo de grado queda esbozada para una
+  etapa posterior.
+preferred-citation:
+  type: article
+  title: "Characterizing Curriculum Prerequisite Networks by a Student Flow Approach"
+  authors:
+    - family-names: Molontay
+      given-names: Roland
+    - family-names: Horváth
+      given-names: Noémi
+    - family-names: Bergmann
+      given-names: Júlia
+    - family-names: Szekrényes
+      given-names: Dóra
+    - family-names: Szabó
+      given-names: Mihály
+  journal: "IEEE Transactions on Learning Technologies"
+  year: 2020
+  doi: "10.1109/TLT.2020.2981331"
