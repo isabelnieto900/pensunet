@@ -209,9 +209,11 @@ respetando la red y se resume la muestra con las ecuaciones (3) y (4).
 El artículo usa 10 000 estudiantes representativos.
 
 En el caso de ingeniería eléctrica el artículo pone probabilidad 1 a las
-electivas. Aquí no se hace: faltan tasas de obligatorias (trabajo de
-grado I y II, entre otras). Inventar ese 1 cambiaría el resultado sin
-que los datos lo respalden. `tasa_de` devuelve `None` cuando no hay fila.
+electivas. Aquí no se hace. Varias electivas no tienen tasa porque no
+se ofrecen: la carrera es nueva y no hay quien las dicte. Ponerles
+probabilidad 1 diría que se aprueban, cuando el hecho es que no se
+abren. `tasa_de` devuelve `None` cuando no hay fila. Trabajo de grado
+I y II tampoco tienen tasa, y ese hueco sigue abierto.
 
 Las ecuaciones (10), (11) y (12) son tres formas de subir p_i para
 aproximar el efecto de atravesar la asignatura, y la (13) es el cociente
@@ -219,12 +221,25 @@ de esperanzas simuladas. Quedan para cuando exista la simulación.
 
 ## Datos que entran al grafo
 
-Los archivos y las inconsistencias están en `data/README.md`. El grafo
-de Física, con prerrequisitos estrictos, tiene 95 nodos y 46 aristas, es
-acíclico y su duración nominal es 10 semestres. Los slots de lengua y de
-línea de aplicación son alternativas en el plan, pero en el grafo cada
-fila es un nodo. Colapsarlos es una decisión de la simulación, no de
-esta etapa.
+Los archivos, las inconsistencias y las reglas que el programa confirmó
+el 13 de noviembre de 2026 están en `data/README.md`. El grafo de esta
+etapa no las incorpora: sigue teniendo 95 nodos, 46 aristas estrictas,
+es acíclico y su duración nominal es 10 semestres.
+
+Esas reglas, para cuando se modele la trayectoria y no solo el extracto:
+
+- cuántica avanzada exige cuántica 1 (25140 en este plan, u otra
+  materia equivalente vista en Licenciatura en Física);
+- trabajo de grado II exige el I, salvo en pasantía, donde van juntas;
+- óptica no tiene prerrequisito;
+- física moderna precede en teoría a física atómica, pero se ven en el
+  mismo semestre;
+- cada idioma es una cadena I → II → III, de un solo idioma, con
+  homologación por examen;
+- el prerrequisito de biosistemas es un cierre de inscripción, no una
+  condición académica, y la materia no está disponible;
+- la línea de aplicación pide 18 créditos, mezclando las cinco líneas
+  y pudiendo ver varias materias a la vez.
 
 ## Pruebas
 

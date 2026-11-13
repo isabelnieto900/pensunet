@@ -69,7 +69,91 @@ Por eso la suma de `nu_creditos` de las 95 filas (271) **no** es el
 número de créditos del grado. El grafo de la etapa 1 conserva cada fila
 como un nodo distinto y no colapsa los slots.
 
+## Reglas confirmadas del programa
+
+Revisión de Isabel Nieto, 13 de noviembre de 2026. Describe cómo
+funciona el plan, no lo que dicen los CSV. El grafo de esta etapa sigue
+leyendo solo las aristas del archivo: estas reglas no se escribieron
+dentro de las tablas.
+
+### Obligatorias
+
+- Mecánica cuántica avanzada (25145) sí exige cuántica 1. En este
+  pensum esa materia es Introducción a la mecánica cuántica (25140,
+  semestre 8). Parte de los estudiantes la vio en Licenciatura en
+  Física, con otro código, así que la condición puede cumplirse fuera
+  de este plan. La arista no está en el CSV y no se agregó. En las
+  tasas hay un código ajeno al pensum, 24328 Mecánica cuántica I (2
+  inscritos): es un candidato a ese código de licenciatura, sin
+  confirmar.
+- Trabajo de grado II (25154) exige Trabajo de grado I (25149). La
+  excepción es la pasantía: en esa modalidad se pueden ver al tiempo.
+  La pasantía no es una fila del pensum.
+- Óptica general (25116) no tiene prerrequisito. Eso queda cerrado:
+  la tabla está bien.
+- Física moderna (25134) es, en teoría, prerrequisito de Física
+  atómica y nuclear (25135). Por razones administrativas se ven en el
+  mismo semestre; las dos están en el 7. No debe entrar como arista
+  estricta, porque eso obligaría a cursar atómica un semestre después.
+  Hoy la tabla no trae ni siquiera la relación débil.
+
+### Segundas lenguas
+
+La cadena I → II → III no está cargada en el sistema, pero es la regla
+en los cinco idiomas. El estudiante cursa un solo idioma. También se
+puede homologar por examen: la nota del examen queda como nota de la
+materia, y el examen se puede presentar para cualquier nivel (por
+ejemplo primero el I y después el III).
+
+Para una simulación, el requisito son tres materias de 2 créditos de
+un idioma, no las 15 filas del pensum. La homologación es otro camino.
+
+### Simulación computacional de biosistemas
+
+25176 solo se dictó una vez y hoy no está disponible. El prerrequisito
+débil hacia Mecánica cuántica avanzada (25145, semestre 9) se puso
+para que nadie pudiera inscribirla, no porque la materia lo necesite.
+En el modelo es un cierre administrativo, no una arista curricular. La
+tasa que aparece (5 inscritos, todos aprobados) corresponde a esa
+única oferta.
+
+### Línea de aplicación
+
+Hay cinco líneas: astronomía, física computacional, física médica,
+instrumentación y energías renovables. Se pueden mezclar y se pueden
+ver varias al tiempo. El requisito es sumar 18 créditos de estas
+electivas.
+
+En el plan, los niveles I y III valen 4 créditos y los II y IV valen
+5. Una línea completa suma 4 + 5 + 4 + 5 = 18, pero no hay que
+permanecer en la misma línea.
+
+El extracto no trae exactamente dos materias de 4 créditos y dos de 5
+por línea:
+
+- Física computacional tiene cuatro opciones de 4 créditos en el nivel
+  I (minería de datos, procesamiento de imágenes, mecánica analítica
+  y biosistemas) y una de 4 créditos en el nivel III.
+- Física médica tiene dos opciones de 4 créditos en el nivel III
+  (dosimetría e instrumentación biomédica).
+- Instrumentación no tiene materia de nivel III en el CSV.
+
+Las filas genéricas 25139, 25144, 25147 y 25152 («LÍNEA DE APLICACIÓN
+… (A,B,C,D,E)») son el cupo del slot, no una electiva más. Contarlas
+junto con las materias concretas duplicaría créditos.
+
+### Electivas sin tasa
+
+Varias electivas no tienen tasa porque la carrera es nueva, muy poca
+gente las ha cursado y no hay profesor que las dicte: no están
+disponibles. En esos casos la tasa ausente significa que la materia no
+se ofrece. No se les debe asignar probabilidad 1. Trabajo de grado I
+y II también están sin tasa, y esta explicación no los cubre.
+
 ## Inconsistencias que no se corrigieron
+
+Lo que sigue describe los archivos tal como están. Donde el programa ya
+aclaró el sentido, la sección anterior manda. Los CSV no se editaron.
 
 ### 1. Nombres distintos para el mismo identificador
 
