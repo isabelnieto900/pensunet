@@ -1,0 +1,30 @@
+# Secretos y variables de entorno
+.env
+.env.*
+!.env.example
+
+# Entornos virtuales
+.venv/
+venv/
+env/
+.python-version
+
+# Bytecode y artefactos de Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+dist/
+build/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# Microdatos: nunca se versionan códigos ni registros de estudiantes
+data/private/
+
+# Sistema
+.DS_Store
