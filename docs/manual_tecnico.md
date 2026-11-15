@@ -175,7 +175,9 @@ en `red.reglas_aplicadas`. Resumen:
 
 Con `aplicar_reglas=False` se obtiene el extracto crudo (útil para
 auditar el CSV). La figura de ejemplo se genera con
-`examples/dibujar_red.py` y se guarda en `docs/figuras/`.
+`examples/dibujar_red.py` y se guarda en `docs/figuras/`: imita la
+grilla del plan oficial (columnas por semestre, cajas por área) y
+superpone las aristas estrictas del DAG.
 
 ### Tiempo de grado (secciones II.C y III)
 

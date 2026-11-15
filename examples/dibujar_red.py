@@ -22,10 +22,11 @@ def main() -> None:
         red,
         ruta=destino,
         titulo=(
-            f"Red de prerrequisitos (análisis): "
-            f"{red.grafo.number_of_nodes()} nodos, "
-            f"{red.grafo.number_of_edges()} aristas"
+            "Plan de estudios de Física · red de prerrequisitos "
+            f"({red.grafo.number_of_nodes()} asignaturas, "
+            f"{red.grafo.number_of_edges()} aristas)"
         ),
+        mostrar_aristas=True,
     )
     print(f"Figura guardada en {destino}")
     print(f"Reglas aplicadas: {len(red.reglas_aplicadas)} notas")
