@@ -25,6 +25,10 @@ def test_el_grafo_de_analisis_aplica_las_reglas_confirmadas(simulador):
 
     assert red.grafo.has_edge(25140, 25145)
     assert red.grafo.has_edge(25149, 25154)
+    assert red.grafo.has_edge(25141, 25146)
+    assert red.grafo.has_edge(25146, 25151)
+    assert red.grafo.has_edge(25142, 25148)
+    assert red.grafo.has_edge(25148, 25153)
     assert 25163 not in red.grafo  # electiva sin tasa
     assert (25145, 25176) not in red.prerrequisitos_debiles_excluidos
 
@@ -36,6 +40,10 @@ def test_trabajo_de_grado_y_cuantica_avanzada_tienen_nivel_por_cadena(simulador)
     assert niveles[25145] == niveles[25140] + 1
     assert niveles[25149] == 1
     assert niveles[25154] == 2
+    assert niveles[25146] == niveles[25141] + 1
+    assert niveles[25151] == niveles[25146] + 1
+    assert niveles[25148] == niveles[25142] + 1
+    assert niveles[25153] == niveles[25148] + 1
     assert simulador.red.grafo.nodes[25154]["semestre"] == 10
     assert simulador.red.grafo.nodes[25145]["semestre"] == 9
 
@@ -55,3 +63,5 @@ def test_preparar_tablas_deja_bitacora_y_no_muta_el_pensum_crudo(
     assert tablas.excluidos
     assert any("25140 → 25145" in nota for nota in tablas.notas)
     assert any("25149 → 25154" in nota for nota in tablas.notas)
+    assert any("25141 → 25146" in nota for nota in tablas.notas)
+    assert any("25148 → 25153" in nota for nota in tablas.notas)

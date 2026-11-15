@@ -33,10 +33,10 @@ _COLOR_FONDO = "#F7F5F2"
 _COLOR_ENCABEZADO = "#2C3E50"
 
 # Cajas más compactas y con más aire entre columnas para ver las flechas.
-_ANCHO_CAJA = 1.15
-_ALTO_CAJA = 0.78
-_GAP_X = 0.55
-_GAP_Y = 0.28
+_ANCHO_CAJA = 1.20
+_ALTO_CAJA = 0.92
+_GAP_X = 0.50
+_GAP_Y = 0.26
 
 _ROMANOS = {
     1: "I",
@@ -158,15 +158,17 @@ def exportar_red_html(
         top = sy(y + alto / 2)
         w = ancho * escala
         h = alto * escala
-        lineas = _partir_texto(_acortar_nombre(nombre, 36), 16)[:3]
+        lineas = _partir_texto(nombre, 15)[:4]
         texto = "<br/>".join(html.escape(linea) for linea in lineas)
+        titulo_attr = html.escape(nombre, quote=True)
         cajas_svg.append(
             f'<g class="nodo" id="n{nodo}" data-id="{nodo}">'
             f'<rect x="{left:.1f}" y="{top:.1f}" width="{w:.1f}" height="{h:.1f}" '
             f'rx="8" ry="8" fill="{color}" stroke="{_COLOR_BORDE}" stroke-width="1.2"/>'
-            f'<foreignObject x="{left + 4:.1f}" y="{top + 4:.1f}" '
-            f'width="{w - 8:.1f}" height="{h - 8:.1f}">'
-            f'<div xmlns="http://www.w3.org/1999/xhtml" class="caja-texto">'
+            f'<foreignObject x="{left + 3:.1f}" y="{top + 3:.1f}" '
+            f'width="{w - 6:.1f}" height="{h - 6:.1f}">'
+            f'<div xmlns="http://www.w3.org/1999/xhtml" class="caja-texto" '
+            f'title="{titulo_attr}">'
             f"<strong>{texto}</strong><span>{html.escape(pie)}</span></div>"
             f"</foreignObject></g>"
         )
@@ -234,12 +236,18 @@ def exportar_red_html(
     .lienzo {{ overflow: auto; padding: 0.5rem 1rem 2rem; }}
     svg {{ display: block; background: {_COLOR_FONDO}; }}
     .caja-texto {{
-      color: white; font-size: 10px; line-height: 1.15;
+      color: white; line-height: 1.12;
       display: flex; flex-direction: column; justify-content: center;
-      height: 100%; text-align: center;
+      align-items: center; height: 100%; text-align: center;
+      overflow: hidden; padding: 1px 2px; box-sizing: border-box;
     }}
-    .caja-texto strong {{ font-size: 10px; }}
-    .caja-texto span {{ opacity: 0.9; margin-top: 2px; font-size: 9px; }}
+    .caja-texto strong {{
+      font-size: 9px; font-weight: 700; max-width: 100%;
+      overflow-wrap: anywhere; word-break: break-word;
+    }}
+    .caja-texto span {{
+      opacity: 0.92; margin-top: 3px; font-size: 8px; flex-shrink: 0;
+    }}
     .nodo {{ cursor: pointer; }}
     .nodo rect {{ transition: opacity 0.15s, filter 0.15s; }}
     .arista {{ opacity: 0.35; transition: opacity 0.15s, stroke-width 0.15s; }}
@@ -416,34 +424,36 @@ def _dibujar_caja(
     )
     eje.add_patch(rect)
 
-    nombre = _acortar_nombre(str(datos.get("nombre") or nodo), 30)
-    lineas = _partir_texto(nombre, 15)
+    nombre = str(datos.get("nombre") or nodo)
+    lineas = _partir_texto(nombre, 14)[:4]
     creditos = datos.get("creditos")
     pie = f"{nodo}" if creditos is None else f"{nodo} · {int(creditos)} cr"
 
-    texto_y = y + alto * 0.16
-    for linea in lineas[:3]:
+    texto_y = y + alto * 0.28
+    for linea in lineas:
         eje.text(
             x,
             texto_y,
             linea,
             ha="center",
             va="center",
-            fontsize=4.8,
+            fontsize=4.4,
             color=_COLOR_TEXTO,
             fontweight="bold",
             zorder=4,
+            clip_on=True,
         )
-        texto_y -= 0.14
+        texto_y -= 0.13
     eje.text(
         x,
-        y - alto * 0.30,
+        y - alto * 0.34,
         pie,
         ha="center",
         va="center",
-        fontsize=4.6,
+        fontsize=4.3,
         color=_COLOR_TEXTO,
         zorder=4,
+        clip_on=True,
     )
 
 
@@ -573,13 +583,6 @@ def _leyenda(eje: Axes) -> None:
         frameon=False,
         fontsize=7,
     )
-
-
-def _acortar_nombre(nombre: str, maximo: int) -> str:
-    texto = " ".join(nombre.split())
-    if len(texto) <= maximo:
-        return texto
-    return texto[: maximo - 1].rstrip() + "…"
 
 
 def _partir_texto(texto: str, ancho: int) -> list[str]:

@@ -24,6 +24,10 @@ NO_OFRECIDAS = frozenset({25176})
 ARISTAS_CONFIRMADAS = (
     (25140, 25145),  # Introducción a la mecánica cuántica → Cuántica avanzada
     (25149, 25154),  # Trabajo de grado I → Trabajo de grado II
+    (25141, 25146),  # Estado sólido → Ciencias de los materiales
+    (25146, 25151),  # Ciencias de los materiales → Nanotecnología
+    (25142, 25148),  # Modelos y gestión I → Modelos y gestión II
+    (25148, 25153),  # Modelos y gestión II → Gestión tecnológica
 )
 
 

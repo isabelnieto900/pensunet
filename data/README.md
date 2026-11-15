@@ -100,6 +100,11 @@ aplica estas reglas al armar el grafo de análisis (ver
   mismo semestre; las dos están en el 7. No debe entrar como arista
   estricta, porque eso obligaría a cursar atómica un semestre después.
   Hoy la tabla no trae ni siquiera la relación débil.
+- Estado sólido (25141) habilita Ciencias de los materiales (25146),
+  que a su vez habilita Nanotecnología (25151). El grafo de análisis
+  añade esas aristas.
+- Modelos y gestión I (25142) habilita Modelos y gestión II (25148),
+  que habilita Gestión tecnológica y compromiso social (25153).
 
 ### Segundas lenguas
 

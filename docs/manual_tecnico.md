@@ -170,7 +170,8 @@ en `red.reglas_aplicadas`. Resumen:
 - segunda lengua: solo inglés (9901 → 9902 → 9903);
 - se excluyen las filas genéricas de línea de aplicación y 25176;
 - se excluyen electivas sin tasa (no ofrecidas);
-- se añaden las aristas 25140 → 25145 y 25149 → 25154;
+- se añaden las aristas 25140 → 25145, 25149 → 25154,
+  25141 → 25146 → 25151 y 25142 → 25148 → 25153;
 - el requisito de 18 créditos de línea queda para la etapa 3.
 
 Con `aplicar_reglas=False` se obtiene el extracto crudo (útil para
