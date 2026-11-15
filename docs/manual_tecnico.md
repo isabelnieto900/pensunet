@@ -33,7 +33,7 @@ distintas por estudiante, un modelo SIR, ni la interfaz gráfica.
 ```text
 SimuladorPensum                 fachada
     │
-    ├── LectorDatos             CSV hoy, Redshift después
+    ├── LectorDatos             solo CSV en esta versión
     │     └── AdaptadorUD       columnas de la Universidad Distrital
     ├── RedPrerrequisitos       DAG con networkx
     ├── indicadores             bloqueo, posponimiento, intermediación
@@ -53,10 +53,9 @@ para que ese código no dependa de networkx ni de los nombres de columna
 de la universidad.
 
 **Fábrica (`FabricaLectores`).** El modelo necesita las mismas tres
-tablas venga de un CSV o, después, de Redshift. Quien llama pide
-`"csv"` o `"redshift"` y recibe un `LectorDatos`. El grafo no se entera
-del cambio de origen. El lector de Redshift es un stub a propósito: no
-hay conexión a medio implementar ni una ruta para bajar microdatos.
+tablas. Quien llama pide `"csv"` y recibe un `LectorDatos`. Si más
+adelante hubiera otro origen, el grafo no tendría que enterarse; en
+esta versión el único tipo admitido es CSV.
 
 **Adaptador (`AdaptadorUD`).** El extracto usa `nu_periodo_formacion`,
 `ds_nombre_asignatura`, `fl_debe_aprobado`. El dominio habla de

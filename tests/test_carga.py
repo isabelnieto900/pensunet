@@ -5,7 +5,6 @@ import pytest
 
 from pensunet.datos.adaptador_ud import AdaptadorUD
 from pensunet.datos.fabrica import FabricaLectores
-from pensunet.datos.lector_redshift import LectorRedshift
 
 
 def test_el_csv_llega_con_nombres_internos(simulador):
@@ -59,17 +58,8 @@ def test_el_adaptador_interpreta_booleanos_escritos_como_texto():
 
 
 def test_la_fabrica_crea_csv_y_rechaza_un_tipo_desconocido(rutas_datos):
-    """La fábrica solo conoce csv y redshift. Sección II.A y ecuación (7)."""
+    """La fábrica solo admite csv. Sección II.A y ecuación (7)."""
     lector = FabricaLectores.crear("csv", **rutas_datos)
     assert len(lector.leer_pensum()) == 95
-    with pytest.raises(ValueError, match="redshift"):
+    with pytest.raises(ValueError, match="solo admite 'csv'"):
         FabricaLectores.crear("excel")
-
-
-def test_redshift_esta_documentado_y_no_conecta():
-    """Ecuación (7): el stub no baja microdatos ni abre una sesión."""
-    lector = LectorRedshift(host="ejemplo.redshift.amazonaws.com", usuario="solo_lectura")
-    with pytest.raises(NotImplementedError, match="Redshift"):
-        lector.leer_tasas_aprobacion()
-    with pytest.raises(NotImplementedError, match="Redshift"):
-        lector.leer_pensum()

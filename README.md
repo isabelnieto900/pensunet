@@ -80,7 +80,7 @@ ruff check src tests examples
 ```
 src/pensunet/
   facade.py                 Fachada SimuladorPensum
-  datos/                    Lectores CSV y stub de Redshift, adaptador UD
+  datos/                    Lector CSV, fábrica y adaptador UD
   dominio/                  DAG, indicadores y escenario
   simulacion/               Estrategia y esqueleto Monte Carlo
   ui/                       Placeholder de la interfaz
