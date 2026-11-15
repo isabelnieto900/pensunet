@@ -8,9 +8,9 @@ from tests.figuras import curriculo_figura_1
 from pensunet.dominio.red import construir_red, validar_aciclicidad
 
 
-def test_el_grafo_de_fisica_es_un_dag_estricto(simulador):
-    """Sección II.A: 95 asignaturas y solo las 46 aristas estrictas."""
-    red = simulador.red
+def test_el_grafo_crudo_de_fisica_es_un_dag_estricto(simulador_crudo):
+    """Sección II.A: 95 asignaturas y solo las 46 aristas estrictas del CSV."""
+    red = simulador_crudo.red
     assert red.es_aciclico()
     assert validar_aciclicidad(red.grafo)
     assert red.grafo.number_of_nodes() == 95
@@ -21,21 +21,22 @@ def test_el_grafo_de_fisica_es_un_dag_estricto(simulador):
     assert not red.grafo.has_edge(25145, 25176)
     assert (25145, 25176) in red.prerrequisitos_debiles_excluidos
     assert len(red.prerrequisitos_debiles_excluidos) == 7
+    assert red.reglas_aplicadas == []
 
 
-def test_la_inversion_de_semestres_queda_anotada_y_no_se_corrige(simulador):
+def test_la_inversion_de_semestres_queda_anotada_y_no_se_corrige(simulador_crudo):
     """Sección II.A: 25176 está en el semestre 7 y su prerrequisito débil en el 9."""
-    textos = " ".join(simulador.red.inconsistencias)
+    textos = " ".join(simulador_crudo.red.inconsistencias)
     assert "25176" in textos
     assert "25145" in textos
-    assert len(simulador.red.inconsistencias) == 1
-    nombre = simulador.red.grafo.nodes[4719]["nombre"]
+    assert len(simulador_crudo.red.inconsistencias) == 1
+    nombre = simulador_crudo.red.grafo.nodes[4719]["nombre"]
     assert nombre == "ECUACIONES DIFERENCIALES"
 
 
-def test_los_niveles_siguen_la_cadena_de_prerrequisitos(simulador):
+def test_los_niveles_siguen_la_cadena_de_prerrequisitos(simulador_crudo):
     """Sección II.A: el semestre mínimo es el largo de la cadena, no el del plan."""
-    niveles = simulador.red.niveles()
+    niveles = simulador_crudo.red.niveles()
     assert niveles[25102] == 1
     assert niveles[25106] == 2
     assert niveles[25111] == 3
@@ -45,7 +46,7 @@ def test_los_niveles_siguen_la_cadena_de_prerrequisitos(simulador):
     assert niveles[9902] == 2
     assert niveles[9903] == 3
     assert niveles[25154] == 1
-    assert simulador.red.grafo.nodes[25154]["semestre"] == 10
+    assert simulador_crudo.red.grafo.nodes[25154]["semestre"] == 10
 
 
 def test_el_segundo_curriculo_de_la_figura_1_tiene_estos_niveles():

@@ -7,10 +7,10 @@ from pensunet.datos.adaptador_ud import AdaptadorUD
 from pensunet.datos.fabrica import FabricaLectores
 
 
-def test_el_csv_llega_con_nombres_internos(simulador):
+def test_el_csv_llega_con_nombres_internos(simulador_crudo):
     """Sección II.A y ecuación (7): el adaptador renombra, no reescribe cifras."""
-    pensum = simulador.pensum
-    prerrequisitos = simulador.prerequisitos
+    pensum = simulador_crudo.pensum
+    prerrequisitos = simulador_crudo.prerequisitos
     assert list(pensum["id_asignatura"]).count(4) == 1
     catedra = pensum.loc[pensum["id_asignatura"] == 4].iloc[0]
     assert catedra["nombre"] == "CÁTEDRA FRANCISCO JOSÉ DE CALDAS"

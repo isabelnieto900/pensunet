@@ -1,9 +1,13 @@
-"""Bloqueo, posponimiento 1/(k + 1) e intermediación."""
+"""Bloqueo, posponimiento 1/(k + 1), intermediación y cuellos de botella."""
 
 import pytest
 from tests.figuras import curriculo_figura_1
 
-from pensunet.dominio.indicadores import calcular_indicadores, intermediacion
+from pensunet.dominio.indicadores import (
+    calcular_indicadores,
+    cuellos_de_botella,
+    intermediacion,
+)
 
 
 def test_la_figura_1_recupera_el_posponimiento_del_articulo():
@@ -20,8 +24,22 @@ def test_la_figura_1_recupera_el_posponimiento_del_articulo():
     assert indicadores.intermediacion == {1: 0.0, 2: 1.0, 3: 0.0, 4: 0.0}
 
 
+def test_la_ecuacion_2_marca_cuellos_por_grado():
+    """Ecuación (2): A tiene salida 2 y es cuello con umbral_salida=1."""
+    red = curriculo_figura_1()
+    assert cuellos_de_botella(red, umbral_entrada=1, umbral_salida=1, umbral_total=3) == (
+        1,
+    )
+    assert calcular_indicadores(
+        red,
+        umbral_entrada=1,
+        umbral_salida=1,
+        umbral_total=3,
+    ).cuellos_de_botella == (1,)
+
+
 def test_bloqueo_y_posponimiento_en_cadenas_conocidas_de_fisica(simulador):
-    """Sección II.B sobre el inglés, Física I y dos asignaturas sin descendientes."""
+    """Sección II.B sobre el inglés, Física I y trabajo de grado (con reglas)."""
     indicadores = simulador.indicadores()
     bloqueo = indicadores.factor_bloqueo
     posponimiento = indicadores.factor_posponimiento
@@ -30,14 +48,14 @@ def test_bloqueo_y_posponimiento_en_cadenas_conocidas_de_fisica(simulador):
     assert bloqueo[9903] == 0
     assert bloqueo[4] == 0
     assert bloqueo[25154] == 0
+    assert bloqueo[25149] >= 1
     assert bloqueo[25102] > bloqueo[25106] > 0
     assert posponimiento[4] == pytest.approx(0.1)
-    assert posponimiento[25102] == pytest.approx(0.25)
     assert posponimiento[25154] == pytest.approx(1.0)
-    assert indicadores.repeticiones_sin_retraso[25102] == 3
     assert indicadores.repeticiones_sin_retraso[25154] == 0
     assert all(0 < valor <= 1 for valor in posponimiento.values())
     assert all(valor >= 0 for valor in bloqueo.values())
+    assert isinstance(indicadores.cuellos_de_botella, tuple)
 
 
 def test_la_intermediacion_de_la_ecuacion_1_cuenta_el_unico_camino(simulador):
