@@ -72,9 +72,11 @@ como un nodo distinto y no colapsa los slots.
 ## Reglas confirmadas del programa
 
 Revisión de Isabel Nieto, 13 de noviembre de 2026. Describe cómo
-funciona el plan, no lo que dicen los CSV. El grafo de esta etapa sigue
-leyendo solo las aristas del archivo: estas reglas no se escribieron
-dentro de las tablas.
+funciona el plan, no lo que dicen los CSV. Los archivos de esta carpeta
+**no se reescribieron**. Desde la etapa 2, `preparar_tablas_analisis`
+aplica estas reglas al armar el grafo de análisis (ver
+`src/pensunet/dominio/reglas_pensum.py` y la bitácora
+`red.reglas_aplicadas`).
 
 ### Obligatorias
 
@@ -82,13 +84,15 @@ dentro de las tablas.
   pensum esa materia es Introducción a la mecánica cuántica (25140,
   semestre 8). Parte de los estudiantes la vio en Licenciatura en
   Física, con otro código, así que la condición puede cumplirse fuera
-  de este plan. La arista no está en el CSV y no se agregó. En las
-  tasas hay un código ajeno al pensum, 24328 Mecánica cuántica I (2
-  inscritos): es un candidato a ese código de licenciatura, sin
-  confirmar.
+  de este plan. La arista no está en el CSV; el grafo de análisis la
+  añade en código. En las tasas hay un código ajeno al pensum, 24328
+  Mecánica cuántica I (2 inscritos): es un candidato a ese código de
+  licenciatura, sin confirmar.
 - Trabajo de grado II (25154) exige Trabajo de grado I (25149). La
   excepción es la pasantía: en esa modalidad se pueden ver al tiempo.
-  La pasantía no es una fila del pensum.
+  La pasantía no es una fila del pensum. El grafo de análisis añade la
+  arista estricta; la excepción de pasantía queda documentada, no
+  modelada como arista débil.
 - Óptica general (25116) no tiene prerrequisito. Eso queda cerrado:
   la tabla está bien.
 - Física moderna (25134) es, en teoría, prerrequisito de Física
@@ -107,6 +111,7 @@ ejemplo primero el I y después el III).
 
 Para una simulación, el requisito son tres materias de 2 créditos de
 un idioma, no las 15 filas del pensum. La homologación es otro camino.
+El grafo de análisis conserva solo inglés (9901 → 9902 → 9903).
 
 ### Simulación computacional de biosistemas
 
@@ -280,6 +285,9 @@ Epistemología de la física I (4728, 22), que no es la epistemología
 ## Qué usa el código
 
 `LectorCSV` lee los tres archivos y `AdaptadorUD` renombra las columnas
-al modelo interno. `construir_red` arma el DAG solo con
-`fl_debe_aprobado = True`. Las tasas se consultan por `id_asignatura`;
-si el identificador no está, la probabilidad estimada queda ausente.
+al modelo interno. Con `aplicar_reglas=True` (por defecto),
+`preparar_tablas_analisis` filtra nodos y añade aristas confirmadas;
+después `construir_red` arma el DAG solo con `debe_aprobado = True`.
+Las tasas se consultan por `id_asignatura`; si el identificador no
+está, la probabilidad estimada queda ausente. El cupo de 18 créditos
+de línea de aplicación se dejará para el Monte Carlo (etapa 3).

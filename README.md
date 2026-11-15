@@ -60,11 +60,13 @@ lector = FabricaLectores.crear(
     ruta_tasas=raiz / "data/processed/tasas_aprobacion_fisica.csv",
 )
 simulador = SimuladorPensum(lector)
-simulador.cargar()
+simulador.cargar()  # aplica las reglas confirmadas del programa
 indicadores = simulador.indicadores()
 ```
 
 Un script equivalente está en `examples/ejemplo_cargar_red.py`.
+Para el extracto CSV sin reglas: `simulador.cargar(aplicar_reglas=False)`.
+La figura del DAG se genera con `examples/dibujar_red.py`.
 La llamada `simulador.simular(...)` lanza `NotImplementedError`: el Monte
 Carlo de la sección III.B se implementa en una etapa posterior.
 
@@ -81,7 +83,7 @@ ruff check src tests examples
 src/pensunet/
   facade.py                 Fachada SimuladorPensum
   datos/                    Lector CSV, fábrica y adaptador UD
-  dominio/                  DAG, indicadores y escenario
+  dominio/                  DAG, reglas del pensum, indicadores, figura
   simulacion/               Estrategia y esqueleto Monte Carlo
   ui/                       Placeholder de la interfaz
 data/reference/             Pensum y prerrequisitos
