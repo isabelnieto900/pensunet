@@ -6,6 +6,8 @@ from pensunet.datos.lector import LectorDatos
 from pensunet.dominio.escenario import Escenario
 from pensunet.dominio.indicadores import IndicadoresTopologicos, calcular_indicadores
 from pensunet.dominio.red import RedPrerrequisitos, construir_red
+from pensunet.dominio.reglas import ReglasCarrera
+from pensunet.dominio.reglas_fisica import ReglasFisica
 from pensunet.simulacion.estrategia import EstrategiaSimulacion, ResultadoSimulacion
 from pensunet.simulacion.montecarlo_molontay import MonteCarloMolontay
 
@@ -24,29 +26,49 @@ class SimuladorPensum:
         self,
         lector: LectorDatos,
         estrategia: EstrategiaSimulacion | None = None,
+        reglas: ReglasCarrera | None = None,
     ) -> None:
         self._lector = lector
         self._estrategia = estrategia if estrategia is not None else MonteCarloMolontay()
+        # Por defecto Física: es el único programa con revisión experta hoy.
+        self._reglas = reglas if reglas is not None else ReglasFisica()
         self.pensum: pd.DataFrame | None = None
         self.prerequisitos: pd.DataFrame | None = None
         self.tasas: pd.DataFrame | None = None
         self.red: RedPrerrequisitos | None = None
 
-    def cargar(self) -> RedPrerrequisitos:
+    def cargar(self, aplicar_reglas: bool = True) -> RedPrerrequisitos:
         """Lee las tres tablas y construye el DAG.
 
-        Sección II.A y ecuación (7) de Molontay et al. (2020).
+        Sección II.A y ecuación (7) de Molontay et al. (2020). Con
+        ``aplicar_reglas`` en verdadero se usa la ``ReglasCarrera``
+        inyectada (por defecto ``ReglasFisica``). Con falso se conserva
+        el extracto crudo, sin correcciones locales.
         """
         self.pensum = self._lector.leer_pensum()
         self.prerequisitos = self._lector.leer_prerequisitos()
         self.tasas = self._lector.leer_tasas_aprobacion()
-        self.red = construir_red(self.pensum, self.prerequisitos)
+        if aplicar_reglas:
+            tablas = self._reglas.preparar(
+                self.pensum,
+                self.prerequisitos,
+                self.tasas,
+            )
+            self.pensum = tablas.pensum
+            self.prerequisitos = tablas.prerrequisitos
+            self.red = construir_red(
+                self.pensum,
+                self.prerequisitos,
+                reglas_aplicadas=list(tablas.notas),
+            )
+        else:
+            self.red = construir_red(self.pensum, self.prerequisitos)
         return self.red
 
     def indicadores(self) -> IndicadoresTopologicos:
-        """Calcula bloqueo, posponimiento e intermediación.
+        """Calcula bloqueo, posponimiento, intermediación y cuellos de botella.
 
-        Sección II.B y ecuación (1).
+        Sección II.B, ecuación (1) y ecuación (2).
         """
         return calcular_indicadores(self._exigir_red())
 

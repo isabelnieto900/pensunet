@@ -71,10 +71,13 @@ como un nodo distinto y no colapsa los slots.
 
 ## Reglas confirmadas del programa
 
-Revisión de Isabel Nieto, 13 de noviembre de 2026. Describe cómo
-funciona el plan, no lo que dicen los CSV. El grafo de esta etapa sigue
-leyendo solo las aristas del archivo: estas reglas no se escribieron
-dentro de las tablas.
+Revisión de Isabel Nieto (programa de Física), noviembre de 2026.
+Describe cómo funciona **este** plan, no reglas universales de la UD.
+Otras carreras deben confiar primero en su extracto de prerrequisitos;
+las correcciones locales solo las valida quien conoce ese programa
+(`ReglasCarrera` / `ReglasFisica` en `src/pensunet/dominio/`). Los
+archivos de esta carpeta **no se reescribieron**. La bitácora queda en
+`red.reglas_aplicadas`.
 
 ### Obligatorias
 
@@ -82,13 +85,15 @@ dentro de las tablas.
   pensum esa materia es Introducción a la mecánica cuántica (25140,
   semestre 8). Parte de los estudiantes la vio en Licenciatura en
   Física, con otro código, así que la condición puede cumplirse fuera
-  de este plan. La arista no está en el CSV y no se agregó. En las
-  tasas hay un código ajeno al pensum, 24328 Mecánica cuántica I (2
-  inscritos): es un candidato a ese código de licenciatura, sin
-  confirmar.
+  de este plan. La arista no está en el CSV; el grafo de análisis la
+  añade en código. En las tasas hay un código ajeno al pensum, 24328
+  Mecánica cuántica I (2 inscritos): es un candidato a ese código de
+  licenciatura, sin confirmar.
 - Trabajo de grado II (25154) exige Trabajo de grado I (25149). La
   excepción es la pasantía: en esa modalidad se pueden ver al tiempo.
-  La pasantía no es una fila del pensum.
+  La pasantía no es una fila del pensum. El grafo de análisis añade la
+  arista estricta; la excepción de pasantía queda documentada, no
+  modelada como arista débil.
 - Óptica general (25116) no tiene prerrequisito. Eso queda cerrado:
   la tabla está bien.
 - Física moderna (25134) es, en teoría, prerrequisito de Física
@@ -96,6 +101,21 @@ dentro de las tablas.
   mismo semestre; las dos están en el 7. No debe entrar como arista
   estricta, porque eso obligaría a cursar atómica un semestre después.
   Hoy la tabla no trae ni siquiera la relación débil.
+- Estado sólido (25141) habilita Ciencias de los materiales (25146),
+  que a su vez habilita Nanotecnología (25151). El grafo de análisis
+  añade esas aristas.
+- Modelos y gestión I (25142) habilita Modelos y gestión II (25148),
+  que habilita Gestión tecnológica y compromiso social (25153).
+- Cátedra Francisco José de Caldas (4) habilita Cátedra democracia y
+  ciudadanía (12). En el plan institucional la cadena sigue hacia
+  Cátedra de contexto; ese código (25246) aparece en tasas pero **no**
+  en el pensum vigente de Física. En su lugar el semestre 3 trae
+  Historia y filosofía de la ciencia I (25115). No se añadió
+  12 → 25115: hay que confirmar si Historia exige las dos cátedras
+  previas o solo ocupa el cupo. Seminario de investigación y
+  Relatividad no tienen prerrequisito.
+- Epistemología de la física (25120) → Epistemología II (25127) **sí**
+  está en el CSV de prerrequisitos; el grafo crudo ya la incluye.
 
 ### Segundas lenguas
 
@@ -107,6 +127,7 @@ ejemplo primero el I y después el III).
 
 Para una simulación, el requisito son tres materias de 2 créditos de
 un idioma, no las 15 filas del pensum. La homologación es otro camino.
+El grafo de análisis conserva solo inglés (9901 → 9902 → 9903).
 
 ### Simulación computacional de biosistemas
 
@@ -280,6 +301,9 @@ Epistemología de la física I (4728, 22), que no es la epistemología
 ## Qué usa el código
 
 `LectorCSV` lee los tres archivos y `AdaptadorUD` renombra las columnas
-al modelo interno. `construir_red` arma el DAG solo con
-`fl_debe_aprobado = True`. Las tasas se consultan por `id_asignatura`;
-si el identificador no está, la probabilidad estimada queda ausente.
+al modelo interno. Con `aplicar_reglas=True` (por defecto),
+`preparar_tablas_analisis` filtra nodos y añade aristas confirmadas;
+después `construir_red` arma el DAG solo con `debe_aprobado = True`.
+Las tasas se consultan por `id_asignatura`; si el identificador no
+está, la probabilidad estimada queda ausente. El cupo de 18 créditos
+de línea de aplicación se dejará para el Monte Carlo (etapa 3).

@@ -1,8 +1,9 @@
 # Manual técnico
 
-Estado: borrador de la etapa 1. Describe la arquitectura que ya está en
-el código y el método de Molontay et al. (2020) que esa etapa alcanza a
-implementar. La simulación Monte Carlo no está programada.
+Estado: borrador de la etapa 2. Describe la arquitectura, las reglas
+confirmadas del programa aplicadas al grafo de análisis, los indicadores
+de la sección II.B (incluida la ecuación (2)) y la figura del DAG. La
+simulación Monte Carlo no está programada.
 
 Referencia:
 
@@ -19,14 +20,18 @@ esa numeración.
 Entra en esta versión:
 
 - leer el pensum, los prerrequisitos y las tasas agregadas;
+- aplicar las reglas confirmadas del programa al grafo de análisis
+  (sin reescribir los CSV en silencio);
 - construir el grafo dirigido y rechazarlo si tiene un ciclo;
 - calcular el semestre mínimo impuesto por los prerrequisitos;
-- calcular el factor de bloqueo, el factor de posponimiento y la
-  intermediación.
+- calcular el factor de bloqueo, el factor de posponimiento, la
+  intermediación y los cuellos de botella de la ecuación (2);
+- dibujar la red (PNG) para documentación.
 
 No entra: la simulación del tiempo de grado, el efecto de atravesar una
-asignatura, los cuellos de botella de la ecuación (2), probabilidades
-distintas por estudiante, un modelo SIR, ni la interfaz gráfica.
+asignatura, el cupo de 18 créditos de línea de aplicación como
+restricción de simulación, probabilidades distintas por estudiante, un
+modelo SIR, ni la interfaz gráfica.
 
 ## Arquitectura
 
@@ -35,8 +40,10 @@ SimuladorPensum                 fachada
     │
     ├── LectorDatos             solo CSV en esta versión
     │     └── AdaptadorUD       columnas de la Universidad Distrital
+    ├── ReglasCarrera            Física hoy; extracto u otras carreras después
     ├── RedPrerrequisitos       DAG con networkx
-    ├── indicadores             bloqueo, posponimiento, intermediación
+    ├── indicadores             bloqueo, posponimiento, intermediación, ec. (2)
+    ├── visualizacion           figura del DAG
     └── EstrategiaSimulacion    Monte Carlo, todavía sin algoritmo
 ```
 
@@ -69,10 +76,21 @@ algoritmo intercambiable. Hoy la única estrategia es
 Cuando haya probabilidades por estudiante u otra dinámica, se escribe
 otra estrategia sin rehacer la fachada ni el grafo.
 
+**Estrategia de reglas (`ReglasCarrera`).** El núcleo confía en el
+extracto de prerrequisitos (válido para cualquier carrera de la UD).
+Las correcciones locales —aristas que el SIU no cargó, materias no
+ofrecidas, slots genéricos— viven en una implementación por programa
+(`ReglasFisica` hoy). `ReglasSoloExtracto` no corrige nada: sirve para
+auditar el CSV o para programas sin revisión experta aún. La primera
+expansión prevista es la Facultad de Ciencias (matemáticas, biología,
+física, química); matemáticas exigirá además varios planes e
+homologaciones. `FabricaReglas` elige la estrategia por código de
+programa.
+
 Hacen falta porque el artículo describe un método y no entrega un
-programa, y porque las fases siguientes (tasas por estudiante, otra
-dinámica de propagación, interfaz) tienen que poder entrar sin mezclarse
-con el DAG.
+programa, porque el SIU no es completo igual en todas las carreras, y
+porque las fases siguientes tienen que poder entrar sin mezclarse con
+el DAG.
 
 ## Metodología
 
@@ -143,13 +161,40 @@ dividida por (n - 1)(n - 2)). Ese valor se pide con `normalizada=True`.
 El artículo mismo advierte que, en un DAG curricular, la intermediación
 se interpreta con cuidado.
 
-**Ecuación (2), cuellos de botella.** El artículo cuenta asignaturas
-cuyo grado de entrada, de salida o total supera unos umbrales a, b y c.
-No está implementada. No hace falta para los indicadores de esta etapa.
+**Ecuación (2), cuellos de botella.** Una asignatura es cuello de botella
+si su grado de entrada supera el umbral `a`, su grado de salida supera
+`b` o la suma supera `c`. En Pensunet eso es `cuellos_de_botella`, con
+umbrales por defecto 2, 2 y 4 (como en el ejemplo del artículo). Se
+pueden pasar otros umbrales a `calcular_indicadores`.
 
 Estos indicadores solo miran la forma del grafo. No usan la tasa de
 aprobación. Eso es deliberado: la sección II.C y la sección III meten
 las tasas, y esa parte es la simulación que falta.
+
+### Reglas del programa en el grafo de análisis
+
+`SimuladorPensum` admite una `ReglasCarrera` (por defecto
+`ReglasFisica`). Con `cargar(aplicar_reglas=True)` esa estrategia
+prepara las tablas antes de `construir_red`. Los CSV de
+`data/reference` y `data/processed` no se modifican. La bitácora queda
+en `red.reglas_aplicadas`. Resumen para Física:
+
+- segunda lengua: solo inglés (9901 → 9902 → 9903);
+- se excluyen las filas genéricas de línea de aplicación y 25176;
+- se excluyen electivas sin tasa (no ofrecidas);
+- se añaden las aristas 25140 → 25145, 25149 → 25154,
+  25141 → 25146 → 25151, 25142 → 25148 → 25153 y 4 → 12;
+- epistemología 25120 → 25127 ya viene en el CSV;
+- no se modela aún 12 → 25115 (Historia vs cátedra de contexto);
+- el requisito de 18 créditos de línea queda para la etapa 3.
+
+Con `aplicar_reglas=False` se obtiene el extracto crudo (útil para
+auditar el CSV). `examples/dibujar_red.py` genera en `docs/figuras/`:
+
+- `red_prerrequisitos.png`: grilla al estilo del plan oficial, con
+  aristas oscuras y halo claro;
+- `red_prerrequisitos.html`: misma disposición, interactiva (clic en
+  una asignatura resalta prerrequisitos y continuaciones).
 
 ### Tiempo de grado (secciones II.C y III)
 

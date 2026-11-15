@@ -21,9 +21,18 @@ def rutas_datos() -> dict[str, Path]:
 
 
 @pytest.fixture(scope="session")
-def simulador(rutas_datos: dict[str, Path]) -> SimuladorPensum:
-    """Pensum de Física ya cargado. Sección II.A y ecuación (7)."""
+def simulador_crudo(rutas_datos: dict[str, Path]) -> SimuladorPensum:
+    """Extracto CSV sin reglas del programa. Sección II.A y ecuación (7)."""
     lector = FabricaLectores.crear("csv", **rutas_datos)
     modelo = SimuladorPensum(lector)
-    modelo.cargar()
+    modelo.cargar(aplicar_reglas=False)
+    return modelo
+
+
+@pytest.fixture(scope="session")
+def simulador(rutas_datos: dict[str, Path]) -> SimuladorPensum:
+    """Grafo de análisis con reglas confirmadas. Sección II.A y ecuación (7)."""
+    lector = FabricaLectores.crear("csv", **rutas_datos)
+    modelo = SimuladorPensum(lector)
+    modelo.cargar(aplicar_reglas=True)
     return modelo

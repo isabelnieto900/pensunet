@@ -21,6 +21,7 @@ class RedPrerrequisitos:
         duracion_nominal: int,
         inconsistencias: list[str],
         prerrequisitos_debiles_excluidos: list[tuple[int, int]],
+        reglas_aplicadas: list[str] | None = None,
     ) -> None:
         if not validar_aciclicidad(grafo):
             raise ValueError(_mensaje_ciclo(grafo))
@@ -28,6 +29,7 @@ class RedPrerrequisitos:
         self.duracion_nominal = duracion_nominal
         self.inconsistencias = list(inconsistencias)
         self.prerrequisitos_debiles_excluidos = list(prerrequisitos_debiles_excluidos)
+        self.reglas_aplicadas = list(reglas_aplicadas or [])
         self._asignar_niveles()
 
     def es_aciclico(self) -> bool:
@@ -69,6 +71,7 @@ def construir_red(
     pensum: pd.DataFrame,
     prerequisitos: pd.DataFrame,
     solo_prerrequisitos_estrictos: bool = True,
+    reglas_aplicadas: list[str] | None = None,
 ) -> RedPrerrequisitos:
     """Construye el DAG a partir del pensum y de la tabla de aristas.
 
@@ -80,6 +83,8 @@ def construir_red(
 
     La duración nominal es el máximo semestre declarado en el pensum, que
     en el artículo es la duración para la cual se diseñó el plan.
+    ``reglas_aplicadas`` guarda la bitácora de ``preparar_tablas_analisis``
+    cuando el grafo ya no es el extracto crudo.
     """
     _exigir_columnas(pensum, ("id_asignatura", "nombre", "semestre"), "pensum")
     _exigir_columnas(
@@ -118,6 +123,7 @@ def construir_red(
         duracion_nominal=max(semestres),
         inconsistencias=inconsistencias,
         prerrequisitos_debiles_excluidos=excluidos,
+        reglas_aplicadas=reglas_aplicadas,
     )
 
 

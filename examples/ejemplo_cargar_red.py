@@ -29,6 +29,7 @@ def main() -> None:
     print(f"Prerrequisitos estrictos: {red.grafo.number_of_edges()}")
     print(f"Es un DAG: {red.es_aciclico()}")
     print(f"Duración nominal: {red.duracion_nominal} semestres")
+    print(f"Notas de reglas aplicadas: {len(red.reglas_aplicadas)}")
     print(f"Inconsistencias registradas: {len(red.inconsistencias)}")
     for texto in red.inconsistencias:
         print(f"  - {texto}")
@@ -37,6 +38,10 @@ def main() -> None:
     ordenados = sorted(indicadores.factor_bloqueo.items(), key=lambda par: par[1], reverse=True)
     for identificador, bloqueo in ordenados[:5]:
         print(f"  {identificador} {nombres[identificador]}: {bloqueo}")
+
+    print(f"Cuellos de botella (ecuación 2): {len(indicadores.cuellos_de_botella)}")
+    for identificador in indicadores.cuellos_de_botella[:10]:
+        print(f"  {identificador} {nombres.get(identificador, '')}")
 
 
 if __name__ == "__main__":

@@ -6,15 +6,22 @@ import networkx as nx
 
 from pensunet.dominio.red import RedPrerrequisitos
 
+# Umbrales por defecto de la ecuación (2): grado de entrada, de salida y total.
+UMBRAL_ENTRADA_CUELLO = 2
+UMBRAL_SALIDA_CUELLO = 2
+UMBRAL_TOTAL_CUELLO = 4
+
 
 @dataclass(frozen=True)
 class IndicadoresTopologicos:
-    """Bloqueo, posponimiento e intermediación de cada asignatura.
+    """Bloqueo, posponimiento, intermediación y cuellos de botella.
 
-    Sección II.B y ecuación (1) de Molontay et al. (2020).
+    Sección II.B, ecuación (1) y ecuación (2) de Molontay et al. (2020).
     ``repeticiones_sin_retraso`` es la k de la definición del factor de
     posponimiento: se puede reprobar la asignatura k veces sin alargar
     el grado, y el factor es 1/(k + 1).
+    ``cuellos_de_botella`` son los nodos que superan los umbrales de
+    grado de la ecuación (2).
     """
 
     factor_bloqueo: dict[int, int]
@@ -22,6 +29,7 @@ class IndicadoresTopologicos:
     intermediacion: dict[int, float]
     repeticiones_sin_retraso: dict[int, int]
     duracion_nominal: int
+    cuellos_de_botella: tuple[int, ...]
 
 
 def factor_bloqueo(red: RedPrerrequisitos) -> dict[int, int]:
@@ -81,13 +89,43 @@ def intermediacion(red: RedPrerrequisitos, normalizada: bool = False) -> dict[in
     return {int(nodo): float(valor) for nodo, valor in cruda.items()}
 
 
+def cuellos_de_botella(
+    red: RedPrerrequisitos,
+    umbral_entrada: int = UMBRAL_ENTRADA_CUELLO,
+    umbral_salida: int = UMBRAL_SALIDA_CUELLO,
+    umbral_total: int = UMBRAL_TOTAL_CUELLO,
+) -> tuple[int, ...]:
+    """Identifica cuellos de botella por grado (ecuación (2)).
+
+    Sección II.B de Molontay et al. (2020). Una asignatura es cuello de
+    botella si su grado de entrada supera ``umbral_entrada``, su grado
+    de salida supera ``umbral_salida`` o la suma de ambos supera
+    ``umbral_total``. Los umbrales por defecto (2, 2, 4) siguen el
+    ejemplo del artículo; se pueden ajustar al comparar planes.
+    """
+    seleccionados: list[int] = []
+    for nodo in red.grafo:
+        entrada = int(red.grafo.in_degree(nodo))
+        salida = int(red.grafo.out_degree(nodo))
+        if (
+            entrada > umbral_entrada
+            or salida > umbral_salida
+            or entrada + salida > umbral_total
+        ):
+            seleccionados.append(int(nodo))
+    return tuple(sorted(seleccionados))
+
+
 def calcular_indicadores(
     red: RedPrerrequisitos,
     duracion: int | None = None,
+    umbral_entrada: int = UMBRAL_ENTRADA_CUELLO,
+    umbral_salida: int = UMBRAL_SALIDA_CUELLO,
+    umbral_total: int = UMBRAL_TOTAL_CUELLO,
 ) -> IndicadoresTopologicos:
-    """Reúne bloqueo, posponimiento e intermediación.
+    """Reúne bloqueo, posponimiento, intermediación y cuellos de botella.
 
-    Sección II.B y ecuación (1) de Molontay et al. (2020).
+    Sección II.B, ecuación (1) y ecuación (2) de Molontay et al. (2020).
     """
     duracion_nominal, holgura = _holgura(red, duracion)
     return IndicadoresTopologicos(
@@ -96,6 +134,12 @@ def calcular_indicadores(
         intermediacion=intermediacion(red),
         repeticiones_sin_retraso=holgura,
         duracion_nominal=duracion_nominal,
+        cuellos_de_botella=cuellos_de_botella(
+            red,
+            umbral_entrada=umbral_entrada,
+            umbral_salida=umbral_salida,
+            umbral_total=umbral_total,
+        ),
     )
 
 
