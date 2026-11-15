@@ -28,6 +28,13 @@ ARISTAS_CONFIRMADAS = (
     (25146, 25151),  # Ciencias de los materiales → Nanotecnología
     (25142, 25148),  # Modelos y gestión I → Modelos y gestión II
     (25148, 25153),  # Modelos y gestión II → Gestión tecnológica
+    (4, 12),  # Cátedra F. J. de Caldas → Cátedra democracia y ciudadanía
+    # Epistemología 25120 → 25127 ya viene en el CSV.
+    # La tercera cátedra institucional suele ser "de contexto" (25246 en
+    # tasas, fuera del pensum vigente). En Física el cupo del semestre 3
+    # es Historia y filosofía de la ciencia I (25115); no se modela aún
+    # 12 → 25115 hasta confirmar si esa equivalencia administrativa vale
+    # como prerrequisito estricto.
 )
 
 

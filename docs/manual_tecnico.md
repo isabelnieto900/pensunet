@@ -171,7 +171,9 @@ en `red.reglas_aplicadas`. Resumen:
 - se excluyen las filas genéricas de línea de aplicación y 25176;
 - se excluyen electivas sin tasa (no ofrecidas);
 - se añaden las aristas 25140 → 25145, 25149 → 25154,
-  25141 → 25146 → 25151 y 25142 → 25148 → 25153;
+  25141 → 25146 → 25151, 25142 → 25148 → 25153 y 4 → 12;
+- epistemología 25120 → 25127 ya viene en el CSV;
+- no se modela aún 12 → 25115 (Historia vs cátedra de contexto);
 - el requisito de 18 créditos de línea queda para la etapa 3.
 
 Con `aplicar_reglas=False` se obtiene el extracto crudo (útil para

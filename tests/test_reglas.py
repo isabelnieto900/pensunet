@@ -29,6 +29,9 @@ def test_el_grafo_de_analisis_aplica_las_reglas_confirmadas(simulador):
     assert red.grafo.has_edge(25146, 25151)
     assert red.grafo.has_edge(25142, 25148)
     assert red.grafo.has_edge(25148, 25153)
+    assert red.grafo.has_edge(4, 12)
+    assert not red.grafo.has_edge(12, 25115)  # Historia vs contexto: pendiente
+    assert red.grafo.has_edge(25120, 25127)  # ya en el CSV
     assert 25163 not in red.grafo  # electiva sin tasa
     assert (25145, 25176) not in red.prerrequisitos_debiles_excluidos
 

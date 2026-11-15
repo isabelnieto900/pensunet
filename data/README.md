@@ -105,6 +105,16 @@ aplica estas reglas al armar el grafo de análisis (ver
   añade esas aristas.
 - Modelos y gestión I (25142) habilita Modelos y gestión II (25148),
   que habilita Gestión tecnológica y compromiso social (25153).
+- Cátedra Francisco José de Caldas (4) habilita Cátedra democracia y
+  ciudadanía (12). En el plan institucional la cadena sigue hacia
+  Cátedra de contexto; ese código (25246) aparece en tasas pero **no**
+  en el pensum vigente de Física. En su lugar el semestre 3 trae
+  Historia y filosofía de la ciencia I (25115). No se añadió
+  12 → 25115: hay que confirmar si Historia exige las dos cátedras
+  previas o solo ocupa el cupo. Seminario de investigación y
+  Relatividad no tienen prerrequisito.
+- Epistemología de la física (25120) → Epistemología II (25127) **sí**
+  está en el CSV de prerrequisitos; el grafo crudo ya la incluye.
 
 ### Segundas lenguas
 
