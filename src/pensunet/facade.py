@@ -6,7 +6,8 @@ from pensunet.datos.lector import LectorDatos
 from pensunet.dominio.escenario import Escenario
 from pensunet.dominio.indicadores import IndicadoresTopologicos, calcular_indicadores
 from pensunet.dominio.red import RedPrerrequisitos, construir_red
-from pensunet.dominio.reglas_pensum import preparar_tablas_analisis
+from pensunet.dominio.reglas import ReglasCarrera
+from pensunet.dominio.reglas_fisica import ReglasFisica
 from pensunet.simulacion.estrategia import EstrategiaSimulacion, ResultadoSimulacion
 from pensunet.simulacion.montecarlo_molontay import MonteCarloMolontay
 
@@ -25,9 +26,12 @@ class SimuladorPensum:
         self,
         lector: LectorDatos,
         estrategia: EstrategiaSimulacion | None = None,
+        reglas: ReglasCarrera | None = None,
     ) -> None:
         self._lector = lector
         self._estrategia = estrategia if estrategia is not None else MonteCarloMolontay()
+        # Por defecto Física: es el único programa con revisión experta hoy.
+        self._reglas = reglas if reglas is not None else ReglasFisica()
         self.pensum: pd.DataFrame | None = None
         self.prerequisitos: pd.DataFrame | None = None
         self.tasas: pd.DataFrame | None = None
@@ -37,16 +41,15 @@ class SimuladorPensum:
         """Lee las tres tablas y construye el DAG.
 
         Sección II.A y ecuación (7) de Molontay et al. (2020). Con
-        ``aplicar_reglas`` en verdadero (por defecto) se filtra el pensum
-        según las reglas confirmadas del programa (un idioma, sin cupos
-        genéricos, sin electivas no ofrecidas, aristas de cuántica y de
-        trabajo de grado). Con falso se conserva el extracto crudo.
+        ``aplicar_reglas`` en verdadero se usa la ``ReglasCarrera``
+        inyectada (por defecto ``ReglasFisica``). Con falso se conserva
+        el extracto crudo, sin correcciones locales.
         """
         self.pensum = self._lector.leer_pensum()
         self.prerequisitos = self._lector.leer_prerequisitos()
         self.tasas = self._lector.leer_tasas_aprobacion()
         if aplicar_reglas:
-            tablas = preparar_tablas_analisis(
+            tablas = self._reglas.preparar(
                 self.pensum,
                 self.prerequisitos,
                 self.tasas,

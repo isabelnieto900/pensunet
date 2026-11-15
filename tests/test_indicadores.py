@@ -46,11 +46,11 @@ def test_bloqueo_y_posponimiento_en_cadenas_conocidas_de_fisica(simulador):
     assert bloqueo[9901] == 2
     assert bloqueo[9902] == 1
     assert bloqueo[9903] == 0
-    assert bloqueo[4] == 0
+    assert bloqueo[4] == 1  # Caldas → Democracia
     assert bloqueo[25154] == 0
     assert bloqueo[25149] >= 1
     assert bloqueo[25102] > bloqueo[25106] > 0
-    assert posponimiento[4] == pytest.approx(0.1)
+    assert posponimiento[4] == pytest.approx(1 / 9)
     assert posponimiento[25154] == pytest.approx(1.0)
     assert indicadores.repeticiones_sin_retraso[25154] == 0
     assert all(0 < valor <= 1 for valor in posponimiento.values())

@@ -71,12 +71,13 @@ como un nodo distinto y no colapsa los slots.
 
 ## Reglas confirmadas del programa
 
-Revisión de Isabel Nieto, 13 de noviembre de 2026. Describe cómo
-funciona el plan, no lo que dicen los CSV. Los archivos de esta carpeta
-**no se reescribieron**. Desde la etapa 2, `preparar_tablas_analisis`
-aplica estas reglas al armar el grafo de análisis (ver
-`src/pensunet/dominio/reglas_pensum.py` y la bitácora
-`red.reglas_aplicadas`).
+Revisión de Isabel Nieto (programa de Física), noviembre de 2026.
+Describe cómo funciona **este** plan, no reglas universales de la UD.
+Otras carreras deben confiar primero en su extracto de prerrequisitos;
+las correcciones locales solo las valida quien conoce ese programa
+(`ReglasCarrera` / `ReglasFisica` en `src/pensunet/dominio/`). Los
+archivos de esta carpeta **no se reescribieron**. La bitácora queda en
+`red.reglas_aplicadas`.
 
 ### Obligatorias
 

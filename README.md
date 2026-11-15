@@ -83,7 +83,7 @@ ruff check src tests examples
 src/pensunet/
   facade.py                 Fachada SimuladorPensum
   datos/                    Lector CSV, fábrica y adaptador UD
-  dominio/                  DAG, reglas del pensum, indicadores, figura
+  dominio/                  DAG, reglas por carrera, indicadores, figura
   simulacion/               Estrategia y esqueleto Monte Carlo
   ui/                       Placeholder de la interfaz
 data/reference/             Pensum y prerrequisitos

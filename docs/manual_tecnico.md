@@ -40,7 +40,7 @@ SimuladorPensum                 fachada
     │
     ├── LectorDatos             solo CSV en esta versión
     │     └── AdaptadorUD       columnas de la Universidad Distrital
-    ├── reglas_pensum           filtros y aristas confirmadas
+    ├── ReglasCarrera            Física hoy; extracto u otras carreras después
     ├── RedPrerrequisitos       DAG con networkx
     ├── indicadores             bloqueo, posponimiento, intermediación, ec. (2)
     ├── visualizacion           figura del DAG
@@ -76,10 +76,21 @@ algoritmo intercambiable. Hoy la única estrategia es
 Cuando haya probabilidades por estudiante u otra dinámica, se escribe
 otra estrategia sin rehacer la fachada ni el grafo.
 
+**Estrategia de reglas (`ReglasCarrera`).** El núcleo confía en el
+extracto de prerrequisitos (válido para cualquier carrera de la UD).
+Las correcciones locales —aristas que el SIU no cargó, materias no
+ofrecidas, slots genéricos— viven en una implementación por programa
+(`ReglasFisica` hoy). `ReglasSoloExtracto` no corrige nada: sirve para
+auditar el CSV o para programas sin revisión experta aún. La primera
+expansión prevista es la Facultad de Ciencias (matemáticas, biología,
+física, química); matemáticas exigirá además varios planes e
+homologaciones. `FabricaReglas` elige la estrategia por código de
+programa.
+
 Hacen falta porque el artículo describe un método y no entrega un
-programa, y porque las fases siguientes (tasas por estudiante, otra
-dinámica de propagación, interfaz) tienen que poder entrar sin mezclarse
-con el DAG.
+programa, porque el SIU no es completo igual en todas las carreras, y
+porque las fases siguientes tienen que poder entrar sin mezclarse con
+el DAG.
 
 ## Metodología
 
@@ -162,10 +173,11 @@ las tasas, y esa parte es la simulación que falta.
 
 ### Reglas del programa en el grafo de análisis
 
-`SimuladorPensum.cargar(aplicar_reglas=True)` (valor por defecto) llama
-a `preparar_tablas_analisis` antes de `construir_red`. Los CSV de
+`SimuladorPensum` admite una `ReglasCarrera` (por defecto
+`ReglasFisica`). Con `cargar(aplicar_reglas=True)` esa estrategia
+prepara las tablas antes de `construir_red`. Los CSV de
 `data/reference` y `data/processed` no se modifican. La bitácora queda
-en `red.reglas_aplicadas`. Resumen:
+en `red.reglas_aplicadas`. Resumen para Física:
 
 - segunda lengua: solo inglés (9901 → 9902 → 9903);
 - se excluyen las filas genéricas de línea de aplicación y 25176;
