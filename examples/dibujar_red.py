@@ -1,10 +1,10 @@
-"""Genera la figura del DAG de análisis del pensum de Física."""
+"""Genera la figura PNG y la vista HTML interactiva de la red."""
 
 from pathlib import Path
 
 from pensunet import SimuladorPensum
 from pensunet.datos.fabrica import FabricaLectores
-from pensunet.dominio.visualizacion import dibujar_red
+from pensunet.dominio.visualizacion import dibujar_red, exportar_red_html
 
 
 def main() -> None:
@@ -17,18 +17,17 @@ def main() -> None:
     )
     simulador = SimuladorPensum(lector)
     red = simulador.cargar(aplicar_reglas=True)
-    destino = raiz / "docs" / "figuras" / "red_prerrequisitos.png"
-    dibujar_red(
-        red,
-        ruta=destino,
-        titulo=(
-            "Plan de estudios de Física · red de prerrequisitos "
-            f"({red.grafo.number_of_nodes()} asignaturas, "
-            f"{red.grafo.number_of_edges()} aristas)"
-        ),
-        mostrar_aristas=True,
+    titulo = (
+        "Plan de estudios de Física · red de prerrequisitos "
+        f"({red.grafo.number_of_nodes()} asignaturas, "
+        f"{red.grafo.number_of_edges()} aristas)"
     )
-    print(f"Figura guardada en {destino}")
+    png = raiz / "docs" / "figuras" / "red_prerrequisitos.png"
+    html_ruta = raiz / "docs" / "figuras" / "red_prerrequisitos.html"
+    dibujar_red(red, ruta=png, titulo=titulo, mostrar_aristas=True)
+    exportar_red_html(red, ruta=html_ruta, titulo=titulo)
+    print(f"Figura PNG: {png}")
+    print(f"Vista HTML: {html_ruta}")
     print(f"Reglas aplicadas: {len(red.reglas_aplicadas)} notas")
 
 

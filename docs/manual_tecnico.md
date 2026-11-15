@@ -174,10 +174,12 @@ en `red.reglas_aplicadas`. Resumen:
 - el requisito de 18 créditos de línea queda para la etapa 3.
 
 Con `aplicar_reglas=False` se obtiene el extracto crudo (útil para
-auditar el CSV). La figura de ejemplo se genera con
-`examples/dibujar_red.py` y se guarda en `docs/figuras/`: imita la
-grilla del plan oficial (columnas por semestre, cajas por área) y
-superpone las aristas estrictas del DAG.
+auditar el CSV). `examples/dibujar_red.py` genera en `docs/figuras/`:
+
+- `red_prerrequisitos.png`: grilla al estilo del plan oficial, con
+  aristas oscuras y halo claro;
+- `red_prerrequisitos.html`: misma disposición, interactiva (clic en
+  una asignatura resalta prerrequisitos y continuaciones).
 
 ### Tiempo de grado (secciones II.C y III)
 
