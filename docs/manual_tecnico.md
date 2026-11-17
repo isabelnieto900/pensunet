@@ -220,9 +220,10 @@ analítica se vuelve intratable. Por eso el artículo simula.
 ### Monte Carlo (sección III.B)
 
 `MonteCarloMolontay.simular` estima p(x) y E(X) con estudiantes
-representativos. Exige una tasa para cada nodo del grafo. Electivas y
-Trabajo de grado sin histórico quedan vacíos en el CSV; la interfaz
-permite completarlos antes de simular y no asigna 0 ni 1 por defecto.
+representativos. Exige p_i para cada obligatoria. Trabajo de Grado
+usa p = 1 por juicio experto, leído de `trabajo_de_grado.csv`
+(`datos/juicio_experto.py`); no es un valor por defecto escondido en el
+código. Las opciones de cupo y electivas sin histórico no se eligen.
 
 Además de la muestra de X, `ResultadoSimulacion` guarda:
 
@@ -295,8 +296,10 @@ Resumen de ajustes (nunca silenciosos; ver
 - Biología y Matemáticas: candidatos faltantes de la auditoría quedan
   pendientes; no se agregan.
 
-Trabajo de Grado: tasa vacía / juicio experto en las cuatro carreras;
-no se usa 0 ni 1 por defecto.
+Trabajo de Grado: p = 1 por juicio experto en las cuatro carreras
+(`trabajo_de_grado.csv`, columna `origen = juicio_experto` con
+justificación). El CSV de tasas del histórico no se modifica; la
+estrategia `ReglasDocumentadas` combina ambas fuentes al cargar con ajustes.
 
 ## Pruebas
 

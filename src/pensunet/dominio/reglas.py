@@ -90,7 +90,9 @@ class ReglasDocumentadas(ReglasCarrera):
     """Aplica las filas de ``ajustes_prerrequisitos.csv`` del programa.
 
     Cada fila trae acción (agregar, excluir nodo o arista, documentar) y
-    justificación; los CSV del SGA no se reescriben.
+    justificación; los CSV del SGA no se reescriben. Además añade las
+    tasas fijadas por juicio experto en ``trabajo_de_grado.csv``
+    (Trabajo de Grado, p = 1).
     """
 
     def __init__(self, codigo_programa: str) -> None:
@@ -107,15 +109,25 @@ class ReglasDocumentadas(ReglasCarrera):
         tasas: pd.DataFrame,
     ) -> TablasAnalisis:
         from pensunet.datos.ajustes import aplicar_ajustes
+        from pensunet.datos.juicio_experto import combinar_tasas, tasas_juicio_experto
 
         resultado = aplicar_ajustes(pensum, prerrequisitos, self._codigo)
+        notas = list(resultado.notas)
+        expertas = tasas_juicio_experto(self._codigo)
+        tasas_analisis = combinar_tasas(tasas, expertas)
+        for fila in expertas.to_dict(orient="records"):
+            notas.append(
+                f"Tasa por juicio experto: {fila['id_asignatura']} "
+                f"({fila['nombre']}) p = {fila['tasa_aprobacion']:g} "
+                "(trabajo_de_grado.csv)."
+            )
         ids_antes = {int(valor) for valor in pensum["id_asignatura"]}
         ids_despues = {int(valor) for valor in resultado.pensum["id_asignatura"]}
         return TablasAnalisis(
             pensum=resultado.pensum.reset_index(drop=True),
             prerrequisitos=resultado.prerrequisitos.reset_index(drop=True),
-            tasas=tasas.copy().reset_index(drop=True),
-            notas=tuple(resultado.notas),
+            tasas=tasas_analisis.reset_index(drop=True),
+            notas=tuple(notas),
             excluidos=frozenset(ids_antes - ids_despues),
         )
 

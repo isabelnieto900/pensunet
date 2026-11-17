@@ -465,9 +465,9 @@ def _pagina_simulacion(clave: str, simulador: SimuladorPensum, oscuro: bool) -> 
     st.markdown(
         "Monte Carlo de la sección III.B: estima p(x) y E(X). "
         "Edita tasas o parámetros y pulsa **Simular**. Los CSV no se modifican. "
-        "Trabajo de grado y electivas sin histórico dejan la tasa vacía "
-        "(juicio experto): hay que completarlas aquí antes de simular; "
-        "no se usa 0 ni 1 por defecto."
+        "Trabajo de Grado usa p = 1 por juicio experto (documentado en "
+        "`trabajo_de_grado.csv`). Las opciones y electivas sin histórico no se "
+        "eligen; las obligatorias sin tasa hay que completarlas aquí."
     )
     _asegurar_tasas_sesion(clave, simulador)
     if "resultado" not in st.session_state:
@@ -582,28 +582,10 @@ def _pagina_simulacion(clave: str, simulador: SimuladorPensum, oscuro: bool) -> 
             width="stretch",
         )
 
-    b_reset, b_tg = st.columns(2)
-    with b_reset:
-        if st.button("Restablecer tasas al histórico", key="reset_tasas", width="stretch"):
-            st.session_state.tasas_editor = st.session_state.tasas_base.copy()
-            st.session_state.pop("editor_tasas", None)
-            st.rerun()
-    with b_tg:
-        ids_tg = set(simulador.programa.ids_trabajo_grado) if simulador.programa else set()
-        if ids_tg and st.button(
-            "Usar p = 1 en Trabajo de Grado (juicio experto)",
-            key="tg_uno",
-            width="stretch",
-            help=(
-                "Opcional y explícito: solo cambia el editor de esta sesión. "
-                "El CSV deja la tasa de TG vacía."
-            ),
-        ):
-            tabla = st.session_state.tasas_editor.copy()
-            tabla.loc[tabla["id"].astype(int).isin(ids_tg), "tasa_aprobacion"] = 1.0
-            st.session_state.tasas_editor = tabla
-            st.session_state.pop("editor_tasas", None)
-            st.rerun()
+    if st.button("Restablecer tasas al histórico", key="reset_tasas"):
+        st.session_state.tasas_editor = st.session_state.tasas_base.copy()
+        st.session_state.pop("editor_tasas", None)
+        st.rerun()
 
     st.session_state.tasas_editor = editadas
 
@@ -810,7 +792,7 @@ def main() -> None:
         )
         st.caption(
             "Ajustes documentados aplicados (ver "
-            "`ajustes_prerrequisitos.csv`). TG sin tasa por defecto."
+            "`ajustes_prerrequisitos.csv`). TG con p = 1 por juicio experto."
         )
         st.caption(f"Pensunet {__version__} · Molontay et al. (2020)")
 

@@ -39,9 +39,10 @@ class MonteCarloMolontay(EstrategiaSimulacion):
     5. X es el semestre en que se cumplen obligatorias, cupos y el mínimo
        de créditos electivos. El artículo usa 10 000 réplicas.
 
-    No se copia la convención BME de fijar p_i = 1 en electivas.
-    Trabajo de grado y materias sin histórico deben traer p_i en
-    ``tasas`` (p. ej. editadas en la interfaz); no se inventa 0 ni 1.
+    No se copia la convención BME de fijar p_i = 1 en electivas. Las
+    obligatorias deben traer p_i en ``tasas``; Trabajo de Grado la trae
+    por juicio experto desde ``trabajo_de_grado.csv`` (``ReglasDocumentadas``). Aquí no
+    se inventa 0 ni 1.
     """
 
     def simular(

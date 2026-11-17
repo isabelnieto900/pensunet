@@ -58,27 +58,27 @@ def test_suma_de_creditos_del_plan(clave: str, creditos: int):
 
 
 @pytest.mark.parametrize("clave", sorted(PROGRAMAS))
-def test_trabajo_de_grado_sin_tasa_ni_cero_ni_uno(clave: str):
-    """TG queda fuera de tasas; no se inventa p_i = 0 ni 1."""
+def test_trabajo_de_grado_usa_p_1_por_juicio_experto(clave: str):
+    """TG: p = 1 documentado en trabajo_de_grado.csv; el CSV de tasas no se toca."""
     programa = obtener_programa(clave)
     simulador = SimuladorPensum.desde_programa(clave)
     simulador.cargar(aplicar_ajustes_documentados=True)
-    assert simulador.tasas is not None
     for codigo in programa.ids_trabajo_grado:
-        assert simulador.tasa_de(codigo) is None
-        assert codigo not in set(simulador.tasas["id_asignatura"])
+        assert simulador.tasa_de(codigo) == 1.0
         assert codigo in set(simulador.pensum["id_asignatura"])
+    assert any("juicio experto" in nota for nota in simulador.ajustes_aplicados)
+
+    crudo = SimuladorPensum.desde_programa(clave)
+    crudo.cargar(aplicar_ajustes_documentados=False)
+    for codigo in programa.ids_trabajo_grado:
+        assert crudo.tasa_de(codigo) is None
 
     catalogo = pd.read_csv(RUTA_TRABAJO_GRADO, encoding="utf-8")
     filas = catalogo.loc[catalogo["programa"] == clave]
     assert set(filas["id_asignatura"]) == set(programa.ids_trabajo_grado)
     assert (filas["origen"] == "juicio_experto").all()
-    def _vacio(valor: object) -> str:
-        if valor is None or (isinstance(valor, float) and pd.isna(valor)):
-            return ""
-        return str(valor).strip()
-
-    assert filas["tasa_aprobacion"].map(_vacio).eq("").all()
+    assert (filas["tasa_aprobacion"] == 1.0).all()
+    assert filas["justificacion"].str.len().gt(20).all()
 
 
 def test_obtener_programa_desconocido_falla():

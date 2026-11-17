@@ -20,7 +20,7 @@ corrige ninguna celda del SGA en silencio.** Las correcciones viven en
 | `processed/tasas_aprobacion_<programa>.csv` | Tasas agregadas 2023-2 a 2025-2 (esquema Pensunet). |
 | `reference/ajustes_prerrequisitos.csv` | Correcciones/documentación con justificación; aplicadas por código. |
 | `reference/cupos_sin_asignatura.csv` | Cupos del plan sin código (p. ej. Electiva VI/VII de Química) para la suma de créditos. |
-| `reference/trabajo_de_grado.csv` | Códigos de TG por carrera; tasa vacía marcada como juicio experto. |
+| `reference/trabajo_de_grado.csv` | Códigos de TG por carrera; p = 1 por juicio experto, con justificación. |
 
 Programas: `fisica` (plan 327), `quimica` (328), `biologia` (329),
 `matematicas` (298).
@@ -129,8 +129,11 @@ Matemáticas 19924/19925.
 
 La nota de TG **no** está en `fact_rendimiento_academico` (todas 0,
 ningún aprobado en la ventana). Las tasas de TG **no** entran al CSV
-procesado: quedan vacías y marcadas como juicio experto en
-`trabajo_de_grado.csv`. **Nunca** se usa 0 ni 1 por defecto.
+procesado del histórico. Por juicio experto (la nota la ponen director y
+evaluador; en la práctica nadie pierde TG) se fija **p = 1** en las
+cuatro carreras, en `trabajo_de_grado.csv` (`origen = juicio_experto`).
+`ReglasDocumentadas` la combina con las tasas al cargar con ajustes; sin ajustes
+(`aplicar_ajustes_documentados=False`) TG queda sin tasa.
 
 ## Cómo cargar
 

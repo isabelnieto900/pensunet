@@ -33,11 +33,12 @@ Matemáticas). Hay tres secciones:
    gris = sin histórico) o por complejidad estructural h(v) = retraso +
    bloqueo. La tabla trae las columnas `retraso` y `complejidad`.
 3. **Tiempo de grado** — Monte Carlo; edita tasas antes de simular.
-   Trabajo de grado y materias sin histórico aparecen sin tasa: hay que
-   completarlas en el editor (no se usa 0 ni 1 por defecto). El botón
-   *Usar p = 1 en Trabajo de Grado (juicio experto)* las llena solo en
-   la sesión, si decides aplicar ese criterio. En *Supuestos del
-   escenario* está el tope de créditos por semestre (0 = sin tope).
+   Trabajo de Grado llega con p = 1 por juicio experto (ver
+   `data/reference/trabajo_de_grado.csv`). Las opciones de un cupo
+   (idiomas, énfasis, profundizaciones) son excluyentes: basta aprobar
+   una. En *Supuestos del escenario* están el cupo de créditos
+   electivos (por defecto el del plan; Física 18), el tope de créditos
+   por semestre (0 = sin tope) y el interruptor de cupos de opciones.
    Tras simular aparecen E(X), la proporción graduada en la duración
    nominal y con dos semestres de rezago, el histograma y la tabla de
    *asignaturas que más frenan* (reprobaciones medias por estudiante).

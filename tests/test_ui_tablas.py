@@ -84,12 +84,12 @@ def test_tabla_indicadores_agrega_complejidad(simulador):
     assert int(tabla["complejidad"].sum()) == complejidad.complejidad_total
 
 
-def test_tasa_media_ignora_asignaturas_sin_historico(simulador):
+def test_tasa_media_ignora_asignaturas_sin_historico(simulador_crudo):
     from pensunet.ui.tablas import tasa_media, tasas_por_asignatura
 
-    por_id = tasas_por_asignatura(simulador.red, simulador.tasas)
+    por_id = tasas_por_asignatura(simulador_crudo.red, simulador_crudo.tasas)
     conocidas = [v for v in por_id.values() if v is not None]
     assert any(v is None for v in por_id.values())
-    assert tasa_media(simulador.red, simulador.tasas) == pytest.approx(
+    assert tasa_media(simulador_crudo.red, simulador_crudo.tasas) == pytest.approx(
         sum(conocidas) / len(conocidas)
     )

@@ -1,9 +1,9 @@
 """Tasas agregadas de la ecuación (7) y huecos respecto del pensum."""
 
 
-def test_la_tasa_es_el_cociente_de_aprobados_sobre_inscritos(simulador):
+def test_la_tasa_es_el_cociente_de_aprobados_sobre_inscritos(simulador_crudo):
     """Ecuación (7). No se reemplaza la tasa publicada por otro redondeo."""
-    tasas = simulador.tasas
+    tasas = simulador_crudo.tasas
     assert len(tasas) == 115
     assert set(tasas.columns) >= {
         "id_asignatura",
@@ -24,20 +24,24 @@ def test_la_tasa_es_el_cociente_de_aprobados_sobre_inscritos(simulador):
     assert matematica["n_aprobados"] == 152
     assert matematica["tasa_aprobacion"] == 0.3744
     assert bool(matematica["n_bajo"]) is False
-    assert simulador.tasa_de(25103) == 0.3744
+    assert simulador_crudo.tasa_de(25103) == 0.3744
 
 
-def test_los_cruces_fallidos_se_conservan(simulador):
-    """Ecuación (7): sin fila no hay probabilidad, y lo ajeno al pensum no entra al grafo."""
-    assert simulador.tasa_de(25149) is None
-    assert simulador.tasa_de(25154) is None
+def test_los_cruces_fallidos_se_conservan(simulador_crudo, simulador):
+    """Ecuación (7): sin fila no hay probabilidad, y lo ajeno al pensum no entra al grafo.
+
+    En el histórico TG no tiene fila; con ajustes llega p = 1 por juicio experto.
+    """
+    assert simulador_crudo.tasa_de(25149) is None
+    assert simulador_crudo.tasa_de(25154) is None
+    assert simulador.tasa_de(25149) == 1.0
     assert simulador.tasa_de(25175) == 1.0
     fila_baja = simulador.tasas.loc[simulador.tasas["id_asignatura"] == 25175].iloc[0]
     assert fila_baja["n_inscritos"] == 4
     assert bool(fila_baja["n_bajo"]) is True
 
-    ids_pensum = set(simulador.pensum["id_asignatura"])
-    ids_tasas = set(simulador.tasas["id_asignatura"])
+    ids_pensum = set(simulador_crudo.pensum["id_asignatura"])
+    ids_tasas = set(simulador_crudo.tasas["id_asignatura"])
     assert 25149 in ids_pensum - ids_tasas
     assert 1 in ids_tasas - ids_pensum
     assert 1 not in simulador.red.grafo
