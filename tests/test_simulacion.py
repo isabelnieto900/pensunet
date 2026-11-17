@@ -6,6 +6,7 @@ import pandas as pd
 import pytest
 
 from pensunet.dominio.escenario import Escenario
+from pensunet.facade import SimuladorPensum
 from pensunet.ui.placeholder import ejecutar
 
 
@@ -227,3 +228,56 @@ def test_cada_carrera_simula_sin_exigir_todas_las_opciones(simulador_programa):
     # Ninguna opción de cupo se cursa más veces que estudiantes × semestres posibles,
     # y el número de cupos es coherente con el grafo.
     assert all(len(opciones) >= 2 for opciones in cupos_de_opciones(red).values())
+
+
+@pytest.mark.parametrize(
+    ("clave", "esperado"),
+    [("fisica", 18), ("quimica", 10), ("biologia", 18), ("matematicas", 12)],
+)
+def test_el_cupo_electivo_por_defecto_es_el_del_plan(clave: str, esperado: int):
+    """La API usa el cupo de cada plan; un entero o None lo sustituyen."""
+    from pensunet.dominio.escenario import CUPO_DEL_PLAN
+    from pensunet.simulacion.montecarlo_molontay import (
+        creditos_electivos_del_plan,
+        resolver_cupo_electivo,
+    )
+
+    simulador = SimuladorPensum.desde_programa(clave)
+    simulador.cargar(aplicar_ajustes_documentados=True)
+    assert creditos_electivos_del_plan(simulador.red) == esperado
+    assert Escenario().creditos_electivas_minimos is CUPO_DEL_PLAN
+    assert resolver_cupo_electivo(simulador.red, Escenario()) == esperado
+    assert resolver_cupo_electivo(
+        simulador.red, Escenario(creditos_electivas_minimos=7)
+    ) == 7
+    assert (
+        resolver_cupo_electivo(
+            simulador.red, Escenario(creditos_electivas_minimos=None)
+        )
+        is None
+    )
+
+
+def test_el_cupo_electivo_explicito_se_respeta_en_quimica():
+    """Química solo suma 15 créditos electivos con tasa; exigir 18 sigue fallando."""
+    simulador = SimuladorPensum.desde_programa("quimica")
+    simulador.cargar(aplicar_ajustes_documentados=True)
+    with pytest.raises(ValueError, match="el cupo exige 18"):
+        simulador.simular(
+            Escenario(n_estudiantes=5, semilla=1, creditos_electivas_minimos=18)
+        )
+    resultado = simulador.simular(Escenario(n_estudiantes=40, semilla=1))
+    assert resultado.n_censurados < 40
+    assert resultado.media < resultado.tope_semestres
+
+
+@pytest.mark.parametrize("clave", ["fisica", "quimica", "biologia", "matematicas"])
+def test_cada_carrera_gradua_con_el_escenario_por_defecto(clave: str):
+    """Con las tasas documentadas, las cuatro carreras producen graduados."""
+    simulador = SimuladorPensum.desde_programa(clave)
+    simulador.cargar(aplicar_ajustes_documentados=True)
+    resultado = simulador.simular(Escenario(n_estudiantes=40, semilla=1))
+    assert len(resultado.tiempos) == 40
+    assert resultado.n_censurados < 40, clave
+    assert resultado.tasa_grado_en(resultado.tope_semestres) > 0, clave
+    assert resultado.media < resultado.tope_semestres, clave

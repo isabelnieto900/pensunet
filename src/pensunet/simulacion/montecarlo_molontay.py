@@ -9,7 +9,7 @@ from dataclasses import dataclass
 import numpy as np
 import pandas as pd
 
-from pensunet.dominio.escenario import Escenario
+from pensunet.dominio.escenario import CUPO_DEL_PLAN, Escenario
 from pensunet.dominio.red import RedPrerrequisitos
 from pensunet.simulacion.estrategia import EstrategiaSimulacion, ResultadoSimulacion
 
@@ -128,7 +128,7 @@ def _exigir_tasas_completas(
         exigidas = set(plan.obligatorias)
         cupos = plan.cupos
         electivas = plan.electivas
-        cupo = escenario.creditos_electivas_minimos
+        cupo = resolver_cupo_electivo(red, escenario)
     faltantes = sorted(codigo for codigo in exigidas if codigo not in tasas_por_id)
     if faltantes:
         muestra = ", ".join(str(codigo) for codigo in faltantes[:8])
@@ -208,6 +208,20 @@ def creditos_electivos_del_plan(red: RedPrerrequisitos) -> int:
     return int(sum(por_slot.values()) + sueltas)
 
 
+def resolver_cupo_electivo(red: RedPrerrequisitos, escenario: Escenario) -> int | None:
+    """Cupo electivo efectivo: el del plan, un entero explícito, o ``None``.
+
+    ``CUPO_DEL_PLAN`` (el valor por defecto de
+    ``Escenario.creditos_electivas_minimos``) se resuelve con
+    ``creditos_electivos_del_plan``. Un entero se respeta tal cual; ``None``
+    exige todas las electivas del grafo.
+    """
+    valor = escenario.creditos_electivas_minimos
+    if valor is CUPO_DEL_PLAN:
+        return creditos_electivos_del_plan(red)
+    return valor
+
+
 def _estructura_del_plan(red: RedPrerrequisitos, escenario: Escenario) -> _Plan:
     grafo = red.grafo
     electivas = {
@@ -255,7 +269,7 @@ def _simular_estudiante(
     obligatorias = set(plan.obligatorias)
     # Solo se eligen electivas con p_i conocida.
     electivas = {codigo for codigo in plan.electivas if codigo in tasas_por_id}
-    cupo = escenario.creditos_electivas_minimos
+    cupo = resolver_cupo_electivo(red, escenario)
     pendientes = dict(plan.cupos)
     elegidas: list[int] = []
 

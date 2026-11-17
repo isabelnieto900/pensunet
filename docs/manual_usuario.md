@@ -38,7 +38,7 @@ Matemáticas). Hay tres secciones:
    `juicio_experto.csv`). Las opciones de un cupo
    (idiomas, énfasis, profundizaciones) son excluyentes: basta aprobar
    una. En *Supuestos del escenario* están el cupo de créditos
-   electivos (por defecto el del plan; Física 18), el tope de créditos
+   electivos (por defecto el del plan: Física 18, Química 10, Biología 18, Matemáticas 12), el tope de créditos
    por semestre (0 = sin tope) y el interruptor de cupos de opciones.
    Tras simular aparecen E(X), la proporción graduada en la duración
    nominal y con dos semestres de rezago, el histograma y la tabla de

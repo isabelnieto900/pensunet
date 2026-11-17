@@ -241,8 +241,12 @@ opciones excluyentes (`Escenario.opciones_excluyentes`, por defecto
 verdadero): el estudiante elige al azar una opción elegible con p_i
 conocida y la cursa hasta aprobarla. Las electivas se cubren por
 créditos; `creditos_electivos_del_plan` suma un cupo electivo por
-`grupo_slot` (Física: 18). Las opciones y electivas sin tasa no se
-eligen; las obligatorias sin tasa impiden simular.
+`grupo_slot`. Ese valor es el predeterminado de
+`Escenario.creditos_electivas_minimos` (`CUPO_DEL_PLAN`: Física 18,
+Química 10, Biología 18, Matemáticas 12). Un entero lo sustituye; con
+`None` se exigen todas las electivas del grafo. Las opciones y
+electivas sin tasa no se eligen; las obligatorias sin tasa impiden
+simular.
 
 `Escenario.max_creditos_semestre` (por defecto `None`, sin tope, como el
 artículo) limita los créditos inscritos por semestre. Con tope se

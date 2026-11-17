@@ -3,6 +3,16 @@
 from dataclasses import dataclass
 
 
+class _CupoDelPlan:
+    """Sentinel: usar el cupo electivo calculado del plan."""
+
+    def __repr__(self) -> str:
+        return "CUPO_DEL_PLAN"
+
+
+CUPO_DEL_PLAN = _CupoDelPlan()
+
+
 @dataclass(frozen=True)
 class Escenario:
     """Supuestos de la sección III de Molontay et al. (2020), más políticas locales.
@@ -22,10 +32,11 @@ class Escenario:
 
     Políticas de Física (no del artículo BME):
 
-    - ``creditos_electivas_minimos``: cupo de línea de aplicación; las
-      electivas del grafo no son todas obligatorias, basta acumular ese
-      mínimo de créditos. Con ``None`` se exige aprobar todos los nodos
-      (comportamiento más cercano al paper).
+    - ``creditos_electivas_minimos``: cupo de créditos electivos. Por
+      defecto ``CUPO_DEL_PLAN``: se toma el del plan
+      (``creditos_electivos_del_plan``: Física 18, Química 10, Biología
+      18, Matemáticas 12). Un entero lo sustituye; con ``None`` se
+      exige aprobar todos los nodos electivos (más cercano al paper).
     - ``electivas_sin_reintento``: si se reprueba una electiva, no se
       vuelve a cursar; el crédito no cuenta y se puede elegir otra.
     - ``max_semestres``: tope de la trayectoria; si no hay grado a tiempo
@@ -54,7 +65,7 @@ class Escenario:
     exitos_independientes: bool = True
     reintenta_hasta_aprobar: bool = True
     sin_semestres_pasivos: bool = True
-    creditos_electivas_minimos: int | None = 18
+    creditos_electivas_minimos: int | None | _CupoDelPlan = CUPO_DEL_PLAN
     electivas_sin_reintento: bool = True
     max_semestres: int = 40
     max_creditos_semestre: int | None = None
@@ -68,5 +79,12 @@ class Escenario:
             raise ValueError("El escenario necesita al menos un semestre de simulación.")
         if self.max_creditos_semestre is not None and self.max_creditos_semestre < 1:
             raise ValueError("El tope de créditos por semestre debe ser positivo o None.")
-        if self.creditos_electivas_minimos is not None and self.creditos_electivas_minimos < 0:
-            raise ValueError("El mínimo de créditos electivos no puede ser negativo.")
+        cupo = self.creditos_electivas_minimos
+        if cupo is not CUPO_DEL_PLAN and cupo is not None:
+            if not isinstance(cupo, int):
+                raise ValueError(
+                    "El mínimo de créditos electivos debe ser un entero, "
+                    "None o CUPO_DEL_PLAN."
+                )
+            if cupo < 0:
+                raise ValueError("El mínimo de créditos electivos no puede ser negativo.")
