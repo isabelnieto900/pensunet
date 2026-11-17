@@ -221,9 +221,10 @@ analítica se vuelve intratable. Por eso el artículo simula.
 
 `MonteCarloMolontay.simular` estima p(x) y E(X) con estudiantes
 representativos. Exige p_i para cada obligatoria. Trabajo de Grado
-usa p = 1 por juicio experto, leído de `trabajo_de_grado.csv`
-(`datos/juicio_experto.py`); no es un valor por defecto escondido en el
-código. Las opciones de cupo y electivas sin histórico no se eligen.
+usa p = 1 por juicio experto, leído de `trabajo_de_grado.csv` y
+`juicio_experto.csv` (`datos/juicio_experto.py`); no es un valor por
+defecto escondido en el código. Las opciones de cupo y electivas sin
+histórico no se eligen.
 
 Además de la muestra de X, `ResultadoSimulacion` guarda:
 
@@ -298,7 +299,10 @@ Resumen de ajustes (nunca silenciosos; ver
 
 Trabajo de Grado: p = 1 por juicio experto en las cuatro carreras
 (`trabajo_de_grado.csv`, columna `origen = juicio_experto` con
-justificación). El CSV de tasas del histórico no se modifica; la
+justificación). El mismo mecanismo cubre Química 25234
+(*Profundización I*, 0/119 en el histórico) y Matemáticas 19927
+(*Electiva en el Área de Trabajo de Grado*, sin tasa), en
+`juicio_experto.csv`. El CSV de tasas del histórico no se modifica; la
 estrategia `ReglasDocumentadas` combina ambas fuentes al cargar con ajustes.
 
 ## Pruebas

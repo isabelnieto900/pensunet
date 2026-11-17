@@ -21,6 +21,7 @@ corrige ninguna celda del SGA en silencio.** Las correcciones viven en
 | `reference/ajustes_prerrequisitos.csv` | Correcciones/documentación con justificación; aplicadas por código. |
 | `reference/cupos_sin_asignatura.csv` | Cupos del plan sin código (p. ej. Electiva VI/VII de Química) para la suma de créditos. |
 | `reference/trabajo_de_grado.csv` | Códigos de TG por carrera; p = 1 por juicio experto, con justificación. |
+| `reference/juicio_experto.csv` | Otros juicios expertos documentados (p. ej. Química 25234 y Matemáticas 19927). |
 
 Programas: `fisica` (plan 327), `quimica` (328), `biologia` (329),
 `matematicas` (298).
@@ -134,6 +135,17 @@ evaluador; en la práctica nadie pierde TG) se fija **p = 1** en las
 cuatro carreras, en `trabajo_de_grado.csv` (`origen = juicio_experto`).
 `ReglasDocumentadas` la combina con las tasas al cargar con ajustes; sin ajustes
 (`aplicar_ajustes_documentados=False`) TG queda sin tasa.
+
+Otros juicios expertos (misma columna `origen`, misma justificación por
+fila) viven en `juicio_experto.csv` y se combinan igual. Hoy:
+
+- Química 25234 *Profundización I*: en el histórico 119 inscritos y 0
+  aprobados (p = 0). Con ese valor nadie se gradúa en la simulación; se
+  fija p = 1 (decisión del 17 nov. 2026). El CSV de tasas no se toca;
+  sin ajustes la tasa del histórico sigue siendo 0.
+- Matemáticas 19927 *Electiva en el Área de Trabajo de Grado*:
+  obligatoria de 4 créditos, sin tasa en el histórico. Se fija p = 1
+  (misma decisión). Sin ajustes queda sin tasa.
 
 ## Cómo cargar
 

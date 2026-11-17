@@ -91,8 +91,8 @@ class ReglasDocumentadas(ReglasCarrera):
 
     Cada fila trae acción (agregar, excluir nodo o arista, documentar) y
     justificación; los CSV del SGA no se reescriben. Además añade las
-    tasas fijadas por juicio experto en ``trabajo_de_grado.csv``
-    (Trabajo de Grado, p = 1).
+    tasas fijadas por juicio experto en ``trabajo_de_grado.csv`` y
+    ``juicio_experto.csv`` (p = 1 documentado fila por fila).
     """
 
     def __init__(self, codigo_programa: str) -> None:
@@ -119,7 +119,7 @@ class ReglasDocumentadas(ReglasCarrera):
             notas.append(
                 f"Tasa por juicio experto: {fila['id_asignatura']} "
                 f"({fila['nombre']}) p = {fila['tasa_aprobacion']:g} "
-                "(trabajo_de_grado.csv)."
+                "(juicio experto documentado)."
             )
         ids_antes = {int(valor) for valor in pensum["id_asignatura"]}
         ids_despues = {int(valor) for valor in resultado.pensum["id_asignatura"]}

@@ -41,8 +41,8 @@ class MonteCarloMolontay(EstrategiaSimulacion):
 
     No se copia la convención BME de fijar p_i = 1 en electivas. Las
     obligatorias deben traer p_i en ``tasas``; Trabajo de Grado la trae
-    por juicio experto desde ``trabajo_de_grado.csv`` (``ReglasDocumentadas``). Aquí no
-    se inventa 0 ni 1.
+    por juicio experto desde ``trabajo_de_grado.csv`` y ``juicio_experto.csv``
+    (``ReglasDocumentadas``). Aquí no se inventa 0 ni 1.
     """
 
     def simular(

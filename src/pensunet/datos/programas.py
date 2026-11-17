@@ -73,6 +73,7 @@ PROGRAMAS: dict[str, Programa] = {
 RUTA_AJUSTES = RAIZ_DATOS / "reference" / "ajustes_prerrequisitos.csv"
 RUTA_CUPOS_SIN_ASIGNATURA = RAIZ_DATOS / "reference" / "cupos_sin_asignatura.csv"
 RUTA_TRABAJO_GRADO = RAIZ_DATOS / "reference" / "trabajo_de_grado.csv"
+RUTA_JUICIO_EXPERTO = RAIZ_DATOS / "reference" / "juicio_experto.csv"
 
 
 def obtener_programa(clave: str) -> Programa:

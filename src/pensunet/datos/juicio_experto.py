@@ -1,9 +1,15 @@
 """Tasas fijadas por juicio experto (p. ej. Trabajo de Grado).
 
-Algunas asignaturas no tienen nota en el histórico agregado: la de
-Trabajo de Grado la ponen director y evaluador fuera del SGA. Su p_i no
-se inventa en el código: sale de ``data/reference/trabajo_de_grado.csv``,
+Algunas asignaturas no tienen una p_i usable en el histórico agregado:
+la de Trabajo de Grado la ponen director y evaluador fuera del SGA;
+otras son códigos genéricos de cupo o electivas de área sin nota. Su
+p_i no se inventa en el código: sale de los CSV de ``data/reference/``
 con columna ``origen = juicio_experto`` y una justificación por fila.
+
+- ``trabajo_de_grado.csv``: Trabajo de Grado de las cuatro carreras.
+- ``juicio_experto.csv``: el resto de juicios documentados (p. ej.
+  Profundización I de Química y la Electiva en el Área de Trabajo de
+  Grado de Matemáticas).
 """
 
 from __future__ import annotations
@@ -12,7 +18,18 @@ from pathlib import Path
 
 import pandas as pd
 
-from pensunet.datos.programas import RUTA_TRABAJO_GRADO
+from pensunet.datos.programas import RUTA_JUICIO_EXPERTO, RUTA_TRABAJO_GRADO
+
+COLUMNAS_TASAS = [
+    "id_asignatura",
+    "nombre",
+    "n_inscritos",
+    "n_aprobados",
+    "tasa_aprobacion",
+    "n_bajo",
+]
+
+RUTAS_CATALOGO = (RUTA_TRABAJO_GRADO, RUTA_JUICIO_EXPERTO)
 
 
 def tasas_juicio_experto(programa: str, ruta: str | Path | None = None) -> pd.DataFrame:
@@ -21,18 +38,28 @@ def tasas_juicio_experto(programa: str, ruta: str | Path | None = None) -> pd.Da
     Devuelve ``id_asignatura``, ``nombre``, ``n_inscritos``,
     ``n_aprobados``, ``tasa_aprobacion`` y ``n_bajo``. Las filas sin tasa
     en el catálogo se omiten: no se completan con 0 ni con 1.
+
+    Con ``ruta`` se lee un solo CSV (útil en pruebas). Sin ella se
+    combinan ``trabajo_de_grado.csv`` y ``juicio_experto.csv``.
     """
-    path = Path(ruta) if ruta is not None else RUTA_TRABAJO_GRADO
-    columnas = [
-        "id_asignatura",
-        "nombre",
-        "n_inscritos",
-        "n_aprobados",
-        "tasa_aprobacion",
-        "n_bajo",
-    ]
+    rutas = (Path(ruta),) if ruta is not None else RUTAS_CATALOGO
+    partes = [_leer_catalogo(programa, path) for path in rutas]
+    presentes = [parte for parte in partes if not parte.empty]
+    if not presentes:
+        return pd.DataFrame(columns=COLUMNAS_TASAS)
+    combinado = pd.concat(presentes, ignore_index=True)
+    duplicados = combinado["id_asignatura"].duplicated()
+    if duplicados.any():
+        ids = ", ".join(str(valor) for valor in combinado.loc[duplicados, "id_asignatura"])
+        raise ValueError(
+            f"Id de asignatura repetido en el catálogo de juicio experto: {ids}."
+        )
+    return combinado
+
+
+def _leer_catalogo(programa: str, path: Path) -> pd.DataFrame:
     if not path.is_file():
-        return pd.DataFrame(columns=columnas)
+        return pd.DataFrame(columns=COLUMNAS_TASAS)
     catalogo = pd.read_csv(path, encoding="utf-8")
     filas = catalogo.loc[
         (catalogo["programa"].map(lambda valor: str(valor).strip().lower()) == programa.lower())
@@ -50,7 +77,7 @@ def tasas_juicio_experto(programa: str, ruta: str | Path | None = None) -> pd.Da
             "tasa_aprobacion": tasas,
             "n_bajo": True,
         },
-        columns=columnas,
+        columns=COLUMNAS_TASAS,
     )
 
 

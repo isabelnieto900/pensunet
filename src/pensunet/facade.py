@@ -81,7 +81,7 @@ class SimuladorPensum:
         ``aplicar_ajustes_documentados`` se aplica la ``ReglasCarrera`` del
         simulador (por defecto, las filas del programa en
         ``ajustes_prerrequisitos.csv`` y las tasas por juicio experto de
-        ``trabajo_de_grado.csv``). ``aplicar_reglas`` es el nombre
+        ``trabajo_de_grado.csv`` y ``juicio_experto.csv``). ``aplicar_reglas`` es el nombre
         de la etapa 2 y, si se da, tiene prioridad.
         """
         aplicar = aplicar_ajustes_documentados if aplicar_reglas is None else aplicar_reglas

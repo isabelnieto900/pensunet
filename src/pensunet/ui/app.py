@@ -465,9 +465,10 @@ def _pagina_simulacion(clave: str, simulador: SimuladorPensum, oscuro: bool) -> 
     st.markdown(
         "Monte Carlo de la sección III.B: estima p(x) y E(X). "
         "Edita tasas o parámetros y pulsa **Simular**. Los CSV no se modifican. "
-        "Trabajo de Grado usa p = 1 por juicio experto (documentado en "
-        "`trabajo_de_grado.csv`). Las opciones y electivas sin histórico no se "
-        "eligen; las obligatorias sin tasa hay que completarlas aquí."
+        "Las tasas por juicio experto (Trabajo de Grado y las filas de "
+        "`juicio_experto.csv`) llegan con p = 1 documentado. Las opciones y "
+        "electivas sin histórico no se eligen; las obligatorias sin tasa hay "
+        "que completarlas aquí."
     )
     _asegurar_tasas_sesion(clave, simulador)
     if "resultado" not in st.session_state:
