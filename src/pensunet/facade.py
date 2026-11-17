@@ -7,6 +7,7 @@ import pandas as pd
 from pensunet.datos.fabrica import FabricaLectores
 from pensunet.datos.lector import LectorDatos
 from pensunet.datos.programas import Programa, obtener_programa
+from pensunet.dominio.complejidad import ComplejidadCurricular, calcular_complejidad
 from pensunet.dominio.escenario import Escenario
 from pensunet.dominio.indicadores import IndicadoresTopologicos, calcular_indicadores
 from pensunet.dominio.red import RedPrerrequisitos, construir_red
@@ -106,6 +107,13 @@ class SimuladorPensum:
         Sección II.B, ecuación (1) y ecuación (2).
         """
         return calcular_indicadores(self._exigir_red())
+
+    def complejidad(self) -> ComplejidadCurricular:
+        """Bloqueo, retraso y complejidad estructural (Curricular Analytics).
+
+        Heileman et al. (2018); complementa la sección II.B de Molontay.
+        """
+        return calcular_complejidad(self._exigir_red())
 
     def tasa_de(self, id_asignatura: int) -> float | None:
         """Devuelve la tasa agregada, o None si el código no está en la tabla.
