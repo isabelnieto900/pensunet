@@ -1,0 +1,58 @@
+nu_periodo_formacion,id_asignatura,ds_nombre_asignatura,ds_nombre_pensum,nu_creditos,ds_clasificacion,ds_grupo_slot,ds_linea_tematica,ds_bloque_electivo
+1,9901,Segunda Lengua I - Inglés,Segunda Lengua I - Inglés,2,Obligatorio,Segunda Lengua I,,Segunda Lengua I
+1,9904,Segunda Lengua I - Francés,Segunda Lengua I - Francés,2,Obligatorio,Segunda Lengua I,,Segunda Lengua I
+1,9907,Segunda Lengua I - Alemán,Segunda Lengua I - Alemán,2,Obligatorio,Segunda Lengua I,,Segunda Lengua I
+1,9910,Segunda Lengua I - Italiano,Segunda Lengua I - Italiano,2,Obligatorio,Segunda Lengua I,,Segunda Lengua I
+1,9913,Segunda Lengua I - Portugués,Segunda Lengua I - Portugués,2,Obligatorio,Segunda Lengua I,,Segunda Lengua I
+1,4963,Vectores y Geometría Analítica,Vectores y Geometría Analítica,2,Electivo,Electiva de Fundamentación I,,Electiva de Fundamentación I
+1,19935,Álgebra Homológica,Álgebra Homológica,2,Electivo,Electiva de Fundamentación I,,Electiva de Fundamentación I
+1,4,Cátedra Francisco José de Caldas,Cátedra Francisco José de Caldas,1,,,,
+1,19901,Introducción al Cálculo,Introducción al Cálculo,4,,,,
+1,19902,Fundamentos de Matemáticas,Fundamentos de Matemáticas,4,,,,
+1,19903,Matemáticas Discretas,Matemáticas Discretas,4,,,,
+2,9902,Segunda Lengua II - Ingles,Segunda Lengua II - Ingles,2,Obligatorio,Segunda Lengua II,,Segunda Lengua II
+2,9905,Segunda Lengua II - Francés,Segunda Lengua II - Francés,2,Obligatorio,Segunda Lengua II,,Segunda Lengua II
+2,9908,Segunda Lengua II - Alemán,Segunda Lengua II - Alemán,2,Obligatorio,Segunda Lengua II,,Segunda Lengua II
+2,9911,Segunda Lengua II - Italiano,Segunda Lengua II - Italiano,2,Obligatorio,Segunda Lengua II,,Segunda Lengua II
+2,9914,Segunda Lengua II - Portugués,Segunda Lengua II - Portugués,2,Obligatorio,Segunda Lengua II,,Segunda Lengua II
+2,4953,Introducción al Latex,Introducción al Latex,2,Electivo,Electiva de Fundamentación II,,Electiva de Fundamentación II
+2,19936,Machine Learning con R,Machine Learning con R,2,Electivo,Electiva de Fundamentación II,,Electiva de Fundamentación II
+2,1,Cálculo Diferencial,Cálculo Diferencial,4,,,,
+2,19904,Teoría de Números,Teoría de Números,4,,,,
+2,19905,Geometría Elemental,Geometría Elemental,4,,,,
+3,9903,Segunda Lengua III - Inglés,Segunda Lengua III - Inglés,2,Obligatorio,Segunda Lengua III,,Segunda Lengua III
+3,9912,Segunda Lengua III Italiano,Segunda Lengua III Italiano,2,Obligatorio,Segunda Lengua III,,Segunda Lengua III
+3,9915,Segunda Lengua III - Portugués,Segunda Lengua III - Portugués,2,Obligatorio,Segunda Lengua III,,Segunda Lengua III
+3,4961,Conceptos de la Topología,Conceptos de la Topología,2,Electivo,Electiva de Fundamentación III,,Electiva de Fundamentación III
+3,4962,Álgebra de Matrices,Álgebra de Matrices,2,Electivo,Electiva de Fundamentación III,,Electiva de Fundamentación III
+3,12,Cátedra Democracia y Ciudadanía,Cátedra Democracia y Ciudadanía,1,,,,
+3,19907,Cálculo Integral,Cálculo Integral,4,,,,
+3,19908,Álgebra Lineal,Álgebra Lineal,4,,,,
+3,19909,Fìsica,Fìsica,4,,,,
+4,4949,Sucesiones y Series Numéricas,Sucesiones y Series Numéricas,2,Electivo,Electiva I,,Electiva I
+4,19934,Introducción a la Estadística con R,Introducción a la Estadística con R,2,Electivo,Electiva I,,Electiva I
+4,19911,Cálculo Vectorial,Cálculo Vectorial,4,,,,
+4,19912,Teoría de Conjuntos,Teoría de Conjuntos,4,,,,
+4,19913,Ecuaciones Diferenciales,Ecuaciones Diferenciales,4,,,,
+4,19914,Lógica Matemática,Lógica Matemática,4,,,,
+5,4965,Isometría y Grupos,Isometría y Grupos,2,Electivo,Electiva II,,Electiva II
+5,22248,Métodos de Investigación Cualitativa aplicados a la Educación Matemática,Métodos de Investigación Cualitativa aplicados a la Educación Matemática,2,Electivo,Electiva II,,Electiva II
+5,4917,Teoría de Grupos,Teoría de Grupos,4,Obligatorio,,,
+5,19915,Análisis Matemático I,Análisis Matemático I,4,Obligatorio,,,
+5,19916,Geometría de Superficies,Geometría de Superficies,4,Obligatorio,,,
+5,19917,Teoría de Probabilidades,Teoría de Probabilidades,4,Obligatorio,,,
+6,4966,Geometría de Números Complejos,Geometría de Números Complejos,2,Electivo,Electiva III,,Electiva III
+6,4967,Computación Matemática,Computación Matemática,2,Electivo,Electiva III,,Electiva III
+6,19932,Analítica de Datos,Analítica de Datos,2,Electivo,Electiva III,,Electiva III
+6,4922,Anillos y Campos,Anillos y Campos,4,,,,
+6,19918,Análisis Matemático II,Análisis Matemático II,4,,,,
+6,19919,Topología,Topología,4,,,,
+6,19920,Métodos Numéricos y Computación,Métodos Numéricos y Computación,4,,,,
+7,19921,Análisis Complejo,Análisis Complejo,4,,,,
+7,19922,Historia de la Matemática,Historia de la Matemática,3,,,,
+7,19923,Análisis Vectorial,Análisis Vectorial,4,,,,
+7,19924,Trabajo de Grado I,Trabajo de Grado I,6,,,,
+7,25246,Cátedra de Contexto,Cátedra de Contexto,1,,,,
+8,19925,Trabajo de Grado II,Trabajo de Grado II,10,Obligatorio,,,
+8,19926,Electiva en el Area de Profundización,Electiva en el Area de Profundización,4,Obligatorio,,,
+8,19927,Electiva en el Área de Trabajo de Grado,Electiva en el Área de Trabajo de Grado,4,Obligatorio,,,

@@ -40,19 +40,21 @@ def test_la_ecuacion_2_marca_cuellos_por_grado():
 
 
 def test_bloqueo_y_posponimiento_en_cadenas_conocidas_de_fisica(simulador):
-    """Sección II.B sobre el inglés, Física I y trabajo de grado (con reglas)."""
+    """Sección II.B sobre el inglés, Física I y TG con ajustes documentados."""
     indicadores = simulador.indicadores()
     bloqueo = indicadores.factor_bloqueo
     posponimiento = indicadores.factor_posponimiento
     assert bloqueo[9901] == 2
     assert bloqueo[9902] == 1
     assert bloqueo[9903] == 0
-    assert bloqueo[4] == 1  # Caldas → Democracia
+    assert bloqueo[4] == 0
     assert bloqueo[25154] == 0
-    assert bloqueo[25149] >= 1
+    assert bloqueo[25149] == 1
     assert bloqueo[25102] > bloqueo[25106] > 0
-    assert posponimiento[4] == pytest.approx(1 / 9)
+    assert posponimiento[4] == pytest.approx(0.1)
+    assert posponimiento[25102] == pytest.approx(1 / 3)
     assert posponimiento[25154] == pytest.approx(1.0)
+    assert indicadores.repeticiones_sin_retraso[25102] == 2
     assert indicadores.repeticiones_sin_retraso[25154] == 0
     assert all(0 < valor <= 1 for valor in posponimiento.values())
     assert all(valor >= 0 for valor in bloqueo.values())

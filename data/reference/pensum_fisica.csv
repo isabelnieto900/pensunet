@@ -1,96 +1,92 @@
 nu_periodo_formacion,id_asignatura,ds_nombre_asignatura,ds_nombre_pensum,nu_creditos,ds_clasificacion,ds_grupo_slot,ds_linea_tematica,ds_bloque_electivo
-1,4,CÁTEDRA FRANCISCO JOSÉ DE CALDAS,CÁTEDRA FRANCISCO JOSÉ DE CALDAS,1,Obligatorio,,,
-1,9901,SEGUNDA LENGUA I - INGLÉS,SEGUNDA LENGUA I - INGLÉS,2,Obligatorio Complementario,Segunda Lengua I,,Segunda Lengua I
-1,9904,SEGUNDA LENGUA I - FRANCÉS,SEGUNDA LENGUA I - FRANCÉS,2,Obligatorio Complementario,Segunda Lengua I,,Segunda Lengua I
-1,9907,SEGUNDA LENGUA I - ALEMÁN,SEGUNDA LENGUA I - ALEMÁN,2,Obligatorio Complementario,Segunda Lengua I,,Segunda Lengua I
-1,9910,SEGUNDA LENGUA I - ITALIANO,SEGUNDA LENGUA I - ITALIANO,2,Obligatorio Complementario,Segunda Lengua I,,Segunda Lengua I
-1,9913,SEGUNDA LENGUA I - PORTUGUÉS,SEGUNDA LENGUA I - PORTUGUÉS,2,Obligatorio Complementario,Segunda Lengua I,,Segunda Lengua I
-1,25102,FÍSICA I Y LABORATORIO,FÍSICA I Y LABORATORIO,3,Obligatorio,,,
-1,25103,MATEMÁTICA I,MATEMÁTICA I,3,Obligatorio,,,
-1,25104,QUÍMICA GENERAL,QUÍMICA GENERAL,2,Obligatorio,,,
-1,25105,REDACCIÓN Y ESCRITURA DE TEXTOS CIENTÍFICOS I,REDACCIÓN Y ESCRITURA DE TEXTOS CIENTÍFICOS I,2,Obligatorio,,,
-2,12,CÁTEDRA DEMOCRACIA Y CIUDADANÍA,CÁTEDRA DEMOCRACIA Y CIUDADANÍA,1,Obligatorio,,,
-2,9902,SEGUNDA LENGUA II - INGLES,SEGUNDA LENGUA II - INGLES,2,Obligatorio Complementario,Segunda Lengua II,,Segunda Lengua II
-2,9905,SEGUNDA LENGUA II - FRANCÉS,SEGUNDA LENGUA II - FRANCÉS,2,Obligatorio Complementario,Segunda Lengua II,,Segunda Lengua II
-2,9908,SEGUNDA LENGUA II - ALEMÁN,SEGUNDA LENGUA II - ALEMÁN,2,Obligatorio Complementario,Segunda Lengua II,,Segunda Lengua II
-2,9911,SEGUNDA LENGUA II - ITALIANO,SEGUNDA LENGUA II - ITALIANO,2,Obligatorio Complementario,Segunda Lengua II,,Segunda Lengua II
-2,9914,SEGUNDA LENGUA II - PORTUGUÉS,SEGUNDA LENGUA II - PORTUGUÉS,2,Obligatorio Complementario,Segunda Lengua II,,Segunda Lengua II
-2,25106,FÍSICA II Y LABORATORIO,FÍSICA II Y LABORATORIO,3,Obligatorio,,,
-2,25107,MATEMÁTICA II,MATEMÁTICA II,2,Obligatorio,,,
-2,25108,ÁLGEBRA LINEAL Y GEOMETRÍA,ÁLGEBRA LINEAL Y GEOMETRÍA,2,Obligatorio,,,
-2,25109,ELEMENTOS COMPUTACIONALES,ELEMENTOS COMPUTACIONALES,2,Obligatorio,,,
-2,25110,REDACCIÓN Y ESCRITURA DE TEXTOS CIENTÍFICOS II,REDACCIÓN Y ESCRITURA DE TEXTOS CIENTÍFICOS II,2,Obligatorio,,,
-3,9903,SEGUNDA LENGUA III - INGLÉS,SEGUNDA LENGUA III - INGLÉS,2,Obligatorio Complementario,Segunda Lengua III,,Segunda Lengua III
-3,9906,SEGUNDA LENGUA III - FRANCÉS,SEGUNDA LENGUA III - FRANCÉS,2,Obligatorio Complementario,Segunda Lengua III,,Segunda Lengua III
-3,9909,SEGUNDA LENGUA III - ALEMÁN,SEGUNDA LENGUA III - ALEMÁN,2,Obligatorio Complementario,Segunda Lengua III,,Segunda Lengua III
-3,9912,SEGUNDA LENGUA III - ITALIANO,SEGUNDA LENGUA III - ITALIANO,2,Obligatorio Complementario,Segunda Lengua III,,Segunda Lengua III
-3,9915,SEGUNDA LENGUA III - PORTUGUÉS,SEGUNDA LENGUA III - PORTUGUÉS,2,Obligatorio Complementario,Segunda Lengua III,,Segunda Lengua III
-3,24321,TEORÍA DE LAS PROBABILIDADES,TEORÍA DE LAS PROBABILIDADES,2,Obligatorio,,,
-3,25111,FÍSICA III Y LABORATORIO,FÍSICA III Y LABORATORIO,3,Obligatorio,,,
-3,25112,MATEMÁTICA III,MATEMÁTICA III,3,Obligatorio,,,
-3,25113,LENGUAJES Y ALGORITMOS,LENGUAJES Y ALGORITMOS,2,Obligatorio,,,
-3,25114,FUNDAMENTOS DE METROLOGÍA,FUNDAMENTOS DE METROLOGÍA,2,Obligatorio,,,
-3,25115,HISTORIA Y FILOSOFÍA DE LA CIENCIA I,HISTORIA Y FILOSOFÍA DE LA CIENCIA I,1,Obligatorio,,,
-4,4719,ECUACIONES DIFERENCIALES,Ecuaciones Diferenciales I,3,Obligatorio,,,
-4,25116,ÓPTICA GENERAL Y LABORATORIO,ÓPTICA GENERAL Y LABORATORIO,3,Obligatorio,,,
-4,25117,MECÁNICA DE FLUIDOS,MECÁNICA DE FLUIDOS,2,Obligatorio,,,
-4,25118,MÉTODOS NUMÉRICOS,MÉTODOS NUMÉRICOS,2,Obligatorio,,,
-4,25119,INSTRUMENTACIÓN ELECTRÓNICA I,INSTRUMENTACIÓN ELECTRÓNICA I,2,Obligatorio,,,
-4,25120,EPISTEMOLOGÍA DE LA FÍSICA,EPISTEMOLOGÍA DE LA FÍSICA,2,Obligatorio,,,
-5,25121,TERMODINÁMICA Y LABORATORIO,TERMODINÁMICA Y LABORATORIO,2,Obligatorio,,,
-5,25122,ECUACIONES DIFERENCIALES,Ecuaciones Diferenciales II,2,Obligatorio,,,
-5,25123,VARIABLE COMPLEJA,VARIABLE COMPLEJA,2,Obligatorio,,,
-5,25124,TEORÍA ELECTROMAGNÉTICA Y LABORATORIO I,TEORÍA ELECTROMAGNÉTICA Y LABORATORIO I,2,Obligatorio,,,
-5,25125,INSTRUMENTACIÓN ELECTRÓNICA II,INSTRUMENTACIÓN ELECTRÓNICA II,2,Obligatorio,,,
-5,25126,ASTRONOMÍA Y LABORATORIO,ASTRONOMÍA Y LABORATORIO,2,Obligatorio,,,
-5,25127,EPISTEMOLOGÍA DE LA FÍSICA II,EPISTEMOLOGÍA DE LA FÍSICA II,2,Obligatorio,,,
-6,25128,MECÁNICA ESTADÍSTICA,MECÁNICA ESTADÍSTICA,3,Obligatorio,,,
-6,25129,MÉTODOS MATEMÁTICOS DE LA FÍSICA,MÉTODOS MATEMÁTICOS DE LA FÍSICA,2,Obligatorio,,,
-6,25130,TEORÍA ELECTROMAGNÉTICA II Y LABORATORIO,TEORÍA ELECTROMAGNÉTICA II Y LABORATORIO,3,Obligatorio,,,
-6,25131,INTRODUCCIÓN A LA ASTROFÍSICA,INTRODUCCIÓN A LA ASTROFÍSICA,2,Obligatorio,,,
-6,25132,FÍSICA COMPUTACIONAL I,FÍSICA COMPUTACIONAL I,2,Obligatorio,,,
-6,25133,ELECTRÓNICA DIGITAL Y LABORATORIO I,ELECTRÓNICA DIGITAL Y LABORATORIO I,2,Obligatorio,,,
-7,25134,FÍSICA MODERNA Y LABORATORIO,FÍSICA MODERNA Y LABORATORIO,2,Obligatorio,,,
-7,25135,FÍSICA ATÓMICA Y NUCLEAR,FÍSICA ATÓMICA Y NUCLEAR,2,Obligatorio,,,
-7,25136,FÍSICA COMPUTACIONAL II,FÍSICA COMPUTACIONAL II,2,Obligatorio,,,
-7,25137,TALLER DE MÁQUINAS Y HERRAMIENTAS,TALLER DE MÁQUINAS Y HERRAMIENTAS,2,Obligatorio,,,
-7,25138,AUTOMATIZACIÓN Y CONTROL I,AUTOMATIZACIÓN Y CONTROL I,2,Obligatorio,,,
-7,25139,"LÍNEA DE APLICACIÓN I (A,B,C,D,E)","LÍNEA DE APLICACIÓN I (A,B,C,D,E)",4,Electivo Intrínseco,Línea de aplicación I,,Línea de aplicación I
-7,25155,MINERÍA DE DATOS,MINERÍA DE DATOS,4,Electivo Intrínseco,Línea de aplicación I,Física computacional,Línea de aplicación I
-7,25156,INSTRUMENTACIÓN EN ASTRONOMÍA,INSTRUMENTACIÓN EN ASTRONOMÍA,4,Electivo Intrínseco,Línea de aplicación I,Astronomía,Línea de aplicación I
-7,25163,PROCESAMIENTO DE IMÁGENES,PROCESAMIENTO DE IMÁGENES,4,Electivo Intrínseco,Línea de aplicación I,Física computacional,Línea de aplicación I
-7,25166,MICROCONTROLADORES,MICROCONTROLADORES,4,Electivo Intrínseco,Línea de aplicación I,Instrumentación,Línea de aplicación I
-7,25169,"ENERGÍA SOLAR, TÉRMICA Y FOTOVOLTAICA","ENERGÍA SOLAR, TÉRMICA Y FOTOVOLTAICA",4,Electivo Intrínseco,Línea de aplicación I,Energías renovables,Línea de aplicación I
-7,25175,MECÁNICA ANALÍTICA,MECÁNICA ANALÍTICA,4,Electivo Intrínseco,Línea de aplicación I,Física computacional,Línea de aplicación I
-7,25176,SIMULACIÓN COMPUTACIONAL DE BIOSISTEMAS,SIMULACIÓN COMPUTACIONAL DE BIOSISTEMAS,4,Electivo Intrínseco,Línea de aplicación I,Física computacional,Línea de aplicación I
-7,25177,INTRODUCCIÓN A LA FÍSICA MÉDICA,INTRODUCCIÓN A LA FÍSICA MÉDICA,4,Electivo Intrínseco,Línea de aplicación I,Física médica,Línea de aplicación I
-8,25140,INTRODUCCIÓN A LA MECÁNICA CUÁNTICA,INTRODUCCIÓN A LA MECÁNICA CUÁNTICA,3,Obligatorio,,,
-8,25141,ESTADO SÓLIDO Y DISPOSITIVOS SEMICONDUCTORES,ESTADO SÓLIDO Y DISPOSITIVOS SEMICONDUCTORES,3,Obligatorio,,,
-8,25142,MODELOS Y GESTIÓN I,MODELOS Y GESTIÓN I,2,Obligatorio,,,
-8,25143,SEMINARIO DE INVESTIGACIÓN,SEMINARIO DE INVESTIGACIÓN,2,Obligatorio,,,
-8,25144,"LÍNEA DE APLICACIÓN II (A,B,C,D,E)","LÍNEA DE APLICACIÓN II (A,B,C,D,E)",5,Electivo Intrínseco,Línea de aplicación II,,Línea de aplicación II
-8,25157,MODELAMIENTO FÍSICO COMPUTACIONAL,MODELAMIENTO FÍSICO COMPUTACIONAL,5,Electivo Intrínseco,Línea de aplicación II,Física computacional,Línea de aplicación II
-8,25158,ASTRONOMÍA OBSERVACIONAL,ASTRONOMÍA OBSERVACIONAL,5,Electivo Intrínseco,Línea de aplicación II,Astronomía,Línea de aplicación II
-8,25164,FÍSICA DE LAS RADIACIONES,FÍSICA DE LAS RADIACIONES,5,Electivo Intrínseco,Línea de aplicación II,Física médica,Línea de aplicación II
-8,25167,ELECTRÓNICA DIGITAL,ELECTRÓNICA DIGITAL,5,Electivo Intrínseco,Línea de aplicación II,Instrumentación,Línea de aplicación II
-8,25170,ENERGÍA EÓLICA Y AEROGENERADORES,ENERGÍA EÓLICA Y AEROGENERADORES,5,Electivo Intrínseco,Línea de aplicación II,Energías renovables,Línea de aplicación II
-9,25145,MECÁNICA CUÁNTICA AVANZADA,MECÁNICA CUÁNTICA AVANZADA,3,Obligatorio,,,
-9,25146,CIENCIAS DE LOS MATERIALES,CIENCIAS DE LOS MATERIALES,3,Obligatorio,,,
-9,25147,"LÍNEA DE APLICACIÓN III (A,B,C,D,E)","LÍNEA DE APLICACIÓN III (A,B,C,D,E)",4,Electivo Intrínseco,Línea de aplicación III,,Línea de aplicación III
-9,25148,MODELOS Y GESTIÓN II,MODELOS Y GESTIÓN II,2,Obligatorio,,,
-9,25149,TRABAJO DE GRADO I,TRABAJO DE GRADO I,4,Obligatorio,,,
-9,25159,DESARROLLO DE SOFTWARE,DESARROLLO DE SOFTWARE,4,Electivo Intrínseco,Línea de aplicación III,Física computacional,Línea de aplicación III
-9,25160,ASTROFÍSICA,ASTROFÍSICA,4,Electivo Intrínseco,Línea de aplicación III,Astronomía,Línea de aplicación III
-9,25172,DOSIMETRÍA DE RADIACIONES,DOSIMETRÍA DE RADIACIONES,4,Electivo Intrínseco,Línea de aplicación III,Física médica,Línea de aplicación III
-9,25173,INSTRUMENTACIÓN BIOMÉDICA,INSTRUMENTACIÓN BIOMÉDICA,4,Electivo Intrínseco,Línea de aplicación III,Física médica,Línea de aplicación III
-9,25174,BIOENERGÍA,BIOENERGÍA,4,Electivo Intrínseco,Línea de aplicación III,Energías renovables,Línea de aplicación III
-10,25150,TEORÍA GENERAL DE LA RELATIVIDAD,TEORÍA GENERAL DE LA RELATIVIDAD,2,Obligatorio,,,
-10,25151,NANOTECNOLOGÍA Y NUEVOS MATERIALES,NANOTECNOLOGÍA Y NUEVOS MATERIALES,3,Obligatorio,,,
-10,25152,"LÍNEA DE APLICACIÓN IV (A,B,C,D,E)","LÍNEA DE APLICACIÓN IV (A,B,C,D,E)",5,Electivo Intrínseco,Línea de aplicación IV,,Línea de aplicación IV
-10,25153,GESTIÓN TECNOLÓGICA Y COMPROMISO SOCIAL,GESTIÓN TECNOLÓGICA Y COMPROMISO SOCIAL,2,Obligatorio,,,
-10,25154,TRABAJO DE GRADO II,TRABAJO DE GRADO II,4,Obligatorio,,,
-10,25161,SISTEMAS DISTRIBUIDOS,SISTEMAS DISTRIBUIDOS,5,Electivo Intrínseco,Línea de aplicación IV,Física computacional,Línea de aplicación IV
-10,25162,COSMOLOGÍA,COSMOLOGÍA,5,Electivo Intrínseco,Línea de aplicación IV,Astronomía,Línea de aplicación IV
-10,25165,PROTECCIÓN RADIOLÓGICA,PROTECCIÓN RADIOLÓGICA,5,Electivo Intrínseco,Línea de aplicación IV,Física médica,Línea de aplicación IV
-10,25168,COMUNICACIONES Y REDES INDUSTRIALES,COMUNICACIONES Y REDES INDUSTRIALES,5,Electivo Intrínseco,Línea de aplicación IV,Instrumentación,Línea de aplicación IV
-10,25171,HIDRÓGENO Y CELDAS DE COMBUSTIBLE,HIDRÓGENO Y CELDAS DE COMBUSTIBLE,5,Electivo Intrínseco,Línea de aplicación IV,Energías renovables,Línea de aplicación IV
+1,9901,Segunda Lengua I - Inglés,Segunda Lengua I - Inglés,2,Obligatorio Complementario,Segunda Lengua I,,Segunda Lengua I
+1,9904,Segunda Lengua I - Francés,Segunda Lengua I - Francés,2,Obligatorio Complementario,Segunda Lengua I,,Segunda Lengua I
+1,9907,Segunda Lengua I - Alemán,Segunda Lengua I - Alemán,2,Obligatorio Complementario,Segunda Lengua I,,Segunda Lengua I
+1,9910,Segunda Lengua I - Italiano,Segunda Lengua I - Italiano,2,Obligatorio Complementario,Segunda Lengua I,,Segunda Lengua I
+1,9913,Segunda Lengua I - Portugués,Segunda Lengua I - Portugués,2,Obligatorio Complementario,Segunda Lengua I,,Segunda Lengua I
+1,4,Cátedra Francisco José de Caldas,Cátedra Francisco José de Caldas,1,Obligatorio,,,
+1,25102,Física I y Laboratorio,Física I y Laboratorio,3,Obligatorio,,,
+1,25103,Matemática I,Matemática I,3,Obligatorio,,,
+1,25104,Química General,Química General,2,Obligatorio,,,
+1,25105,Redacción y Escritura de Textos Científicos I,Redacción y Escritura de Textos Científicos I,2,Obligatorio,,,
+2,9902,Segunda Lengua II - Ingles,Segunda Lengua II - Ingles,2,Obligatorio Complementario,Segunda Lengua II,,Segunda Lengua II
+2,9905,Segunda Lengua II - Francés,Segunda Lengua II - Francés,2,Obligatorio Complementario,Segunda Lengua II,,Segunda Lengua II
+2,9908,Segunda Lengua II - Alemán,Segunda Lengua II - Alemán,2,Obligatorio Complementario,Segunda Lengua II,,Segunda Lengua II
+2,9911,Segunda Lengua II - Italiano,Segunda Lengua II - Italiano,2,Obligatorio Complementario,Segunda Lengua II,,Segunda Lengua II
+2,9914,Segunda Lengua II - Portugués,Segunda Lengua II - Portugués,2,Obligatorio Complementario,Segunda Lengua II,,Segunda Lengua II
+2,12,Cátedra Democracia y Ciudadanía,Cátedra Democracia y Ciudadanía,1,Obligatorio,,,
+2,25106,Física II y Laboratorio,Física II y Laboratorio,3,Obligatorio,,,
+2,25107,Matemática II,Matemática II,2,Obligatorio,,,
+2,25108,Álgebra Lineal y Geometría,Álgebra Lineal y Geometría,2,Obligatorio,,,
+2,25109,Elementos Computacionales,Elementos Computacionales,2,Obligatorio,,,
+2,25110,Redacción y Escritura de Textos Científicos II,Redacción y Escritura de Textos Científicos II,2,Obligatorio,,,
+3,9903,Segunda Lengua III - Inglés,Segunda Lengua III - Inglés,2,Obligatorio Complementario,Segunda Lengua III,,Segunda Lengua III
+3,9906,Segunda Lengua III - Francés,Segunda Lengua III - Francés,2,Obligatorio Complementario,Segunda Lengua III,,Segunda Lengua III
+3,9909,Segunda Lengua III - Alemán,Segunda Lengua III - Alemán,2,Obligatorio Complementario,Segunda Lengua III,,Segunda Lengua III
+3,9912,Segunda Lengua III - Italiano,Segunda Lengua III - Italiano,2,Obligatorio Complementario,Segunda Lengua III,,Segunda Lengua III
+3,9915,Segunda Lengua III - Portugués,Segunda Lengua III - Portugués,2,Obligatorio Complementario,Segunda Lengua III,,Segunda Lengua III
+3,24321,Teoría de las Probabilidades,Teoría de las Probabilidades,2,Obligatorio,,,
+3,25111,Física III y Laboratorio,Física III y Laboratorio,3,Obligatorio,,,
+3,25112,Matemática III,Matemática III,3,Obligatorio,,,
+3,25113,Lenguajes y Algoritmos,Lenguajes y Algoritmos,2,Obligatorio,,,
+3,25114,Fundamentos de Metrología,Fundamentos de Metrología,2,Obligatorio,,,
+3,25115,Historia y Filosofía de la Ciencia I,Historia y Filosofía de la Ciencia I,1,Obligatorio,,,
+4,4719,Ecuaciones Diferenciales,Ecuaciones Diferenciales,3,Obligatorio,,,
+4,25116,Óptica General y Laboratorio,Óptica General y Laboratorio,3,Obligatorio,,,
+4,25117,Mecánica de Fluidos,Mecánica de Fluidos,2,Obligatorio,,,
+4,25118,Métodos Numéricos,Métodos Numéricos,2,Obligatorio,,,
+4,25119,Instrumentación Electrónica I,Instrumentación Electrónica I,2,Obligatorio,,,
+4,25120,Epistemología de la Física,Epistemología de la Física,2,Obligatorio,,,
+5,25121,Termodinámica y Laboratorio,Termodinámica y Laboratorio,2,Obligatorio,,,
+5,25122,Ecuaciones Diferenciales,Ecuaciones Diferenciales,2,Obligatorio,,,
+5,25123,Variable Compleja,Variable Compleja,2,Obligatorio,,,
+5,25124,Teoría Electromagnética y Laboratorio I,Teoría Electromagnética y Laboratorio I,2,Obligatorio,,,
+5,25125,Instrumentación Electrónica II,Instrumentación Electrónica II,2,Obligatorio,,,
+5,25126,Astronomía y Laboratorio,Astronomía y Laboratorio,2,Obligatorio,,,
+5,25127,Epistemología de la Física II,Epistemología de la Física II,2,Obligatorio,,,
+6,25128,Mecánica Estadística,Mecánica Estadística,3,Obligatorio,,,
+6,25129,Métodos Matemáticos de la Física,Métodos Matemáticos de la Física,2,Obligatorio,,,
+6,25130,Teoría Electromagnética II y Laboratorio,Teoría Electromagnética II y Laboratorio,3,Obligatorio,,,
+6,25131,Introducción a la Astrofísica,Introducción a la Astrofísica,2,Obligatorio,,,
+6,25132,Física Computacional I,Física Computacional I,2,Obligatorio,,,
+6,25133,Electrónica Digital y Laboratorio I,Electrónica Digital y Laboratorio I,2,Obligatorio,,,
+7,25155,Minería de datos,Minería de datos,4,Electivo,"Línea de aplicación I (A,B,C,D,E)",Física computacional,"Línea de aplicación I (A,B,C,D,E)"
+7,25156,Instrumentación en astronomía,Instrumentación en astronomía,4,Electivo,"Línea de aplicación I (A,B,C,D,E)",Astronomía,"Línea de aplicación I (A,B,C,D,E)"
+7,25163,Procesamiento de imágenes,Procesamiento de imágenes,4,Electivo,"Línea de aplicación I (A,B,C,D,E)",Física computacional,"Línea de aplicación I (A,B,C,D,E)"
+7,25166,Microcontroladores,Microcontroladores,4,Electivo,"Línea de aplicación I (A,B,C,D,E)",Instrumentación,"Línea de aplicación I (A,B,C,D,E)"
+7,25169,"Energía solar, térmica y fotovoltaica","Energía solar, térmica y fotovoltaica",4,Electivo,"Línea de aplicación I (A,B,C,D,E)",Energías renovables,"Línea de aplicación I (A,B,C,D,E)"
+7,25175,Mecánica analítica,Mecánica analítica,4,Electivo,"Línea de aplicación I (A,B,C,D,E)",Física computacional,"Línea de aplicación I (A,B,C,D,E)"
+7,25176,Simulación computacional de biosistemas,Simulación computacional de biosistemas,4,Electivo,"Línea de aplicación I (A,B,C,D,E)",Física computacional,"Línea de aplicación I (A,B,C,D,E)"
+7,25177,Introducción a la física médica,Introducción a la física médica,4,Electivo,"Línea de aplicación I (A,B,C,D,E)",Física médica,"Línea de aplicación I (A,B,C,D,E)"
+7,25134,Física Moderna y Laboratorio,Física Moderna y Laboratorio,2,Obligatorio,,,
+7,25135,Física Atómica y Nuclear,Física Atómica y Nuclear,2,Obligatorio,,,
+7,25136,Física Computacional II,Física Computacional II,2,Obligatorio,,,
+7,25137,Taller de Máquinas y Herramientas,Taller de Máquinas y Herramientas,2,Obligatorio,,,
+7,25138,Automatización y Control I,Automatización y Control I,2,Obligatorio,,,
+8,25157,Modelamiento físico computacional,Modelamiento físico computacional,5,Electivo,"Línea de aplicación II (A,B,C,D,E)",Física computacional,"Línea de aplicación II (A,B,C,D,E)"
+8,25158,Astronomía observacional,Astronomía observacional,5,Electivo,"Línea de aplicación II (A,B,C,D,E)",Astronomía,"Línea de aplicación II (A,B,C,D,E)"
+8,25164,Física de las radiaciones,Física de las radiaciones,5,Electivo,"Línea de aplicación II (A,B,C,D,E)",Física médica,"Línea de aplicación II (A,B,C,D,E)"
+8,25167,Electrónica digital,Electrónica digital,5,Electivo,"Línea de aplicación II (A,B,C,D,E)",Instrumentación,"Línea de aplicación II (A,B,C,D,E)"
+8,25170,Energía eólica y aerogeneradores,Energía eólica y aerogeneradores,5,Electivo,"Línea de aplicación II (A,B,C,D,E)",Energías renovables,"Línea de aplicación II (A,B,C,D,E)"
+8,25140,Introducción a la Mecánica Cuántica,Introducción a la Mecánica Cuántica,3,Obligatorio,,,
+8,25141,Estado Sólido y Dispositivos Semiconductores,Estado Sólido y Dispositivos Semiconductores,3,Obligatorio,,,
+8,25142,Modelos y Gestión I,Modelos y Gestión I,2,Obligatorio,,,
+8,25143,Seminario de Investigación,Seminario de Investigación,2,Obligatorio,,,
+9,25159,Desarrollo de software,Desarrollo de software,4,Electivo,"Línea de aplicación III (A,B,C,D,E)",Física computacional,"Línea de aplicación III (A,B,C,D,E)"
+9,25160,Astrofísica,Astrofísica,4,Electivo,"Línea de aplicación III (A,B,C,D,E)",Astronomía,"Línea de aplicación III (A,B,C,D,E)"
+9,25172,Dosimetría de radiaciones,Dosimetría de radiaciones,4,Electivo,"Línea de aplicación III (A,B,C,D,E)",Física médica,"Línea de aplicación III (A,B,C,D,E)"
+9,25173,Instrumentación biomédica,Instrumentación biomédica,4,Electivo,"Línea de aplicación III (A,B,C,D,E)",Física médica,"Línea de aplicación III (A,B,C,D,E)"
+9,25174,Bioenergía,Bioenergía,4,Electivo,"Línea de aplicación III (A,B,C,D,E)",Energías renovables,"Línea de aplicación III (A,B,C,D,E)"
+9,25145,Mecánica Cuántica Avanzada,Mecánica Cuántica Avanzada,3,Obligatorio,,,
+9,25146,Ciencias de los Materiales,Ciencias de los Materiales,3,Obligatorio,,,
+9,25148,Modelos y Gestión II,Modelos y Gestión II,2,Obligatorio,,,
+9,25149,Trabajo de Grado I,Trabajo de Grado I,4,Obligatorio,,,
+10,25161,Sistemas distribuidos,Sistemas distribuidos,5,Electivo,"Línea de aplicación IV (A,B,C,D,E)",Física computacional,"Línea de aplicación IV (A,B,C,D,E)"
+10,25162,Cosmología,Cosmología,5,Electivo,"Línea de aplicación IV (A,B,C,D,E)",Astronomía,"Línea de aplicación IV (A,B,C,D,E)"
+10,25165,Protección radiológica,Protección radiológica,5,Electivo,"Línea de aplicación IV (A,B,C,D,E)",Física médica,"Línea de aplicación IV (A,B,C,D,E)"
+10,25168,Comunicaciones y redes industriales,Comunicaciones y redes industriales,5,Electivo,"Línea de aplicación IV (A,B,C,D,E)",Instrumentación,"Línea de aplicación IV (A,B,C,D,E)"
+10,25171,Hidrógeno y celdas de combustible,Hidrógeno y celdas de combustible,5,Electivo,"Línea de aplicación IV (A,B,C,D,E)",Energías renovables,"Línea de aplicación IV (A,B,C,D,E)"
+10,25150,Teoría General de la Relatividad,Teoría General de la Relatividad,2,Obligatorio,,,
+10,25151,Nanotecnología y Nuevos Materiales,Nanotecnología y Nuevos Materiales,3,Obligatorio,,,
+10,25153,Gestión Tecnológica y Compromiso Social,Gestión Tecnológica y Compromiso Social,2,Obligatorio,,,
+10,25154,Trabajo de Grado II,Trabajo de Grado II,4,Obligatorio,,,

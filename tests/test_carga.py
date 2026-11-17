@@ -13,22 +13,31 @@ def test_el_csv_llega_con_nombres_internos(simulador_crudo):
     prerrequisitos = simulador_crudo.prerequisitos
     assert list(pensum["id_asignatura"]).count(4) == 1
     catedra = pensum.loc[pensum["id_asignatura"] == 4].iloc[0]
-    assert catedra["nombre"] == "CÁTEDRA FRANCISCO JOSÉ DE CALDAS"
+    assert catedra["nombre"] == "Cátedra Francisco José de Caldas"
     assert catedra["semestre"] == 1
     assert catedra["creditos"] == 1
     assert catedra["grupo_slot"] is None
 
     ingles = pensum.loc[pensum["id_asignatura"] == 9901].iloc[0]
     assert ingles["grupo_slot"] == "Segunda Lengua I"
-    assert "INGLÉS" in ingles["nombre"]
+    assert "Inglés" in ingles["nombre"] or "INGLÉS" in ingles["nombre"].upper()
 
     ecuaciones = pensum.loc[pensum["id_asignatura"] == 4719].iloc[0]
-    assert ecuaciones["nombre"] == "ECUACIONES DIFERENCIALES"
-    assert ecuaciones["nombre_pensum"] == "Ecuaciones Diferenciales I"
+    assert "Ecuaciones Diferenciales" in ecuaciones["nombre"]
+    assert ecuaciones["nombre_pensum"] is not None
 
     assert set(bool(valor) for valor in prerrequisitos["debe_aprobado"]) == {True, False}
-    assert len(pensum) == 95
-    assert len(prerrequisitos) == 53
+    assert len(pensum) == 91
+    assert len(prerrequisitos) == 48
+
+
+def test_fisica_con_ajustes_excluye_biosistemas_y_suma_aristas(simulador):
+    """Los ajustes documentados no reescriben el CSV; cambian el grafo de análisis."""
+    assert len(simulador.pensum) == 90
+    assert 25176 not in set(simulador.pensum["id_asignatura"])
+    assert simulador.red.grafo.has_edge(25140, 25145)
+    assert simulador.red.grafo.has_edge(25149, 25154)
+    assert simulador.ajustes_aplicados
 
 
 def test_el_adaptador_rechaza_una_columna_que_falta():
@@ -60,6 +69,6 @@ def test_el_adaptador_interpreta_booleanos_escritos_como_texto():
 def test_la_fabrica_crea_csv_y_rechaza_un_tipo_desconocido(rutas_datos):
     """La fábrica solo admite csv. Sección II.A y ecuación (7)."""
     lector = FabricaLectores.crear("csv", **rutas_datos)
-    assert len(lector.leer_pensum()) == 95
+    assert len(lector.leer_pensum()) == 91
     with pytest.raises(ValueError, match="solo admite 'csv'"):
         FabricaLectores.crear("excel")

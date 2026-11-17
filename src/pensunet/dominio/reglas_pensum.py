@@ -1,26 +1,13 @@
 """Compatibilidad: reexporta las reglas de Física.
 
-El punto de extensión nuevo es ``ReglasCarrera`` / ``FabricaReglas`` en
+El punto de extensión es ``ReglasCarrera`` / ``FabricaReglas`` en
 ``reglas.py``. Este módulo evita romper imports antiguos.
 """
 
 from pensunet.dominio.reglas import TablasAnalisis
-from pensunet.dominio.reglas_fisica import (
-    ARISTAS_CONFIRMADAS,
-    IDIOMAS_MODELO,
-    NO_OFRECIDAS,
-    SLOTS_GENERICOS_LINEA,
-    TASAS_JUICIO_EXPERTO,
-    ReglasFisica,
-    preparar_tablas_analisis,
-)
+from pensunet.dominio.reglas_fisica import ReglasFisica, preparar_tablas_analisis
 
 __all__ = [
-    "ARISTAS_CONFIRMADAS",
-    "IDIOMAS_MODELO",
-    "NO_OFRECIDAS",
-    "SLOTS_GENERICOS_LINEA",
-    "TASAS_JUICIO_EXPERTO",
     "ReglasFisica",
     "TablasAnalisis",
     "preparar_tablas_analisis",

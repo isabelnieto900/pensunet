@@ -1,24 +1,18 @@
 """Genera la figura PNG y la vista HTML interactiva de la red."""
 
+import sys
 from pathlib import Path
 
 from pensunet import SimuladorPensum
-from pensunet.datos.fabrica import FabricaLectores
 from pensunet.dominio.visualizacion import dibujar_red, exportar_red_html
 
 
-def main() -> None:
+def main(clave: str = "fisica") -> None:
     raiz = Path(__file__).resolve().parents[1]
-    lector = FabricaLectores.crear(
-        "csv",
-        ruta_pensum=raiz / "data/reference/pensum_fisica.csv",
-        ruta_prerequisitos=raiz / "data/reference/prerequisitos_fisica.csv",
-        ruta_tasas=raiz / "data/processed/tasas_aprobacion_fisica.csv",
-    )
-    simulador = SimuladorPensum(lector)
-    red = simulador.cargar(aplicar_reglas=True)
+    simulador = SimuladorPensum.desde_programa(clave)
+    red = simulador.cargar()
     titulo = (
-        "Plan de estudios de Física · red de prerrequisitos "
+        f"Plan de estudios de {simulador.programa.nombre} · red de prerrequisitos "
         f"({red.grafo.number_of_nodes()} asignaturas, "
         f"{red.grafo.number_of_edges()} aristas)"
     )
@@ -32,4 +26,4 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    main(sys.argv[1] if len(sys.argv) > 1 else "fisica")

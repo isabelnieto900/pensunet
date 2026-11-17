@@ -33,7 +33,8 @@ class MonteCarloMolontay(EstrategiaSimulacion):
        créditos electivos. El artículo usa 10 000 réplicas.
 
     No se copia la convención BME de fijar p_i = 1 en electivas.
-    Trabajo de grado I y II reciben p_i = 1 vía ``ReglasFisica``.
+    Trabajo de grado y materias sin histórico deben traer p_i en
+    ``tasas`` (p. ej. editadas en la interfaz); no se inventa 0 ni 1.
     """
 
     def simular(

@@ -1,0 +1,87 @@
+nu_periodo_formacion,id_asignatura,ds_nombre_asignatura,ds_nombre_pensum,nu_creditos,ds_clasificacion,ds_grupo_slot,ds_linea_tematica,ds_bloque_electivo
+1,25205,Electiva I,Electiva I,2,Electivo,Electiva I,,Electiva I
+1,4,Cátedra Francisco José de Caldas,Cátedra Francisco José de Caldas,1,Obligatorio,,,
+1,6002,Física I,Física I,2,Obligatorio,,,
+1,25202,Química General I,Química General I,3,Obligatorio,,,
+1,25203,Matemáticas,Matemáticas,3,Obligatorio,,,
+1,25204,Biología,Biología,4,Obligatorio,,,
+2,25211,Electiva II,Electiva II,2,Electivo,Electiva II,,Electiva II
+2,25247,Introducción a la contaminación ambiental,Introducción a la contaminación ambiental,2,Electivo,Electiva II,,Electiva II
+2,25255,Fundamentos de la ciencia de materiales,Fundamentos de la ciencia de materiales,2,Electivo,Electiva II,,Electiva II
+2,12,Cátedra Democracia y Ciudadanía,Cátedra Democracia y Ciudadanía,1,Obligatorio,,,
+2,25206,Química General II,Química General II,3,Obligatorio,,,
+2,25207,Cálculo Diferencial,Cálculo Diferencial,3,Obligatorio Básico,,,
+2,25208,Física II,Física II,2,Obligatorio,,,
+2,25209,Microbiología,Microbiología,3,Obligatorio,,,
+2,25210,Estadística,Estadística,2,Obligatorio,,,
+3,25216,Electiva III,Electiva III,3,Electivo,Electiva III,,Electiva III
+3,25248,Introducción a la Ciencia de Materiales,Introducción a la Ciencia de Materiales,3,Electivo,Electiva III,,Electiva III
+3,2140,Diseño Experimental,Diseño Experimental,2,Obligatorio,,,
+3,6014,Calculo Integral,Calculo Integral,2,Obligatorio,,,
+3,25212,Química Inorgánica I,Química Inorgánica I,3,Obligatorio,,,
+3,25217,Informática y Programación Básica I,Informática y Programación Básica I,2,Obligatorio,,,
+3,25218,Metodología de la Investigación,Metodología de la Investigación,1,Obligatorio,,,
+3,25246,Cátedra de Contexto,Cátedra de Contexto,1,Obligatorio,,,
+4,9901,Segunda Lengua I - Inglés,Segunda Lengua I - Inglés,2,Obligatorio,Segunda Lengua I,,Segunda Lengua I
+4,9904,Segunda Lengua I - Francés,Segunda Lengua I - Francés,2,Obligatorio,Segunda Lengua I,,Segunda Lengua I
+4,9907,Segunda Lengua I - Alemán,Segunda Lengua I - Alemán,2,Obligatorio,Segunda Lengua I,,Segunda Lengua I
+4,9910,Segunda Lengua I - Italiano,Segunda Lengua I - Italiano,2,Obligatorio,Segunda Lengua I,,Segunda Lengua I
+4,9913,Segunda Lengua I - Portugués,Segunda Lengua I - Portugués,2,Obligatorio,Segunda Lengua I,,Segunda Lengua I
+4,25244,Nanoquímica,Nanoquímica,1,Electivo,Electiva IV,,Electiva IV
+4,6079,Química Verde,Química Verde,2,Obligatorio,,,
+4,25220,Química Inorgánica II,Química Inorgánica II,3,Obligatorio,,,
+4,25221,Química Orgánica I,Química Orgánica I,3,Obligatorio,,,
+4,25223,Fisicoquímica I,Fisicoquímica I,2,Obligatorio,,,
+4,25226,Análisis Químico Instrumental I,Análisis Químico Instrumental I,3,Obligatorio,,,
+5,25245,La Química en la Historia de la Humanidad,La Química en la Historia de la Humanidad,2,Electivo,Electiva V,,Electiva V
+5,25249,Nomenclatura Orgánica e Inorgánica,Nomenclatura Orgánica e Inorgánica,2,Electivo,Electiva V,,Electiva V
+5,25256,Electroquímica y corrosión,Electroquímica y corrosión,2,Electivo,Electiva V,,Electiva V
+5,25257,Farmacia química,Farmacia química,2,Electivo,Electiva V,,Electiva V
+5,25266,Gestión de la Calidad,Gestión de la Calidad,2,Electivo,Electiva V,,Electiva V
+5,25267,Química Forense,Química Forense,2,Electivo,Electiva V,,Electiva V
+5,25268,Química y ciencia de datos,Química y ciencia de datos,2,Electivo,Electiva V,,Electiva V
+5,25269,Química de Compuestos Heterocíclicos,Química de Compuestos Heterocíclicos,2,Electivo,Electiva V,,Electiva V
+5,25270,Perspectivas del Carbón,Perspectivas del Carbón,2,Electivo,Electiva V,,Electiva V
+5,25271,Análisis Retrosintético,Análisis Retrosintético,2,Electivo,Electiva V,,Electiva V
+5,25222,Espectroscopia Básica,Espectroscopia Básica,2,Obligatorio,,,
+5,25224,Química Analítica,Química Analítica,4,Obligatorio,,,
+5,25225,Química Orgánica II,Química Orgánica II,4,Obligatorio,,,
+5,25228,Procesos Químicos Industriales,Procesos Químicos Industriales,2,Obligatorio,,,
+6,25227,Fisicoquímica II,Fisicoquímica II,2,Obligatorio,,,
+6,25229,Química de los Compuestos de Coordinación,Química de los Compuestos de Coordinación,2,Obligatorio,,,
+6,25230,Análisis Químico Orgánico,Análisis Químico Orgánico,4,Obligatorio,,,
+6,25231,Análisis Químico Instrumental II,Análisis Químico Instrumental II,3,Obligatorio,,,
+6,25232,Química Cuántica,Química Cuántica,3,Obligatorio,,,
+6,25233,Química Ambiental,Química Ambiental,3,Obligatorio,,,
+6,25234,Profundización I (Industria o Salud o Medio Ambiente),Profundización I (Industria o Salud o Medio Ambiente),3,Obligatorio,,,
+7,9902,Segunda Lengua II - Ingles,Segunda Lengua II - Ingles,2,Obligatorio,Segunda Lengua II,,Segunda Lengua II
+7,9905,Segunda Lengua II - Francés,Segunda Lengua II - Francés,2,Obligatorio,Segunda Lengua II,,Segunda Lengua II
+7,9908,Segunda Lengua II - Alemán,Segunda Lengua II - Alemán,2,Obligatorio,Segunda Lengua II,,Segunda Lengua II
+7,9911,Segunda Lengua II - Italiano,Segunda Lengua II - Italiano,2,Obligatorio,Segunda Lengua II,,Segunda Lengua II
+7,9914,Segunda Lengua II - Portugués,Segunda Lengua II - Portugués,2,Obligatorio,Segunda Lengua II,,Segunda Lengua II
+7,25250,Procesos de transferencia de masa,Procesos de transferencia de masa,3,Obligatorio,Profundización II (Industria o Salud o Medio Ambiente),,Profundización II (Industria o Salud o Medio Ambiente)
+7,25251,Análisis y tratamiento de aguas residuales,Análisis y tratamiento de aguas residuales,3,Obligatorio,Profundización II (Industria o Salud o Medio Ambiente),,Profundización II (Industria o Salud o Medio Ambiente)
+7,25252,Biotecnología en salud,Biotecnología en salud,3,Obligatorio,Profundización II (Industria o Salud o Medio Ambiente),,Profundización II (Industria o Salud o Medio Ambiente)
+7,25253,Bioensayos,Bioensayos,3,Obligatorio,Profundización II (Industria o Salud o Medio Ambiente),,Profundización II (Industria o Salud o Medio Ambiente)
+7,25259,Inmunología básica,Inmunología básica,3,Obligatorio,Profundización II (Industria o Salud o Medio Ambiente),,Profundización II (Industria o Salud o Medio Ambiente)
+7,25260,Carbones,Carbones,3,Obligatorio,Profundización II (Industria o Salud o Medio Ambiente),,Profundización II (Industria o Salud o Medio Ambiente)
+7,25261,Cinética química,Cinética química,3,Obligatorio,Profundización II (Industria o Salud o Medio Ambiente),,Profundización II (Industria o Salud o Medio Ambiente)
+7,25235,Síntesis Química Orgánica,Síntesis Química Orgánica,3,Obligatorio,,,
+7,25236,Espectroscopia Avanzada,Espectroscopia Avanzada,2,Obligatorio,,,
+7,25237,Biología Molecular,Biología Molecular,3,Obligatorio,,,
+7,25238,Bioquímica I,Bioquímica I,4,Obligatorio,,,
+8,25254,Aplicaciones de Biociencias,Aplicaciones de Biociencias,6,Obligatorio,Profundización III (Industria o Salud o Medio Ambiente),,Profundización III (Industria o Salud o Medio Ambiente)
+8,25262,Catálisis Ambiental y Agroecología,Catálisis Ambiental y Agroecología,6,Obligatorio,Profundización III (Industria o Salud o Medio Ambiente),,Profundización III (Industria o Salud o Medio Ambiente)
+8,25263,Biociencias,Biociencias,6,Obligatorio,Profundización III (Industria o Salud o Medio Ambiente),,Profundización III (Industria o Salud o Medio Ambiente)
+8,25264,Reactores químicos,Reactores químicos,6,Obligatorio,Profundización III (Industria o Salud o Medio Ambiente),,Profundización III (Industria o Salud o Medio Ambiente)
+8,6000,Química Computacional,Química Computacional,2,Obligatorio,,,
+8,6049,Radioquimica,Radioquimica,2,Obligatorio,,,
+8,25149,Trabajo de Grado I,Trabajo de Grado I,4,Obligatorio,,,
+8,25240,Productos Naturales,Productos Naturales,3,Obligatorio,,,
+9,9903,Segunda Lengua III - Inglés,Segunda Lengua III - Inglés,2,Obligatorio,Segunda Lengua III,,Segunda Lengua III
+9,9906,Segunda Lengua III - Francés,Segunda Lengua III - Francés,2,Obligatorio,Segunda Lengua III,,Segunda Lengua III
+9,9909,Segunda Lengua III - Alemán,Segunda Lengua III - Alemán,2,Obligatorio,Segunda Lengua III,,Segunda Lengua III
+9,9912,Segunda Lengua III - Italiano,Segunda Lengua III - Italiano,2,Obligatorio,Segunda Lengua III,,Segunda Lengua III
+9,9915,Segunda Lengua III - Portugués,Segunda Lengua III - Portugués,2,Obligatorio,Segunda Lengua III,,Segunda Lengua III
+9,25265,Gestión Empresarial y Bioética,Gestión Empresarial y Bioética,6,Obligatorio,Profundización IV (Industria o Salud o Medio Ambiente),,Profundización IV (Industria o Salud o Medio Ambiente)
+9,25242,Trabajo de Grado II,Trabajo de Grado II,4,Obligatorio,,,

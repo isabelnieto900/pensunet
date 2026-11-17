@@ -1,15 +1,15 @@
 # Manual técnico
 
-Estado: borrador de la etapa 2. Describe la arquitectura, las reglas
-confirmadas del programa aplicadas al grafo de análisis, los indicadores
-de la sección II.B (incluida la ecuación (2)) y la figura del DAG. La
-simulación Monte Carlo no está programada.
+Estado: borrador de la etapa 1. Describe la arquitectura que ya está en
+el código y el método de Molontay et al. (2020) que esa etapa alcanza a
+implementar. La simulación Monte Carlo no está programada.
 
 Referencia:
 
 > Molontay, R., Horváth, N., Bergmann, J., Szekrényes, D. y Szabó, M. (2020).
 > Characterizing Curriculum Prerequisite Networks by a Student Flow Approach.
-> *IEEE Transactions on Learning Technologies*. DOI: 10.1109/TLT.2020.2981331.
+> *IEEE Transactions on Learning Technologies*, 13(3), 491–501.
+> DOI: 10.1109/TLT.2020.2981331.
 
 El artículo no publica código. Pensunet es una implementación original
 de sus definiciones. Las citas de ecuación en los docstrings apuntan a
@@ -20,36 +20,36 @@ esa numeración.
 Entra en esta versión:
 
 - leer el pensum, los prerrequisitos y las tasas agregadas;
-- aplicar las reglas confirmadas del programa al grafo de análisis
-  (sin reescribir los CSV en silencio);
 - construir el grafo dirigido y rechazarlo si tiene un ciclo;
 - calcular el semestre mínimo impuesto por los prerrequisitos;
-- calcular el factor de bloqueo, el factor de posponimiento, la
-  intermediación y los cuellos de botella de la ecuación (2);
-- dibujar la red (PNG) para documentación.
+- calcular el factor de bloqueo, el factor de posponimiento y la
+  intermediación.
 
-No entra: la simulación del tiempo de grado, el efecto de atravesar una
-asignatura, el cupo de 18 créditos de línea de aplicación como
-restricción de simulación, probabilidades distintas por estudiante, un
-modelo SIR, ni la interfaz gráfica.
+Entra también la interfaz Streamlit (`src/pensunet/ui/app.py`) con
+selector de carrera FCMN, la figura/HTML de la red, los cuellos de
+botella de la ecuación (2) y el Monte Carlo del tiempo de grado
+(tasas editables; TG sin valor por defecto).
+
+No entra: el efecto de atravesar una asignatura, probabilidades
+distintas por estudiante ni un modelo SIR.
 
 ## Arquitectura
 
 ```text
-SimuladorPensum                 fachada
+SimuladorPensum                 fachada (selector de programa FCMN)
     │
     ├── LectorDatos             solo CSV en esta versión
     │     └── AdaptadorUD       columnas de la Universidad Distrital
-    ├── ReglasCarrera            Física hoy; extracto u otras carreras después
+    ├── ajustes                 correcciones documentadas por programa
     ├── RedPrerrequisitos       DAG con networkx
-    ├── indicadores             bloqueo, posponimiento, intermediación, ec. (2)
-    ├── visualizacion           figura del DAG
+    ├── indicadores             bloqueo, posponimiento, intermediación
     └── EstrategiaSimulacion    Monte Carlo, todavía sin algoritmo
 ```
 
 El dominio no importa la capa de datos. Recibe dataframes con nombres
 internos (`id_asignatura`, `semestre`, `debe_aprobado`, `tasa_aprobacion`).
-La interfaz, cuando exista, solo debería hablar con `SimuladorPensum`.
+La interfaz, cuando exista, solo debería hablar con `SimuladorPensum` y
+ofrecer un selector entre Física, Química, Biología y Matemáticas.
 
 ## Patrones y por qué están
 
@@ -70,27 +70,26 @@ esta versión el único tipo admitido es CSV.
 y no corrige cifras. Si el sistema académico renombra una columna, el
 cambio se concentra en un solo módulo.
 
+**Estrategia de reglas (`ReglasCarrera`).** Las correcciones locales
+(etapa 2) son propias de cada carrera. La fachada solo conoce el
+contrato `ReglasCarrera.preparar(pensum, prerrequisitos, tasas)` y
+`FabricaReglas.crear(clave)` elige la implementación:
+`ReglasDocumentadas` aplica las filas del programa en
+`ajustes_prerrequisitos.csv` (`ReglasFisica` es la de Física) y
+`ReglasSoloExtracto` deja el CSV tal cual para auditar el dato crudo.
+Las reglas viven como datos con justificación, no como constantes en el
+código.
+
 **Estrategia (`EstrategiaSimulacion`).** La sección III.B es un
 algoritmo intercambiable. Hoy la única estrategia es
 `MonteCarloMolontay` y su método `simular` lanza `NotImplementedError`.
 Cuando haya probabilidades por estudiante u otra dinámica, se escribe
 otra estrategia sin rehacer la fachada ni el grafo.
 
-**Estrategia de reglas (`ReglasCarrera`).** El núcleo confía en el
-extracto de prerrequisitos (válido para cualquier carrera de la UD).
-Las correcciones locales —aristas que el SIU no cargó, materias no
-ofrecidas, slots genéricos— viven en una implementación por programa
-(`ReglasFisica` hoy). `ReglasSoloExtracto` no corrige nada: sirve para
-auditar el CSV o para programas sin revisión experta aún. La primera
-expansión prevista es la Facultad de Ciencias (matemáticas, biología,
-física, química); matemáticas exigirá además varios planes e
-homologaciones. `FabricaReglas` elige la estrategia por código de
-programa.
-
 Hacen falta porque el artículo describe un método y no entrega un
-programa, porque el SIU no es completo igual en todas las carreras, y
-porque las fases siguientes tienen que poder entrar sin mezclarse con
-el DAG.
+programa, y porque las fases siguientes (tasas por estudiante, otra
+dinámica de propagación, interfaz) tienen que poder entrar sin mezclarse
+con el DAG.
 
 ## Metodología
 
@@ -161,40 +160,13 @@ dividida por (n - 1)(n - 2)). Ese valor se pide con `normalizada=True`.
 El artículo mismo advierte que, en un DAG curricular, la intermediación
 se interpreta con cuidado.
 
-**Ecuación (2), cuellos de botella.** Una asignatura es cuello de botella
-si su grado de entrada supera el umbral `a`, su grado de salida supera
-`b` o la suma supera `c`. En Pensunet eso es `cuellos_de_botella`, con
-umbrales por defecto 2, 2 y 4 (como en el ejemplo del artículo). Se
-pueden pasar otros umbrales a `calcular_indicadores`.
+**Ecuación (2), cuellos de botella.** El artículo cuenta asignaturas
+cuyo grado de entrada, de salida o total supera unos umbrales a, b y c.
+No está implementada. No hace falta para los indicadores de esta etapa.
 
 Estos indicadores solo miran la forma del grafo. No usan la tasa de
 aprobación. Eso es deliberado: la sección II.C y la sección III meten
 las tasas, y esa parte es la simulación que falta.
-
-### Reglas del programa en el grafo de análisis
-
-`SimuladorPensum` admite una `ReglasCarrera` (por defecto
-`ReglasFisica`). Con `cargar(aplicar_reglas=True)` esa estrategia
-prepara las tablas antes de `construir_red`. Los CSV de
-`data/reference` y `data/processed` no se modifican. La bitácora queda
-en `red.reglas_aplicadas`. Resumen para Física:
-
-- segunda lengua: solo inglés (9901 → 9902 → 9903);
-- se excluyen las filas genéricas de línea de aplicación y 25176;
-- se excluyen electivas sin tasa (no ofrecidas);
-- se añaden las aristas 25140 → 25145, 25149 → 25154,
-  25141 → 25146 → 25151, 25142 → 25148 → 25153 y 4 → 12;
-- epistemología 25120 → 25127 ya viene en el CSV;
-- no se modela aún 12 → 25115 (Historia vs cátedra de contexto);
-- el requisito de 18 créditos de línea se exige en el Monte Carlo.
-
-Con `aplicar_reglas=False` se obtiene el extracto crudo (útil para
-auditar el CSV). `examples/dibujar_red.py` genera en `docs/figuras/`:
-
-- `red_prerrequisitos.png`: grilla al estilo del plan oficial, con
-  aristas oscuras y halo claro;
-- `red_prerrequisitos.html`: misma disposición, interactiva (clic en
-  una asignatura resalta prerrequisitos y continuaciones).
 
 ### Tiempo de grado (secciones II.C y III)
 
@@ -224,20 +196,16 @@ En los CSV eso es `n_aprobados / n_inscritos`, ya guardado en
 aprobada cuando `fl_aprobada` es verdadero. La ventana es 2023-2 a
 2025-2.
 
-Supuestos de la sección III, guardados en `Escenario` y ejecutados por
-`MonteCarloMolontay`:
+Supuestos de la sección III, guardados en `Escenario` y todavía sin
+ejecutar:
 
 - no se cursa una asignatura antes de su semestre recomendado;
-- el estudiante intenta todas las obligatorias que ya le permite la
-  red, en el primer semestre posible;
+- el estudiante intenta todas las que ya le permite la red, en el
+  primer semestre posible;
 - todas las asignaturas se abren cada semestre;
 - p_i no cambia con el número de intento;
 - aprobar una asignatura no cambia la probabilidad de las otras;
-- las obligatorias se reintentan hasta aprobar;
-- las electivas de línea, si se reprueban, **no** se repiten (crédito
-  no cuenta; se puede elegir otra);
-- el grado en Física exige las obligatorias del grafo más **18 créditos**
-  de electivas ofrecidas (`creditos_electivas_minimos`);
+- se reintenta hasta aprobar;
 - no hay semestres pasivos.
 
 Con intentos independientes, el número de intentos X_i sigue una
@@ -250,51 +218,41 @@ analítica se vuelve intratable. Por eso el artículo simula.
 
 ### Monte Carlo (sección III.B)
 
-`MonteCarloMolontay.simular` genera la muestra de X: se leen las p_i de
-la ecuación (7), se avanza semestre a semestre respetando la red y se
-resume con las ecuaciones (3) y (4). El artículo usa 10 000 estudiantes
-representativos (`Escenario.n_estudiantes`). Si una trayectoria no se
-gradúa dentro de `Escenario.max_semestres` (o agota electivas), se
-censura en ese tope: la muestra termina igual y
-`ResultadoSimulacion.n_censurados` lo reporta. La interfaz Streamlit
-(`pensunet.ui.app`) expone la red, los indicadores y ese histograma.
+`MonteCarloMolontay.simular` estima p(x) y E(X) con estudiantes
+representativos. Exige una tasa para cada nodo del grafo. Electivas y
+Trabajo de grado sin histórico quedan vacíos en el CSV; la interfaz
+permite completarlos antes de simular y no asigna 0 ni 1 por defecto.
 
-En el caso de ingeniería eléctrica el artículo pone probabilidad 1 a las
-electivas. Aquí **no** se hace eso con electivas no ofrecidas: la tasa
-ausente significa que no se abren. En cambio, Trabajo de grado I y II
-reciben p_i = 1 por **juicio experto de Física** (nota del
-director/evaluador fuera del SIU; sin reprobaciones conocidas). Queda
-documentado en `TASAS_JUICIO_EXPERTO` y en `data/README.md`. El cupo de
-18 créditos de línea vive en la simulación, no en el grafo.
-
-Las ecuaciones (10), (11) y (12) son tres formas de subir p_i para
-aproximar el efecto de atravesar la asignatura, y la (13) es el cociente
-de esperanzas simuladas. Quedan para una etapa posterior.
+Las ecuaciones (10), (11) y (12) (efecto de atravesar la asignatura) y
+la (13) quedan fuera de esta versión.
 
 ## Datos que entran al grafo
 
-Los archivos, las inconsistencias y las reglas que el programa confirmó
-el 13 de noviembre de 2026 están en `data/README.md`. El grafo de esta
-etapa no las incorpora: sigue teniendo 95 nodos, 46 aristas estrictas,
-es acíclico y su duración nominal es 10 semestres.
+Los cuatro programas FCMN, el origen Cóndor/SGA, la ventana de tasas
+2023-2 a 2025-2, los ajustes documentados y el tratamiento de Trabajo
+de Grado están en `data/README.md`.
 
-Esas reglas, para cuando se modele la trayectoria y no solo el extracto:
+Física con ajustes documentados: **90 nodos, 48 aristas estrictas**,
+DAG, duración nominal 10. El extracto crudo del SGA tiene 91 asignaturas
+y 46 aristas estrictas (más inconsistencias anotadas, p. ej. el cupo
+25139 sin código).
 
-- cuántica avanzada exige cuántica 1 (25140 en este plan, u otra
-  materia equivalente vista en Licenciatura en Física);
-- trabajo de grado II exige el I, salvo en pasantía, donde van juntas;
-- óptica no tiene prerrequisito;
-- física moderna precede en teoría a física atómica, pero se ven en el
-  mismo semestre;
-- cada idioma es una cadena I → II → III, de un solo idioma, con
-  homologación por examen;
-- el prerrequisito de biosistemas es un cierre de inscripción, no una
-  condición académica, y la materia no está disponible;
-- la línea de aplicación pide 18 créditos, mezclando las cinco líneas
-  y pudiendo ver varias materias a la vez.
+Resumen de ajustes (nunca silenciosos; ver
+`data/reference/ajustes_prerrequisitos.csv`):
+
+- Física: se agregan 25140 → 25145 y TG I → TG II (salvo pasantía); se
+  excluye biosistemas (25176) y la arista al cupo 25139.
+- Química: se conservan las aristas que invierten semestre; no se agrega
+  TG I → TG II.
+- Biología y Matemáticas: candidatos faltantes de la auditoría quedan
+  pendientes; no se agregan.
+
+Trabajo de Grado: tasa vacía / juicio experto en las cuatro carreras;
+no se usa 0 ni 1 por defecto.
 
 ## Pruebas
 
-`pytest` cubre la carga y el adaptador, el DAG y su rechazo cuando hay
-un ciclo, los niveles, los tres indicadores (incluido el currículo de la
-figura 1) y las tasas. `ruff check` cubre el estilo.
+`pytest` cubre la carga y el adaptador, el DAG (regresión de Física y
+casos parametrizados por carrera: ids únicos, aciclicidad, créditos del
+plan, códigos de prerrequisito), los indicadores (incluido el currículo
+de la figura 1) y las tasas. `ruff check` cubre el estilo.

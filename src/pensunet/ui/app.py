@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 import streamlit as st
 
 from pensunet import SimuladorPensum, __version__
-from pensunet.datos.fabrica import FabricaLectores
+from pensunet.datos.programas import PROGRAMAS
 from pensunet.dominio.escenario import Escenario
 from pensunet.dominio.indicadores import (
     UMBRAL_ENTRADA_CUELLO,
@@ -26,18 +26,12 @@ from pensunet.ui.tablas import (
     tasas_desde_editor,
 )
 
-
-def _mostrar_red_html(html: str) -> None:
-    """Muestra la red interactiva (iframe sin barra de scroll interna)."""
-    st.iframe(html, height=560)
-
 _PAGINAS = (
     "Red de prerrequisitos",
     "Indicadores",
     "Tiempo de grado",
 )
 
-# Tipografía propia; colores ligados al tema de Streamlit (claro/oscuro).
 _CSS = """
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Source+Sans+3:wght@400;600;700&display=swap');
@@ -56,7 +50,7 @@ html, body, [class*="css"] {
 .pensunet-lema {
   font-size: 1.05rem;
   margin: 0 0 1.25rem 0;
-  max-width: 38rem;
+  max-width: 42rem;
   color: var(--text-color);
   opacity: 0.78;
 }
@@ -80,26 +74,9 @@ div[data-testid="stIFrame"] > iframe {
 """
 
 
-def _raiz_proyecto() -> Path:
-    """Localiza la raíz del repo (desarrollo) o el directorio de trabajo."""
-    aqui = Path(__file__).resolve()
-    candidatos = [aqui.parents[3], Path.cwd()]
-    for candidato in candidatos:
-        if (candidato / "data" / "reference" / "pensum_fisica.csv").is_file():
-            return candidato
-    raise FileNotFoundError(
-        "No se encontraron los CSV de Física. Ejecute la interfaz desde "
-        "la raíz del repositorio pensunet."
-    )
-
-
-def _rutas_por_defecto() -> dict[str, Path]:
-    raiz = _raiz_proyecto()
-    return {
-        "ruta_pensum": raiz / "data" / "reference" / "pensum_fisica.csv",
-        "ruta_prerequisitos": raiz / "data" / "reference" / "prerequisitos_fisica.csv",
-        "ruta_tasas": raiz / "data" / "processed" / "tasas_aprobacion_fisica.csv",
-    }
+def _mostrar_red_html(html: str) -> None:
+    """Muestra la red interactiva (iframe sin barra de scroll interna)."""
+    st.iframe(html, height=560)
 
 
 def _tema_oscuro() -> bool:
@@ -116,19 +93,19 @@ def _firma_codigo_sim() -> str:
         "simulacion/montecarlo_molontay.py",
         "simulacion/estrategia.py",
         "dominio/escenario.py",
+        "datos/ajustes.py",
     ):
         ruta = Path(__file__).resolve().parents[1] / relativo
         firmas.append(f"{relativo}:{ruta.stat().st_mtime_ns}")
     return "|".join(firmas)
 
 
-@st.cache_resource(show_spinner="Cargando el pensum de Física…")
-def _cargar_simulador(_firma: str) -> SimuladorPensum:
-    """Siempre con reglas de Física: es el modo de análisis del programa."""
+@st.cache_resource(show_spinner="Cargando el pensum…")
+def _cargar_simulador(clave: str, _firma: str) -> SimuladorPensum:
+    """Carga el programa con ajustes documentados aplicados."""
     del _firma
-    lector = FabricaLectores.crear("csv", **_rutas_por_defecto())
-    modelo = SimuladorPensum(lector)
-    modelo.cargar(aplicar_reglas=True)
+    modelo = SimuladorPensum.desde_programa(clave)
+    modelo.cargar(aplicar_ajustes_documentados=True)
     return modelo
 
 
@@ -171,23 +148,24 @@ def _metricas_nodos(
 
 @st.cache_data(show_spinner=False)
 def _html_red_cacheado(
+    clave: str,
     nodos: int,
     aristas: int,
     oscuro: bool,
     cuellos: tuple[int, ...],
     camino: tuple[int, ...],
     con_metricas: bool,
-    _vista: int = 4,
+    _vista: int = 1,
 ) -> str:
-    """Regenera el HTML embebido cuando cambian red, tema o resaltados."""
+    """Regenera el HTML embebido cuando cambian programa, red, tema o resaltados."""
     del nodos, aristas, _vista
-    simulador = _cargar_simulador(_firma_codigo_sim())
-    assert simulador.red is not None
+    simulador = _cargar_simulador(clave, _firma_codigo_sim())
+    assert simulador.red is not None and simulador.programa is not None
     indicadores = simulador.indicadores()
     metricas = _metricas_nodos(simulador, indicadores) if con_metricas else None
     return html_de_la_red(
         simulador.red,
-        titulo="Red de prerrequisitos · Física",
+        titulo=f"Red de prerrequisitos · {simulador.programa.nombre}",
         embebido=True,
         oscuro=oscuro,
         resaltar=cuellos,
@@ -235,14 +213,39 @@ def _histograma(
 
 def _firma_tasas(tabla) -> tuple[tuple[int, float], ...]:
     """Huella estable de las p_i del editor (para saber si hay cambios pendientes)."""
-    return tuple(
-        (int(fila["id"]), round(float(fila["tasa_aprobacion"]), 6))
-        for fila in tabla.sort_values("id").to_dict(orient="records")
-    )
+    firmas = []
+    for fila in tabla.sort_values("id").to_dict(orient="records"):
+        valor = fila["tasa_aprobacion"]
+        if valor is None or (isinstance(valor, float) and valor != valor):
+            firmas.append((int(fila["id"]), float("nan")))
+        else:
+            firmas.append((int(fila["id"]), round(float(valor), 6)))
+    return tuple(firmas)
 
 
-def _asegurar_tasas_sesion(simulador: SimuladorPensum) -> None:
+def _ids_sin_tasa(tabla) -> list[int]:
+    faltan = []
+    for fila in tabla.to_dict(orient="records"):
+        valor = fila["tasa_aprobacion"]
+        if valor is None or (isinstance(valor, float) and valor != valor):
+            faltan.append(int(fila["id"]))
+    return faltan
+
+
+def _asegurar_tasas_sesion(clave: str, simulador: SimuladorPensum) -> None:
     assert simulador.red is not None and simulador.tasas is not None
+    if st.session_state.get("tasas_programa") != clave:
+        st.session_state.tasas_programa = clave
+        st.session_state.tasas_editor = tabla_tasas_del_grafo(
+            simulador.red,
+            simulador.tasas,
+        )
+        st.session_state.tasas_base = st.session_state.tasas_editor.copy()
+        st.session_state.resultado = None
+        st.session_state.escenario_usado = None
+        st.session_state.tasas_simuladas = None
+        st.session_state.mensaje_sim = None
+        st.session_state.pop("editor_tasas", None)
     if "tasas_editor" not in st.session_state:
         st.session_state.tasas_editor = tabla_tasas_del_grafo(
             simulador.red,
@@ -252,7 +255,12 @@ def _asegurar_tasas_sesion(simulador: SimuladorPensum) -> None:
         st.session_state.tasas_base = st.session_state.tasas_editor.copy()
 
 
-def _pagina_red(simulador: SimuladorPensum, resumen: dict, oscuro: bool) -> None:
+def _creditos_linea_default(clave: str) -> int:
+    """Física usa cupo de línea 18; el resto exige todos los nodos del grafo."""
+    return 18 if clave == "fisica" else 0
+
+
+def _pagina_red(clave: str, simulador: SimuladorPensum, resumen: dict, oscuro: bool) -> None:
     st.subheader("Red de prerrequisitos")
     st.caption(
         "Clic en una materia para ver prerrequisitos a la derecha; clic en el "
@@ -260,6 +268,7 @@ def _pagina_red(simulador: SimuladorPensum, resumen: dict, oscuro: bool) -> None
         "fondo para desplazar."
     )
     html = _html_red_cacheado(
+        clave,
         int(resumen["asignaturas"]),
         int(resumen["aristas"]),
         oscuro,
@@ -270,12 +279,17 @@ def _pagina_red(simulador: SimuladorPensum, resumen: dict, oscuro: bool) -> None
     _mostrar_red_html(html)
     assert simulador.red is not None
     if simulador.red.reglas_aplicadas:
-        with st.expander("Bitácora de reglas aplicadas"):
+        with st.expander("Bitácora de ajustes documentados"):
             for nota in simulador.red.reglas_aplicadas:
+                st.markdown(f"- {nota}")
+    if simulador.red.inconsistencias:
+        with st.expander("Inconsistencias del extracto (no corregidas en silencio)"):
+            for nota in simulador.red.inconsistencias:
                 st.markdown(f"- {nota}")
 
 
 def _pagina_indicadores(
+    clave: str,
     simulador: SimuladorPensum,
     resumen: dict,
     oscuro: bool,
@@ -322,6 +336,7 @@ def _pagina_indicadores(
         st.caption("Camino más largo: " + " → ".join(nombres_camino))
 
     html = _html_red_cacheado(
+        clave,
         int(resumen["asignaturas"]),
         int(resumen["aristas"]),
         oscuro,
@@ -338,22 +353,31 @@ def _pagina_indicadores(
     )
 
 
-def _pagina_simulacion(simulador: SimuladorPensum, oscuro: bool) -> None:
+def _pagina_simulacion(clave: str, simulador: SimuladorPensum, oscuro: bool) -> None:
     st.subheader("Tiempo de grado")
     st.markdown(
         "Monte Carlo de la sección III.B: estima p(x) y E(X). "
-        "Edita tasas o parámetros y pulsa **Simular** (un solo clic aplica "
-        "todo; no hace falta cambiar la semilla). Los CSV no se modifican."
+        "Edita tasas o parámetros y pulsa **Simular**. Los CSV no se modifican. "
+        "Trabajo de grado y electivas sin histórico dejan la tasa vacía "
+        "(juicio experto): hay que completarlas aquí antes de simular; "
+        "no se usa 0 ni 1 por defecto."
     )
-    _asegurar_tasas_sesion(simulador)
+    _asegurar_tasas_sesion(clave, simulador)
     if "resultado" not in st.session_state:
         st.session_state.resultado = None
         st.session_state.escenario_usado = None
         st.session_state.tasas_simuladas = None
         st.session_state.mensaje_sim = None
 
-    # Formulario: al enviar, Streamlit confirma el data_editor (antes las
-    # ediciones de tasas solo se “pegaban” al tocar otro control, p. ej. semilla).
+    faltan = _ids_sin_tasa(st.session_state.tasas_editor)
+    if faltan:
+        st.warning(
+            f"Faltan tasas para {len(faltan)} asignatura(s) del grafo "
+            f"(p. ej. {', '.join(str(c) for c in faltan[:8])}"
+            f"{'…' if len(faltan) > 8 else ''}). "
+            "Complétalas en el editor o la simulación no podrá correr."
+        )
+
     with st.form("form_simular", clear_on_submit=False):
         col_a, col_b = st.columns([3, 1])
         with col_a:
@@ -372,10 +396,10 @@ def _pagina_simulacion(simulador: SimuladorPensum, oscuro: bool) -> None:
                 step=1,
             )
 
-        with st.expander("Supuestos del escenario (Molontay + Física)", expanded=False):
+        with st.expander("Supuestos del escenario (Molontay + políticas locales)", expanded=False):
             st.caption(
-                "Parámetros de la sección III y políticas locales. "
-                "Las tasas p_i se editan en el bloque de abajo."
+                "Parámetros de la sección III. El cupo de electivas de 18 "
+                "créditos es propio de la línea de aplicación de Física."
             )
             respetar_semestre = st.toggle(
                 "Respetar semestre recomendado",
@@ -386,10 +410,10 @@ def _pagina_simulacion(simulador: SimuladorPensum, oscuro: bool) -> None:
                 "Créditos mínimos de electivas (línea)",
                 min_value=0,
                 max_value=48,
-                value=18,
+                value=_creditos_linea_default(clave),
                 step=1,
                 help=(
-                    "Cupo de línea de aplicación en Física. "
+                    "En Física: cupo de línea de aplicación. "
                     "0 = exigir todas las del grafo."
                 ),
             )
@@ -403,16 +427,12 @@ def _pagina_simulacion(simulador: SimuladorPensum, oscuro: bool) -> None:
                 max_value=80,
                 value=40,
                 step=1,
-                help=(
-                    "Si un estudiante no se gradúa a tiempo, se censura en este "
-                    "tope (la simulación no falla; se reporta cuántos censurados)."
-                ),
             )
 
         with st.expander("Tasas de aprobación (editables)", expanded=True):
             st.caption(
                 "Edita `tasa_aprobacion` entre 0 y 1. Al pulsar **Simular** "
-                "se usan estos valores (no hace falta tocar la semilla)."
+                "se usan estos valores."
             )
             editadas = st.data_editor(
                 st.session_state.tasas_editor,
@@ -440,13 +460,11 @@ def _pagina_simulacion(simulador: SimuladorPensum, oscuro: bool) -> None:
 
     if st.button("Restablecer tasas al histórico", key="reset_tasas"):
         st.session_state.tasas_editor = st.session_state.tasas_base.copy()
-        # Limpia el estado interno del data_editor del formulario.
         st.session_state.pop("editor_tasas", None)
         st.rerun()
 
     st.session_state.tasas_editor = editadas
 
-    # Huecos fijos: el progreso/aviso no desplaza la gráfica entre corridas.
     slot_estado = st.empty()
     slot_aviso = st.empty()
     slot_caption = st.empty()
@@ -581,11 +599,20 @@ def main() -> None:
     st.markdown('<p class="pensunet-marca">Pensunet</p>', unsafe_allow_html=True)
     st.markdown(
         '<p class="pensunet-lema">Red de prerrequisitos y tiempo de grado '
-        "del pensum de Física (Universidad Distrital).</p>",
+        "de los pensum FCMN (Universidad Distrital).</p>",
         unsafe_allow_html=True,
     )
 
+    etiquetas = {clave: prog.nombre for clave, prog in PROGRAMAS.items()}
     with st.sidebar:
+        st.markdown("### Carrera")
+        clave = st.selectbox(
+            "Programa",
+            options=sorted(PROGRAMAS),
+            format_func=lambda c: f"{etiquetas[c]} (plan {PROGRAMAS[c].id_plan})",
+            index=sorted(PROGRAMAS).index("fisica"),
+            key="selector_programa",
+        )
         st.markdown("### Navegación")
         pagina = st.radio(
             "Sección",
@@ -594,18 +621,16 @@ def main() -> None:
             label_visibility="collapsed",
         )
         st.caption(
-            "Datos de Física con reglas del programa aplicadas "
-            "(exclusiones, aristas confirmadas, TG con tasa 1)."
+            "Ajustes documentados aplicados (ver "
+            "`ajustes_prerrequisitos.csv`). TG sin tasa por defecto."
         )
         st.caption(f"Pensunet {__version__} · Molontay et al. (2020)")
 
-    simulador = _cargar_simulador(_firma_codigo_sim())
-    assert simulador.red is not None
+    simulador = _cargar_simulador(clave, _firma_codigo_sim())
+    assert simulador.red is not None and simulador.programa is not None
     resumen = tabla_resumen_red(simulador.red)
     indicadores = simulador.indicadores()
     cuellos = tuple(int(c) for c in indicadores.cuellos_de_botella)
-    # Se calcula aparte por si Streamlit aún tiene un IndicadoresTopologicos
-    # antiguo en memoria tras un hot-reload.
     camino = tuple(int(c) for c in camino_mas_largo(simulador.red))
 
     c1, c2, c3, c4 = st.columns(4)
@@ -615,11 +640,11 @@ def main() -> None:
     c4.metric("Cuellos de botella", len(cuellos))
 
     if pagina == "Red de prerrequisitos":
-        _pagina_red(simulador, resumen, oscuro)
+        _pagina_red(clave, simulador, resumen, oscuro)
     elif pagina == "Indicadores":
-        _pagina_indicadores(simulador, resumen, oscuro, cuellos, camino)
+        _pagina_indicadores(clave, simulador, resumen, oscuro, cuellos, camino)
     else:
-        _pagina_simulacion(simulador, oscuro)
+        _pagina_simulacion(clave, simulador, oscuro)
 
 
 if __name__ == "__main__":

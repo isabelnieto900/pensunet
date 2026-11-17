@@ -1,5 +1,7 @@
 """Tablas auxiliares de la interfaz (sin abrir Streamlit)."""
 
+import pandas as pd
+
 from pensunet.dominio.escenario import Escenario
 from pensunet.ui.tablas import (
     tabla_indicadores,
@@ -10,11 +12,36 @@ from pensunet.ui.tablas import (
 )
 
 
+def _tasas_completas(simulador) -> pd.DataFrame:
+    assert simulador.red is not None and simulador.tasas is not None
+    tasas = simulador.tasas.copy()
+    ids = {int(v) for v in tasas["id_asignatura"]}
+    nuevas = []
+    for nodo in simulador.red.grafo.nodes:
+        codigo = int(nodo)
+        if codigo in ids:
+            continue
+        nuevas.append(
+            {
+                "id_asignatura": codigo,
+                "nombre": simulador.red.grafo.nodes[nodo].get("nombre", ""),
+                "n_inscritos": 0,
+                "n_aprobados": 0,
+                "tasa_aprobacion": 1.0,
+                "n_bajo": True,
+            }
+        )
+    if nuevas:
+        tasas = pd.concat([tasas, pd.DataFrame(nuevas)], ignore_index=True)
+    return tasas
+
+
 def test_tabla_resumen_coincide_con_la_red(simulador):
     resumen = tabla_resumen_red(simulador.red)
     assert resumen["asignaturas"] == simulador.red.grafo.number_of_nodes()
     assert resumen["aristas"] == simulador.red.grafo.number_of_edges()
     assert resumen["duracion_nominal"] == simulador.red.duracion_nominal
+    assert resumen["reglas_aplicadas"] == len(simulador.red.reglas_aplicadas)
 
 
 def test_tabla_indicadores_incluye_cuellos(simulador):
@@ -26,7 +53,10 @@ def test_tabla_indicadores_incluye_cuellos(simulador):
 
 
 def test_tabla_tiempos_suma_la_muestra(simulador):
-    resultado = simulador.simular(Escenario(n_estudiantes=80, semilla=2))
+    resultado = simulador.simular(
+        Escenario(n_estudiantes=80, semilla=2),
+        tasas=_tasas_completas(simulador),
+    )
     frecuencias = tabla_tiempos(resultado)
     assert frecuencias["estudiantes"].sum() == 80
     assert abs(frecuencias["proporcion"].sum() - 1.0) < 1e-9

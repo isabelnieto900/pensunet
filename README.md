@@ -1,13 +1,14 @@
 # Pensunet
 
-Simulador de la red de prerrequisitos del pensum de Física de la
-Universidad Distrital Francisco José de Caldas (Bogotá).
+Simulador de la red de prerrequisitos de los pensum FCMN (Física,
+Química, Biología y Matemáticas) de la Universidad Distrital Francisco
+José de Caldas (Bogotá).
 
 Titular de los derechos de autor: **Laura Isabel Nieto Parroyo**, 2026.
 El software se presenta en la materia Desarrollo de Software Científico
-(profesor Carlos Andrés Gómez Vasco). La versión en desarrollo cubre la
-red de prerrequisitos, los indicadores topológicos, el Monte Carlo del
-tiempo de grado y una interfaz Streamlit.
+(profesor Carlos Andrés Gómez Vasco). La versión 1 cubre solo la red de
+prerrequisitos y los indicadores topológicos; la simulación Monte Carlo
+del tiempo de grado queda esbozada.
 
 ## Objetivo
 
@@ -17,7 +18,7 @@ método es:
 
 > Molontay, R., Horváth, N., Bergmann, J., Szekrényes, D. y Szabó, M. (2020).
 > Characterizing Curriculum Prerequisite Networks by a Student Flow Approach.
-> *IEEE Transactions on Learning Technologies*.
+> *IEEE Transactions on Learning Technologies*, 13(3), 491–501.
 > DOI: [10.1109/TLT.2020.2981331](https://doi.org/10.1109/TLT.2020.2981331).
 
 El artículo no publica código. Esta es una implementación original a partir
@@ -38,43 +39,30 @@ source .venv/bin/activate
 pip install -e ".[dev]"
 ```
 
-La interfaz Streamlit es una dependencia opcional (usa el mismo `.venv`):
+La interfaz gráfica, prevista con Streamlit, es una dependencia opcional:
 
 ```bash
-source .venv/bin/activate
 pip install -e ".[ui]"
-streamlit run src/pensunet/ui/app.py
 ```
-
-Sin activar el venv: `.venv/bin/streamlit run src/pensunet/ui/app.py`.
-También: `python examples/ejecutar_interfaz.py` (con el venv activo).
 
 ## Uso
 
 ```python
-from pathlib import Path
-
-from pensunet.datos.fabrica import FabricaLectores
 from pensunet import SimuladorPensum
 
-raiz = Path(".")
-lector = FabricaLectores.crear(
-    "csv",
-    ruta_pensum=raiz / "data/reference/pensum_fisica.csv",
-    ruta_prerequisitos=raiz / "data/reference/prerequisitos_fisica.csv",
-    ruta_tasas=raiz / "data/processed/tasas_aprobacion_fisica.csv",
-)
-simulador = SimuladorPensum(lector)
-simulador.cargar()  # aplica las reglas confirmadas del programa
+simulador = SimuladorPensum.desde_programa("fisica")  # o quimica, biologia, matematicas
+simulador.cargar()
 indicadores = simulador.indicadores()
 ```
 
-Un script equivalente está en `examples/ejemplo_cargar_red.py`.
-Para el extracto CSV sin reglas: `simulador.cargar(aplicar_reglas=False)`.
-La figura del DAG se genera con `examples/dibujar_red.py`.
-La simulación Monte Carlo (sección III.B) se invoca con
-`simulador.simular(Escenario(n_estudiantes=10_000, semilla=1))` y
-devuelve la muestra de tiempos de grado X.
+CLI: `python examples/ejemplo_cargar_red.py --programa quimica`.
+
+Interfaz Streamlit (selector de carrera en la barra lateral):
+
+```bash
+pip install -e ".[ui]"
+python examples/ejecutar_interfaz.py
+```
 
 Para ejecutar las pruebas:
 
@@ -89,9 +77,9 @@ ruff check src tests examples
 src/pensunet/
   facade.py                 Fachada SimuladorPensum
   datos/                    Lector CSV, fábrica y adaptador UD
-  dominio/                  DAG, reglas por carrera, indicadores, figura
-  simulacion/               Monte Carlo del tiempo de grado
-  ui/                       Interfaz Streamlit
+  dominio/                  DAG, indicadores y escenario
+  simulacion/               Estrategia y esqueleto Monte Carlo
+  ui/                       Placeholder de la interfaz
 data/reference/             Pensum y prerrequisitos
 data/processed/             Tasas de aprobación agregadas por asignatura
 data/private/               Ignorado por git: no guardar microdatos
@@ -105,18 +93,14 @@ Los patrones (fachada, fábrica, adaptador y estrategia) se justifican en
 
 ## Datos
 
-En el repositorio solo hay tablas agregadas o de catálogo:
+En el repositorio solo hay tablas agregadas o de catálogo para las cuatro
+carreras FCMN (`pensum_*.csv`, `prerequisitos_*.csv`,
+`tasas_aprobacion_*.csv`), más `ajustes_prerrequisitos.csv` y el
+catálogo de Trabajo de Grado sin tasa.
 
-- `data/reference/pensum_fisica.csv`
-- `data/reference/prerequisitos_fisica.csv`
-- `data/processed/tasas_aprobacion_fisica.csv`
-
-No hay registros individuales ni códigos de estudiante. Las tasas vienen del
-histórico **2023-2 a 2025-2** de Física y una asignatura cuenta como
-aprobada cuando `fl_aprobada` es verdadero. El detalle de cobertura, de
-materias con pocos inscritos y de las inconsistencias entre las tres tablas
-está en [`data/README.md`](data/README.md). Esas inconsistencias se
-documentan; no se corrigen dentro de los archivos.
+No hay registros individuales ni códigos de estudiante. Las tasas vienen
+del histórico **2023-2 a 2025-2** (2026-1 no entra). El detalle de origen
+Cóndor/SGA, ajustes y TG está en [`data/README.md`](data/README.md).
 
 ## Licencia
 

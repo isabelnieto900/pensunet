@@ -1,0 +1,10 @@
+programa,accion,id_asignatura,id_prerequisito,fl_debe_aprobado,nu_orden,justificacion
+fisica,agregar,25145,25140,True,1,"No está en el SGA; confirmada por el programa. En el histórico la cumplió el 89,6 % (43/48)."
+fisica,excluir_nodo,25176,,,,"Simulación computacional de biosistemas: materia discontinuada. El prerrequisito débil 25145←25176 (semestres 9→7) es un cierre administrativo; nadie lo cumple (0/5). Se excluye de la red de análisis."
+fisica,excluir_arista,25139,25132,False,,"El SGA declara prerrequisito débil de Física Computacional I hacia el cupo genérico Línea de Aplicación I (25139), que en Cóndor no tiene id_asignatura. Se excluye para no crear un nodo huérfano."
+fisica,agregar,25154,25149,True,1,"Trabajo de Grado II exige TG I salvo modalidad pasantía (en pasantía pueden cursarse a la vez). La excepción de pasantía queda documentada; no se modela como arista débil."
+quimica,documentar,6079,25233,True,1,"La arista del SGA invierte semestres (Química Verde en 4 exige Química Ambiental en 6) pero se cumple en la práctica (98–100 %). Se mantiene sin corregir el plan."
+quimica,documentar,25226,25224,True,1,"La arista del SGA invierte semestres (Análisis Instrumental I en 4 exige Química Analítica en 5) pero se cumple en la práctica (100 % en cohorte nueva). Se mantiene sin corregir el plan."
+quimica,documentar,25242,25149,,,"No se agrega TG I→TG II: el SGA pide Profundización I (25234) a ambos TG; 13/23 los cursan a la vez."
+biologia,documentar,,,,,"Candidatos faltantes de la auditoría (n pequeño en semestres altos) quedan pendientes de confirmar con el programa; no se agregan aristas."
+matematicas,documentar,,,,,"Candidatos faltantes de la auditoría (n pequeño en semestres altos) quedan pendientes de confirmar con el programa; no se agregan aristas."
