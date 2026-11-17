@@ -1,6 +1,7 @@
 """Tablas auxiliares de la interfaz (sin abrir Streamlit)."""
 
 import pandas as pd
+import pytest
 
 from pensunet.dominio.escenario import Escenario
 from pensunet.ui.tablas import (
@@ -72,3 +73,23 @@ def test_tasas_editadas_se_aplican_en_la_simulacion(simulador):
     fusion = tasas_desde_editor(simulador.tasas, editor)
     fila = fusion.loc[fusion["id_asignatura"] == codigo].iloc[0]
     assert float(fila["tasa_aprobacion"]) == 0.5
+
+
+def test_tabla_indicadores_agrega_complejidad(simulador):
+    from pensunet.dominio.complejidad import calcular_complejidad
+
+    complejidad = calcular_complejidad(simulador.red)
+    tabla = tabla_indicadores(simulador.red, simulador.indicadores(), complejidad)
+    assert {"retraso", "complejidad"} <= set(tabla.columns)
+    assert int(tabla["complejidad"].sum()) == complejidad.complejidad_total
+
+
+def test_tasa_media_ignora_asignaturas_sin_historico(simulador):
+    from pensunet.ui.tablas import tasa_media, tasas_por_asignatura
+
+    por_id = tasas_por_asignatura(simulador.red, simulador.tasas)
+    conocidas = [v for v in por_id.values() if v is not None]
+    assert any(v is None for v in por_id.values())
+    assert tasa_media(simulador.red, simulador.tasas) == pytest.approx(
+        sum(conocidas) / len(conocidas)
+    )

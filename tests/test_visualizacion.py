@@ -74,3 +74,35 @@ def test_html_embebido_incluye_zoom_cuellos_y_camino(simulador):
         assert "Cuello de botella" in texto
     assert "Camino más largo" in texto
     assert "#c0392b" in texto
+
+
+def test_colores_por_valor_interpola_y_marca_faltantes():
+    """Extremos de la escala, punto medio y gris para valores sin dato."""
+    from pensunet.dominio.visualizacion import (
+        COLOR_SIN_DATO,
+        ESCALAS_COLOR,
+        colores_por_valor,
+    )
+
+    colores = colores_por_valor({1: 0.0, 2: 0.5, 3: 1.0, 4: None}, "tasa", 0.0, 1.0)
+    bajo, medio, alto = ESCALAS_COLOR["tasa"]
+    assert colores[1] == bajo.upper()
+    assert colores[2] == medio.upper()
+    assert colores[3] == alto.upper()
+    assert colores[4] == COLOR_SIN_DATO
+
+
+def test_colores_por_valor_rechaza_escala_desconocida():
+    import pytest
+
+    from pensunet.dominio.visualizacion import colores_por_valor
+
+    with pytest.raises(KeyError):
+        colores_por_valor({1: 1.0}, "arcoiris")
+
+
+def test_html_usa_los_colores_indicados(simulador):
+    """``colores`` reemplaza el color de área de la caja."""
+    nodo = next(iter(simulador.red.grafo))
+    html = html_de_la_red(simulador.red, embebido=True, colores={int(nodo): "#123456"})
+    assert 'fill="#123456"' in html

@@ -17,14 +17,23 @@ from pensunet.dominio.indicadores import (
     IndicadoresTopologicos,
     camino_mas_largo,
 )
-from pensunet.dominio.visualizacion import html_de_la_red
+from pensunet.dominio.visualizacion import ESCALAS_COLOR, colores_por_valor, html_de_la_red
 from pensunet.ui.tablas import (
     tabla_indicadores,
     tabla_resumen_red,
     tabla_tasas_del_grafo,
     tabla_tiempos,
+    tasa_media,
     tasas_desde_editor,
+    tasas_por_asignatura,
 )
+
+# Modos de color de las cajas en la vista de indicadores.
+_MODOS_COLOR = {
+    "area": "Área del plan",
+    "tasa": "Tasa de aprobación p_i",
+    "complejidad": "Complejidad estructural",
+}
 
 _PAGINAS = (
     "Red de prerrequisitos",
@@ -64,6 +73,40 @@ iframe {
   border: none !important;
   background: transparent !important;
   overflow: hidden !important;
+}
+p.pensunet-marca {
+  font-size: 2.55rem !important;
+  border-bottom: 3px solid var(--primary-color);
+  display: inline-block;
+  padding-bottom: 0.15rem;
+}
+div[data-testid="stMetricLabel"] p {
+  white-space: normal !important;
+  font-size: 0.82rem;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+div[data-testid="stMetricValue"] {
+  font-size: 1.75rem;
+  font-variant-numeric: tabular-nums;
+}
+.pensunet-leyenda {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.85rem;
+  max-width: 28rem;
+}
+.pensunet-degradado {
+  flex: 1;
+  height: 0.7rem;
+  border-radius: 999px;
+}
+.pensunet-nota {
+  font-size: 0.8rem;
+  opacity: 0.75;
+  margin: 0.15rem 0 0.6rem 0;
 }
 div[data-testid="stIFrame"],
 div[data-testid="stIFrame"] > iframe {
@@ -127,6 +170,7 @@ def _metricas_nodos(
     indicadores: IndicadoresTopologicos,
 ) -> dict[int, dict]:
     assert simulador.red is not None
+    complejidad = simulador.complejidad()
     metricas: dict[int, dict] = {}
     for nodo in simulador.red.grafo:
         codigo = int(nodo)
@@ -137,6 +181,8 @@ def _metricas_nodos(
             "bloqueo": indicadores.factor_bloqueo.get(codigo),
             "posponimiento": indicadores.factor_posponimiento.get(codigo),
             "intermediacion": indicadores.intermediacion.get(codigo),
+            "retraso": complejidad.retraso.get(codigo),
+            "complejidad": complejidad.complejidad_estructural.get(codigo),
             "motivo_cuello": (
                 _motivo_cuello(entrada, salida)
                 if codigo in indicadores.cuellos_de_botella
@@ -156,13 +202,15 @@ def _html_red_cacheado(
     camino: tuple[int, ...],
     con_metricas: bool,
     _vista: int = 1,
+    modo_color: str = "area",
 ) -> str:
-    """Regenera el HTML embebido cuando cambian programa, red, tema o resaltados."""
+    """Regenera el HTML embebido cuando cambian programa, red, tema, resaltados o color."""
     del nodos, aristas, _vista
     simulador = _cargar_simulador(clave, _firma_codigo_sim())
     assert simulador.red is not None and simulador.programa is not None
     indicadores = simulador.indicadores()
     metricas = _metricas_nodos(simulador, indicadores) if con_metricas else None
+    colores = _colores_de_cajas(simulador, modo_color)
     return html_de_la_red(
         simulador.red,
         titulo=f"Red de prerrequisitos · {simulador.programa.nombre}",
@@ -171,6 +219,46 @@ def _html_red_cacheado(
         resaltar=cuellos,
         camino=camino,
         metricas=metricas,
+        colores=colores,
+    )
+
+
+def _colores_de_cajas(simulador: SimuladorPensum, modo: str) -> dict[int, str] | None:
+    """Colores por tasa o complejidad; ``None`` conserva los colores del plan."""
+    assert simulador.red is not None and simulador.tasas is not None
+    if modo == "tasa":
+        return colores_por_valor(
+            tasas_por_asignatura(simulador.red, simulador.tasas),
+            escala="tasa",
+            minimo=0.0,
+            maximo=1.0,
+        )
+    if modo == "complejidad":
+        return colores_por_valor(
+            dict(simulador.complejidad().complejidad_estructural),
+            escala="complejidad",
+        )
+    return None
+
+
+def _leyenda_color(modo: str, simulador: SimuladorPensum) -> None:
+    """Barra de degradado bajo los controles, en HTML ligero."""
+    if modo == "area":
+        return
+    paradas = ", ".join(ESCALAS_COLOR[modo])
+    if modo == "tasa":
+        izquierda, derecha = "p = 0", "p = 1"
+        nota = "Gris: sin histórico (no se completa con 0 ni 1)."
+    else:
+        valores = simulador.complejidad().complejidad_estructural.values()
+        izquierda, derecha = f"h = {min(valores)}", f"h = {max(valores)}"
+        nota = "h(v) = retraso + bloqueo (Curricular Analytics)."
+    st.markdown(
+        f'<div class="pensunet-leyenda"><span>{izquierda}</span>'
+        f'<div class="pensunet-degradado" style="background: linear-gradient(90deg, {paradas});">'
+        f"</div><span>{derecha}</span></div>"
+        f'<p class="pensunet-nota">{nota}</p>',
+        unsafe_allow_html=True,
     )
 
 
@@ -319,6 +407,15 @@ def _pagina_indicadores(
             key="toggle_camino",
         )
 
+    modo_color = st.segmented_control(
+        "Color de las cajas",
+        options=list(_MODOS_COLOR),
+        format_func=lambda clave_modo: _MODOS_COLOR[clave_modo],
+        default="area",
+        key="modo_color_indicadores",
+    ) or "area"
+    _leyenda_color(modo_color, simulador)
+
     cuellos_vista = cuellos if ver_cuellos else ()
     camino_vista = camino if ver_camino else ()
 
@@ -343,10 +440,18 @@ def _pagina_indicadores(
         cuellos_vista,
         camino_vista,
         True,
+        modo_color=modo_color,
     )
     _mostrar_red_html(html)
+    complejidad = simulador.complejidad()
+    st.caption(
+        f"Complejidad curricular del plan: **{complejidad.complejidad_total}** "
+        "(suma de h(v) = retraso + bloqueo; Heileman et al., 2018, "
+        "curricularanalytics.org). Ordena la tabla por `complejidad` para ver "
+        "las asignaturas que más arrastran una reprobación."
+    )
     st.dataframe(
-        tabla_indicadores(simulador.red, indicadores),
+        tabla_indicadores(simulador.red, indicadores, complejidad),
         width="stretch",
         hide_index=True,
         height=360,
@@ -633,11 +738,33 @@ def main() -> None:
     cuellos = tuple(int(c) for c in indicadores.cuellos_de_botella)
     camino = tuple(int(c) for c in camino_mas_largo(simulador.red))
 
-    c1, c2, c3, c4 = st.columns(4)
-    c1.metric("Asignaturas", resumen["asignaturas"])
-    c2.metric("Aristas estrictas", resumen["aristas"])
-    c3.metric("Duración nominal", f"{resumen['duracion_nominal']} sem.")
-    c4.metric("Cuellos de botella", len(cuellos))
+    assert simulador.tasas is not None
+    media_p = tasa_media(simulador.red, simulador.tasas)
+    complejidad_total = simulador.complejidad().complejidad_total
+    c1, c2, c3, c4, c5, c6, c7 = st.columns(7)
+    c1.metric("Asignaturas", resumen["asignaturas"], help="Nodos del grafo con ajustes.")
+    c2.metric("Aristas", resumen["aristas"], help="Prerrequisitos estrictos (deben aprobarse).")
+    c3.metric(
+        "Créditos",
+        simulador.programa.creditos_plan,
+        help="Créditos del grado; cada cupo electivo cuenta una vez.",
+    )
+    c4.metric(
+        "Semestres",
+        resumen["duracion_nominal"],
+        help="Duración nominal del plan (máximo semestre recomendado).",
+    )
+    c5.metric(
+        "p̄ media",
+        "—" if media_p is None else f"{media_p:.2f}",
+        help="Promedio simple de p_i en las asignaturas con histórico.",
+    )
+    c6.metric(
+        "Complejidad",
+        complejidad_total,
+        help="Complejidad curricular (Curricular Analytics): suma de retraso + bloqueo.",
+    )
+    c7.metric("Cuellos", len(cuellos), help="Cuellos de botella, ecuación (2) de Molontay.")
 
     if pagina == "Red de prerrequisitos":
         _pagina_red(clave, simulador, resumen, oscuro)

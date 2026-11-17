@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import pandas as pd
 
+from pensunet.dominio.complejidad import ComplejidadCurricular
 from pensunet.dominio.indicadores import IndicadoresTopologicos
 from pensunet.dominio.red import RedPrerrequisitos
 from pensunet.simulacion.estrategia import ResultadoSimulacion
@@ -22,8 +23,13 @@ def tabla_resumen_red(red: RedPrerrequisitos) -> dict[str, int | float]:
 def tabla_indicadores(
     red: RedPrerrequisitos,
     indicadores: IndicadoresTopologicos,
+    complejidad: ComplejidadCurricular | None = None,
 ) -> pd.DataFrame:
-    """Una fila por asignatura con bloqueo, posponimiento e intermediación."""
+    """Una fila por asignatura con bloqueo, posponimiento e intermediación.
+
+    Con ``complejidad`` se añaden ``retraso`` y ``complejidad`` (Curricular
+    Analytics, Heileman et al., 2018).
+    """
     filas: list[dict] = []
     for nodo, datos in red.grafo.nodes(data=True):
         codigo = int(nodo)
@@ -39,6 +45,9 @@ def tabla_indicadores(
                 "cuello_de_botella": codigo in indicadores.cuellos_de_botella,
             }
         )
+        if complejidad is not None:
+            filas[-1]["retraso"] = complejidad.retraso.get(codigo)
+            filas[-1]["complejidad"] = complejidad.complejidad_estructural.get(codigo)
     tabla = pd.DataFrame(filas)
     return tabla.sort_values(
         by=["bloqueo", "intermediacion", "id"],
@@ -125,3 +134,33 @@ def tasas_desde_editor(
                 ignore_index=True,
             )
     return resultado.reset_index(drop=True)
+
+
+def tasa_media(red: RedPrerrequisitos, tasas: pd.DataFrame) -> float | None:
+    """Promedio simple de p_i sobre las asignaturas del grafo que tienen tasa.
+
+    Las asignaturas sin histórico (p. ej. Trabajo de Grado) no entran: no
+    se completan con 0 ni con 1. Devuelve None si ninguna tiene tasa.
+    """
+    nodos = {int(n) for n in red.grafo}
+    filas = tasas.loc[tasas["id_asignatura"].astype(int).isin(nodos), "tasa_aprobacion"]
+    filas = pd.to_numeric(filas, errors="coerce").dropna()
+    if filas.empty:
+        return None
+    return float(filas.mean())
+
+
+def tasas_por_asignatura(red: RedPrerrequisitos, tasas: pd.DataFrame) -> dict[int, float | None]:
+    """p_i de cada nodo del grafo, o None si no hay histórico."""
+    mapa = {
+        int(fila["id_asignatura"]): fila["tasa_aprobacion"]
+        for fila in tasas.to_dict(orient="records")
+    }
+    resultado: dict[int, float | None] = {}
+    for nodo in red.grafo:
+        valor = mapa.get(int(nodo))
+        if valor is None or pd.isna(valor):
+            resultado[int(nodo)] = None
+        else:
+            resultado[int(nodo)] = float(valor)
+    return resultado

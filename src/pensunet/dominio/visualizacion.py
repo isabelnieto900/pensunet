@@ -149,6 +149,7 @@ def html_de_la_red(
     resaltar: frozenset[int] | set[int] | tuple[int, ...] | None = None,
     camino: frozenset[int] | set[int] | tuple[int, ...] | None = None,
     metricas: dict[int, dict[str, float | int | str | None]] | None = None,
+    colores: dict[int, str] | None = None,
 ) -> str:
     """Devuelve el HTML interactivo de la red.
 
@@ -158,6 +159,8 @@ def html_de_la_red(
     ``oscuro`` fija colores legibles dentro del iframe.
     ``resaltar`` marca cuellos de botella; ``camino`` el camino más largo.
     ``metricas`` aporta tasa, bloqueo, etc. al panel lateral al hacer clic.
+    ``colores`` reemplaza el color de área de las cajas indicadas (p. ej.
+    por tasa de aprobación o complejidad; ver ``colores_por_valor``).
     """
     destacados = frozenset(int(x) for x in (resaltar or ()))
     en_camino = tuple(int(x) for x in (camino or ()))
@@ -187,7 +190,7 @@ def html_de_la_red(
     cajas_svg = []
     for nodo, (x, y, ancho, alto) in cajas.items():
         datos = grafo.nodes[nodo]
-        color = _color_area(datos)
+        color = (colores or {}).get(int(nodo)) or _color_area(datos)
         nombre = str(datos.get("nombre") or nodo)
         creditos = datos.get("creditos")
         pie = f"{nodo}" if creditos is None else f"{nodo} · {int(creditos)} cr"
@@ -230,6 +233,8 @@ def html_de_la_red(
                 "bloqueo": extra.get("bloqueo"),
                 "posponimiento": extra.get("posponimiento"),
                 "intermediacion": extra.get("intermediacion"),
+                "retraso": extra.get("retraso"),
+                "complejidad": extra.get("complejidad"),
                 "motivo_cuello": extra.get("motivo_cuello"),
             }
         )
@@ -622,6 +627,10 @@ def html_de_la_red(
         fmt(nodo.posponimiento, 3) + "</div>";
       html += "<div class='dato'><span class='etiqueta'>Intermediación</span><br/>" +
         fmt(nodo.intermediacion, 4) + "</div>";
+      if (nodo.complejidad !== null && nodo.complejidad !== undefined) {{
+        html += "<div class='dato'><span class='etiqueta'>Retraso / complejidad (CA)</span><br/>" +
+          fmt(nodo.retraso, 0) + " / " + fmt(nodo.complejidad, 0) + "</div>";
+      }}
       if (nodo.motivo_cuello) {{
         html += "<div class='dato'><span class='etiqueta'>Por qué es cuello</span><br/>" +
           nodo.motivo_cuello + "</div>";
@@ -859,6 +868,62 @@ def _dibujar_aristas(
         )
         flecha.set_path_effects(halo)
         eje.add_patch(flecha)
+
+
+# Escalas de color para las cajas (texto blanco legible en todos los tonos).
+ESCALAS_COLOR: dict[str, tuple[str, ...]] = {
+    # Tasa baja (rojo) → media (ámbar oscuro) → alta (verde).
+    "tasa": ("#A93226", "#B9770E", "#1E8449"),
+    # Complejidad baja (azul grisáceo) → alta (azul noche).
+    "complejidad": ("#7FA1B8", "#2E5E82", "#0B2545"),
+}
+COLOR_SIN_DATO = "#7F8C8D"
+
+
+def colores_por_valor(
+    valores: dict[int, float | int | None],
+    escala: str = "tasa",
+    minimo: float | None = None,
+    maximo: float | None = None,
+) -> dict[int, str]:
+    """Asigna a cada asignatura un color interpolado según su valor.
+
+    ``escala`` es una clave de ``ESCALAS_COLOR``. Los valores ``None`` o
+    NaN reciben ``COLOR_SIN_DATO`` (gris), para que una tasa faltante no
+    se confunda con una tasa baja. Por defecto el rango es el mínimo y el
+    máximo observados; para tasas conviene fijar ``minimo=0, maximo=1``.
+    """
+    if escala not in ESCALAS_COLOR:
+        raise KeyError(f"Escala {escala!r} desconocida. Opciones: {sorted(ESCALAS_COLOR)}.")
+    paradas = [_hex_a_rgb(c) for c in ESCALAS_COLOR[escala]]
+    validos = [
+        float(v) for v in valores.values() if v is not None and float(v) == float(v)
+    ]
+    lo = minimo if minimo is not None else (min(validos) if validos else 0.0)
+    hi = maximo if maximo is not None else (max(validos) if validos else 1.0)
+    resultado: dict[int, str] = {}
+    for codigo, valor in valores.items():
+        if valor is None or float(valor) != float(valor):
+            resultado[int(codigo)] = COLOR_SIN_DATO
+            continue
+        t = 0.0 if hi <= lo else (float(valor) - lo) / (hi - lo)
+        resultado[int(codigo)] = _interpolar(paradas, min(1.0, max(0.0, t)))
+    return resultado
+
+
+def _hex_a_rgb(color: str) -> tuple[int, int, int]:
+    limpio = color.lstrip("#")
+    return int(limpio[0:2], 16), int(limpio[2:4], 16), int(limpio[4:6], 16)
+
+
+def _interpolar(paradas: list[tuple[int, int, int]], t: float) -> str:
+    tramos = len(paradas) - 1
+    posicion = t * tramos
+    i = min(int(posicion), tramos - 1)
+    local = posicion - i
+    a, b = paradas[i], paradas[i + 1]
+    r, g, bl = (round(a[k] + (b[k] - a[k]) * local) for k in range(3))
+    return f"#{r:02X}{g:02X}{bl:02X}"
 
 
 def _color_area(datos: dict) -> str:
