@@ -42,16 +42,25 @@ class MonteCarloMolontay(EstrategiaSimulacion):
         tasas: pd.DataFrame,
         escenario: Escenario,
     ) -> ResultadoSimulacion:
-        """Estima la muestra de X. Ecuaciones (3), (4) y (7), sección III.B."""
+        """Estima la muestra de X. Ecuaciones (3), (4) y (7), sección III.B.
+
+        Si una trayectoria no se gradúa dentro de ``max_semestres`` (o
+        agota electivas), se censura en ese tope: la simulación termina
+        igual y ``n_censurados`` lo reporta.
+        """
         tasas_por_id = _mapa_tasas(tasas)
         _exigir_tasas_completas(red, tasas_por_id)
 
         rng = np.random.default_rng(escenario.semilla)
         tiempos: list[int] = []
+        censurados = 0
         for _ in range(escenario.n_estudiantes):
-            tiempos.append(
-                _simular_estudiante(red, tasas_por_id, escenario, rng)
+            tiempo, censurado = _simular_estudiante(
+                red, tasas_por_id, escenario, rng
             )
+            tiempos.append(tiempo)
+            if censurado:
+                censurados += 1
 
         media = float(np.mean(tiempos))
         desviacion = float(np.std(tiempos, ddof=1)) if len(tiempos) > 1 else 0.0
@@ -59,6 +68,8 @@ class MonteCarloMolontay(EstrategiaSimulacion):
             tiempos=tuple(tiempos),
             media=media,
             desviacion=desviacion,
+            n_censurados=censurados,
+            tope_semestres=escenario.max_semestres,
         )
 
 
@@ -104,8 +115,13 @@ def _simular_estudiante(
     tasas_por_id: dict[int, float],
     escenario: Escenario,
     rng: np.random.Generator,
-) -> int:
-    """Devuelve el semestre X en que el estudiante representativo se gradúa."""
+) -> tuple[int, bool]:
+    """Devuelve (X, censurado).
+
+    Si se gradúa dentro del tope, ``censurado`` es falso. Si supera
+    ``max_semestres`` o agota electivas sin reunir el cupo, se censura
+    en el semestre de corte (no se aborta la muestra entera).
+    """
     grafo = red.grafo
     obligatorias = {
         int(nodo)
@@ -163,7 +179,7 @@ def _simular_estudiante(
             cupo,
             creditos_electivos,
         ):
-            return semestre
+            return semestre, False
 
         if cupo is not None and not _queda_margen_electivo(
             electivas,
@@ -173,15 +189,10 @@ def _simular_estudiante(
             creditos_electivos,
             cupo,
         ):
-            raise RuntimeError(
-                "El estudiante agotó las electivas ofrecidas antes de "
-                f"reunir {cupo} créditos de línea de aplicación "
-                f"(aprobó {creditos_electivos})."
-            )
+            # Sin margen electivo ya no puede graduarse: censura en este semestre.
+            return semestre, True
 
-    raise RuntimeError(
-        f"La simulación superó {escenario.max_semestres} semestres sin grado."
-    )
+    return escenario.max_semestres, True
 
 
 def _elegible(

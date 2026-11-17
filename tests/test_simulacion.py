@@ -38,7 +38,20 @@ def test_falta_de_tasa_impide_simular(simulador):
         simulador._estrategia.simular(simulador.red, tasas, Escenario(n_estudiantes=5, semilla=1))
 
 
-def test_la_interfaz_no_esta_implementada():
-    """La fachada de las secciones II.A y II.B se usa desde Python."""
-    with pytest.raises(NotImplementedError, match="etapa 1"):
+def test_tope_bajo_censura_sin_abortar(simulador):
+    """Con max_semestres bajo la muestra termina; hay trayectorias censuradas."""
+    resultado = simulador.simular(
+        Escenario(n_estudiantes=80, semilla=3, max_semestres=12)
+    )
+    assert len(resultado.tiempos) == 80
+    assert resultado.tope_semestres == 12
+    assert all(t <= 12 for t in resultado.tiempos)
+    assert resultado.n_censurados > 0
+
+
+def test_ejecutar_avisa_si_falta_streamlit(monkeypatch):
+    """Sin el extra ui, ejecutar explica cómo instalarlo."""
+    monkeypatch.setattr("pensunet.ui.placeholder.shutil.which", lambda _nombre: None)
+    monkeypatch.setattr("pensunet.ui.placeholder._streamlit_importable", lambda: False)
+    with pytest.raises(ModuleNotFoundError, match="Streamlit"):
         ejecutar()

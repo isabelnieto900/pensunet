@@ -28,7 +28,8 @@ class Escenario:
       (comportamiento más cercano al paper).
     - ``electivas_sin_reintento``: si se reprueba una electiva, no se
       vuelve a cursar; el crédito no cuenta y se puede elegir otra.
-    - ``max_semestres``: tope de seguridad si el cupo electivo se agota.
+    - ``max_semestres``: tope de la trayectoria; si no hay grado a tiempo
+      la observación se censura en ese valor (no aborta la muestra).
 
     El tiempo de grado es la variable aleatoria X de las ecuaciones (3)
     y (4). Este objeto no ejecuta la simulación.

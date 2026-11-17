@@ -1,8 +1,8 @@
 """Pensunet: red de prerrequisitos del pensum de Física.
 
 Implementación original de Molontay et al. (2020). La sección II
-(grafo del pensum e indicadores topológicos) está operativa. La
-simulación Monte Carlo de la sección III.B queda esbozada.
+(grafo e indicadores) y el Monte Carlo de la sección III.B están
+operativos. La interfaz Streamlit vive en ``pensunet.ui``.
 """
 
 __version__ = "0.1.0"

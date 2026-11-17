@@ -15,11 +15,17 @@ class ResultadoSimulacion:
 
     Ecuaciones (3) y (4) de Molontay et al. (2020): ``tiempos`` permite
     estimar p(x) = P(X = x) por frecuencias, y ``media`` estima E(X).
+
+    ``n_censurados`` cuenta trayectorias que no se graduaron dentro del
+    tope ``max_semestres`` (o agotaron electivas): su tiempo queda en el
+    tope o en el semestre de corte, para que la simulación no falle.
     """
 
     tiempos: tuple[int, ...]
     media: float
     desviacion: float
+    n_censurados: int = 0
+    tope_semestres: int | None = None
 
 
 class EstrategiaSimulacion(ABC):

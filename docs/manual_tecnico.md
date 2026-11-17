@@ -253,7 +253,11 @@ analítica se vuelve intratable. Por eso el artículo simula.
 `MonteCarloMolontay.simular` genera la muestra de X: se leen las p_i de
 la ecuación (7), se avanza semestre a semestre respetando la red y se
 resume con las ecuaciones (3) y (4). El artículo usa 10 000 estudiantes
-representativos (`Escenario.n_estudiantes`).
+representativos (`Escenario.n_estudiantes`). Si una trayectoria no se
+gradúa dentro de `Escenario.max_semestres` (o agota electivas), se
+censura en ese tope: la muestra termina igual y
+`ResultadoSimulacion.n_censurados` lo reporta. La interfaz Streamlit
+(`pensunet.ui.app`) expone la red, los indicadores y ese histograma.
 
 En el caso de ingeniería eléctrica el artículo pone probabilidad 1 a las
 electivas. Aquí **no** se hace eso con electivas no ofrecidas: la tasa

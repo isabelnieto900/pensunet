@@ -86,15 +86,21 @@ class SimuladorPensum:
             return None
         return float(filas.iloc[0]["tasa_aprobacion"])
 
-    def simular(self, escenario: Escenario | None = None) -> ResultadoSimulacion:
+    def simular(
+        self,
+        escenario: Escenario | None = None,
+        tasas: pd.DataFrame | None = None,
+    ) -> ResultadoSimulacion:
         """Delega la simulación en la estrategia configurada.
 
         Ecuaciones (3) y (4). Por defecto corre el Monte Carlo de la
         sección III.B con el cupo de 18 créditos de línea de Física.
+        ``tasas`` permite explorar escenarios alterando p_i sin tocar
+        el CSV (p. ej. desde la interfaz).
         """
         return self._estrategia.simular(
             self._exigir_red(),
-            self._exigir_tasas(),
+            tasas if tasas is not None else self._exigir_tasas(),
             escenario if escenario is not None else Escenario(),
         )
 

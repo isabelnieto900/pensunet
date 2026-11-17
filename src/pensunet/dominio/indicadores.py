@@ -22,6 +22,8 @@ class IndicadoresTopologicos:
     el grado, y el factor es 1/(k + 1).
     ``cuellos_de_botella`` son los nodos que superan los umbrales de
     grado de la ecuación (2).
+    ``camino_mas_largo`` es una cadena máxima de prerrequisitos en el DAG
+    (el camino crítico topológico).
     """
 
     factor_bloqueo: dict[int, int]
@@ -30,6 +32,7 @@ class IndicadoresTopologicos:
     repeticiones_sin_retraso: dict[int, int]
     duracion_nominal: int
     cuellos_de_botella: tuple[int, ...]
+    camino_mas_largo: tuple[int, ...]
 
 
 def factor_bloqueo(red: RedPrerrequisitos) -> dict[int, int]:
@@ -116,6 +119,18 @@ def cuellos_de_botella(
     return tuple(sorted(seleccionados))
 
 
+def camino_mas_largo(red: RedPrerrequisitos) -> tuple[int, ...]:
+    """Una cadena máxima de prerrequisitos en el DAG.
+
+    Sección II.A–II.B: en un grafo acíclico el camino más largo mide la
+    profundidad crítica del pensum (cuántas asignaturas hay que encadenar
+    en serie). Si hay varios, NetworkX devuelve uno.
+    """
+    if red.grafo.number_of_nodes() == 0:
+        return ()
+    return tuple(int(nodo) for nodo in nx.dag_longest_path(red.grafo))
+
+
 def calcular_indicadores(
     red: RedPrerrequisitos,
     duracion: int | None = None,
@@ -140,6 +155,7 @@ def calcular_indicadores(
             umbral_salida=umbral_salida,
             umbral_total=umbral_total,
         ),
+        camino_mas_largo=camino_mas_largo(red),
     )
 
 

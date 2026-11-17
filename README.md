@@ -5,9 +5,9 @@ Universidad Distrital Francisco José de Caldas (Bogotá).
 
 Titular de los derechos de autor: **Laura Isabel Nieto Parroyo**, 2026.
 El software se presenta en la materia Desarrollo de Software Científico
-(profesor Carlos Andrés Gómez Vasco). La versión 1 cubre solo la red de
-prerrequisitos y los indicadores topológicos; la simulación Monte Carlo
-del tiempo de grado queda esbozada.
+(profesor Carlos Andrés Gómez Vasco). La versión en desarrollo cubre la
+red de prerrequisitos, los indicadores topológicos, el Monte Carlo del
+tiempo de grado y una interfaz Streamlit.
 
 ## Objetivo
 
@@ -38,11 +38,16 @@ source .venv/bin/activate
 pip install -e ".[dev]"
 ```
 
-La interfaz gráfica, prevista con Streamlit, es una dependencia opcional:
+La interfaz Streamlit es una dependencia opcional (usa el mismo `.venv`):
 
 ```bash
+source .venv/bin/activate
 pip install -e ".[ui]"
+streamlit run src/pensunet/ui/app.py
 ```
+
+Sin activar el venv: `.venv/bin/streamlit run src/pensunet/ui/app.py`.
+También: `python examples/ejecutar_interfaz.py` (con el venv activo).
 
 ## Uso
 
@@ -85,8 +90,8 @@ src/pensunet/
   facade.py                 Fachada SimuladorPensum
   datos/                    Lector CSV, fábrica y adaptador UD
   dominio/                  DAG, reglas por carrera, indicadores, figura
-  simulacion/               Estrategia y esqueleto Monte Carlo
-  ui/                       Placeholder de la interfaz
+  simulacion/               Monte Carlo del tiempo de grado
+  ui/                       Interfaz Streamlit
 data/reference/             Pensum y prerrequisitos
 data/processed/             Tasas de aprobación agregadas por asignatura
 data/private/               Ignorado por git: no guardar microdatos

@@ -1,4 +1,4 @@
-"""Interfaz gráfica, todavía sin implementar."""
+"""Interfaz gráfica Streamlit de Pensunet."""
 
 from pensunet.ui.placeholder import ejecutar
 
