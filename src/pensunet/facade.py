@@ -56,6 +56,7 @@ class SimuladorPensum:
             )
             self.pensum = tablas.pensum
             self.prerequisitos = tablas.prerrequisitos
+            self.tasas = tablas.tasas
             self.red = construir_red(
                 self.pensum,
                 self.prerequisitos,
@@ -88,9 +89,8 @@ class SimuladorPensum:
     def simular(self, escenario: Escenario | None = None) -> ResultadoSimulacion:
         """Delega la simulación en la estrategia configurada.
 
-        Ecuaciones (3) y (4). La estrategia por defecto es el esqueleto
-        de Monte Carlo de la sección III.B y todavía lanza
-        ``NotImplementedError``.
+        Ecuaciones (3) y (4). Por defecto corre el Monte Carlo de la
+        sección III.B con el cupo de 18 créditos de línea de Física.
         """
         return self._estrategia.simular(
             self._exigir_red(),

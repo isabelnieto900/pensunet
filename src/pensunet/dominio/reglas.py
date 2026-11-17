@@ -15,10 +15,11 @@ import pandas as pd
 
 @dataclass(frozen=True)
 class TablasAnalisis:
-    """Pensum y prerrequisitos listos para el DAG de análisis."""
+    """Pensum, prerrequisitos y tasas listos para el análisis / simulación."""
 
     pensum: pd.DataFrame
     prerrequisitos: pd.DataFrame
+    tasas: pd.DataFrame
     notas: tuple[str, ...]
     excluidos: frozenset[int]
 
@@ -67,7 +68,6 @@ class ReglasSoloExtracto(ReglasCarrera):
         prerrequisitos: pd.DataFrame,
         tasas: pd.DataFrame,
     ) -> TablasAnalisis:
-        del tasas
         notas = (
             f"Programa {self._codigo}: se confía en el extracto de "
             "prerrequisitos sin correcciones locales.",
@@ -75,6 +75,7 @@ class ReglasSoloExtracto(ReglasCarrera):
         return TablasAnalisis(
             pensum=pensum.copy().reset_index(drop=True),
             prerrequisitos=prerrequisitos.copy().reset_index(drop=True),
+            tasas=tasas.copy().reset_index(drop=True),
             notas=notas,
             excluidos=frozenset(),
         )

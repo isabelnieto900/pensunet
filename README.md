@@ -67,8 +67,9 @@ indicadores = simulador.indicadores()
 Un script equivalente está en `examples/ejemplo_cargar_red.py`.
 Para el extracto CSV sin reglas: `simulador.cargar(aplicar_reglas=False)`.
 La figura del DAG se genera con `examples/dibujar_red.py`.
-La llamada `simulador.simular(...)` lanza `NotImplementedError`: el Monte
-Carlo de la sección III.B se implementa en una etapa posterior.
+La simulación Monte Carlo (sección III.B) se invoca con
+`simulador.simular(Escenario(n_estudiantes=10_000, semilla=1))` y
+devuelve la muestra de tiempos de grado X.
 
 Para ejecutar las pruebas:
 

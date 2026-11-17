@@ -10,6 +10,7 @@ from pensunet.dominio.reglas_fisica import (
     IDIOMAS_MODELO,
     NO_OFRECIDAS,
     SLOTS_GENERICOS_LINEA,
+    TASAS_JUICIO_EXPERTO,
     ReglasFisica,
     preparar_tablas_analisis,
 )
@@ -19,6 +20,7 @@ __all__ = [
     "IDIOMAS_MODELO",
     "NO_OFRECIDAS",
     "SLOTS_GENERICOS_LINEA",
+    "TASAS_JUICIO_EXPERTO",
     "ReglasFisica",
     "TablasAnalisis",
     "preparar_tablas_analisis",

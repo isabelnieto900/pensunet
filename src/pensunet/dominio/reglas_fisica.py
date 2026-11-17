@@ -20,6 +20,15 @@ SLOTS_GENERICOS_LINEA = frozenset({25139, 25144, 25147, 25152})
 # Confirmadas como no ofrecidas aunque tengan tasa en el histórico.
 NO_OFRECIDAS = frozenset({25176})
 
+# Trabajo de grado: la nota la fija el director (y el evaluador en el II)
+# por un trámite fuera de la inscripción ordinaria; en Física no hay
+# registro de reprobación conocido. Se asigna p_i = 1 por juicio experto,
+# no por la convención BME de Molontay sobre electivas.
+TASAS_JUICIO_EXPERTO = {
+    25149: "TRABAJO DE GRADO I",
+    25154: "TRABAJO DE GRADO II",
+}
+
 # Aristas estrictas confirmadas y ausentes del CSV: (prerrequisito, asignatura).
 ARISTAS_CONFIRMADAS = (
     (25140, 25145),  # Introducción a la mecánica cuántica → Cuántica avanzada
@@ -51,16 +60,17 @@ class ReglasFisica(ReglasCarrera):
         prerrequisitos: pd.DataFrame,
         tasas: pd.DataFrame,
     ) -> TablasAnalisis:
-        """Filtra nodos y completa aristas según las reglas de Física.
+        """Filtra nodos, completa aristas y tasas de juicio experto.
 
-        No modifica los DataFrames de entrada. Las obligatorias sin tasa
-        (p. ej. trabajo de grado) se conservan: la exclusión por tasa
-        ausente solo aplica a electivas.
+        No modifica los DataFrames de entrada. La exclusión por tasa
+        ausente solo aplica a electivas. Trabajo de grado I y II reciben
+        tasa 1.0 (juicio experto; ver ``TASAS_JUICIO_EXPERTO``).
         """
         notas: list[str] = [
             "Reglas locales del programa de Física (no universales).",
         ]
-        ids_tasa = {int(valor) for valor in tasas["id_asignatura"]}
+        tasas_analisis = _completar_tasas_juicio_experto(tasas, pensum, notas)
+        ids_tasa = {int(valor) for valor in tasas_analisis["id_asignatura"]}
         excluidos: set[int] = set()
 
         for fila in pensum.to_dict(orient="records"):
@@ -133,6 +143,7 @@ class ReglasFisica(ReglasCarrera):
         return TablasAnalisis(
             pensum=pensum_filtrado.reset_index(drop=True),
             prerrequisitos=prerrequisitos_filtrados.reset_index(drop=True),
+            tasas=tasas_analisis.reset_index(drop=True),
             notas=tuple(notas),
             excluidos=frozenset(excluidos),
         )
@@ -145,6 +156,47 @@ def preparar_tablas_analisis(
 ) -> TablasAnalisis:
     """Atajo de compatibilidad: aplica ``ReglasFisica``."""
     return ReglasFisica().preparar(pensum, prerrequisitos, tasas)
+
+
+def _completar_tasas_juicio_experto(
+    tasas: pd.DataFrame,
+    pensum: pd.DataFrame,
+    notas: list[str],
+) -> pd.DataFrame:
+    """Añade filas con p_i = 1 para trabajo de grado I y II si faltan."""
+    resultado = tasas.copy()
+    ids = {int(valor) for valor in resultado["id_asignatura"]}
+    filas = []
+    for identificador, nombre_fallback in TASAS_JUICIO_EXPERTO.items():
+        if identificador in ids:
+            notas.append(
+                f"La tasa de {identificador} ya estaba en el histórico; "
+                "no se sobrescribe con juicio experto."
+            )
+            continue
+        nombre = nombre_fallback
+        if "id_asignatura" in pensum.columns:
+            coincidencias = pensum.loc[pensum["id_asignatura"] == identificador]
+            if not coincidencias.empty:
+                nombre = str(coincidencias.iloc[0]["nombre"])
+        filas.append(
+            {
+                "id_asignatura": identificador,
+                "nombre": nombre,
+                "n_inscritos": 0,
+                "n_aprobados": 0,
+                "tasa_aprobacion": 1.0,
+                "n_bajo": True,
+            }
+        )
+        notas.append(
+            f"Se asigna tasa 1.0 a {identificador} ({nombre}) por juicio "
+            "experto (trámite de trabajo de grado; no es la convención "
+            "BME de electivas del artículo)."
+        )
+    if filas:
+        resultado = pd.concat([resultado, pd.DataFrame(filas)], ignore_index=True)
+    return resultado
 
 
 def _motivo_exclusion(fila: dict, ids_tasa: set[int]) -> str | None:

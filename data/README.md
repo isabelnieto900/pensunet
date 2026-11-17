@@ -168,8 +168,19 @@ junto con las materias concretas duplicaría créditos.
 Varias electivas no tienen tasa porque la carrera es nueva, muy poca
 gente las ha cursado y no hay profesor que las dicte: no están
 disponibles. En esos casos la tasa ausente significa que la materia no
-se ofrece. No se les debe asignar probabilidad 1. Trabajo de grado I
-y II también están sin tasa, y esta explicación no los cubre.
+se ofrece. No se les debe asignar probabilidad 1 (tampoco se copia la
+convención BME del artículo de Molontay).
+
+### Trabajo de grado I y II (tasas por juicio experto)
+
+25149 y 25154 no aparecen en el CSV de tasas: la nota la fija el
+director (y el evaluador en el II) por un trámite de correos con
+coordinación, no por inscripción ordinaria en el SIU. En la historia
+académica sí quedan, casi siempre altas; en Física no hay registro
+conocido de reprobación. `ReglasFisica` les asigna **p_i = 1.0** con
+`n_inscritos = 0` y lo anota en `reglas_aplicadas`. Eso es juicio
+experto del programa, no una regla universal ni la convención de
+electivas del paper.
 
 ## Inconsistencias que no se corrigieron
 
@@ -306,4 +317,6 @@ al modelo interno. Con `aplicar_reglas=True` (por defecto),
 después `construir_red` arma el DAG solo con `debe_aprobado = True`.
 Las tasas se consultan por `id_asignatura`; si el identificador no
 está, la probabilidad estimada queda ausente. El cupo de 18 créditos
-de línea de aplicación se dejará para el Monte Carlo (etapa 3).
+de línea de aplicación lo exige `MonteCarloMolontay` vía
+`Escenario.creditos_electivas_minimos` (por defecto 18): las electivas
+reprobadas no se repiten y el crédito no cuenta.

@@ -186,7 +186,7 @@ en `red.reglas_aplicadas`. Resumen para Física:
   25141 → 25146 → 25151, 25142 → 25148 → 25153 y 4 → 12;
 - epistemología 25120 → 25127 ya viene en el CSV;
 - no se modela aún 12 → 25115 (Historia vs cátedra de contexto);
-- el requisito de 18 créditos de línea queda para la etapa 3.
+- el requisito de 18 créditos de línea se exige en el Monte Carlo.
 
 Con `aplicar_reglas=False` se obtiene el extracto crudo (útil para
 auditar el CSV). `examples/dibujar_red.py` genera en `docs/figuras/`:
@@ -224,16 +224,20 @@ En los CSV eso es `n_aprobados / n_inscritos`, ya guardado en
 aprobada cuando `fl_aprobada` es verdadero. La ventana es 2023-2 a
 2025-2.
 
-Supuestos de la sección III, guardados en `Escenario` y todavía sin
-ejecutar:
+Supuestos de la sección III, guardados en `Escenario` y ejecutados por
+`MonteCarloMolontay`:
 
 - no se cursa una asignatura antes de su semestre recomendado;
-- el estudiante intenta todas las que ya le permite la red, en el
-  primer semestre posible;
+- el estudiante intenta todas las obligatorias que ya le permite la
+  red, en el primer semestre posible;
 - todas las asignaturas se abren cada semestre;
 - p_i no cambia con el número de intento;
 - aprobar una asignatura no cambia la probabilidad de las otras;
-- se reintenta hasta aprobar;
+- las obligatorias se reintentan hasta aprobar;
+- las electivas de línea, si se reprueban, **no** se repiten (crédito
+  no cuenta; se puede elegir otra);
+- el grado en Física exige las obligatorias del grafo más **18 créditos**
+  de electivas ofrecidas (`creditos_electivas_minimos`);
 - no hay semestres pasivos.
 
 Con intentos independientes, el número de intentos X_i sigue una
@@ -244,24 +248,24 @@ cerrada si las geométricas son independientes (ecuaciones (8) y (9)),
 pero al anidar los caminos el máximo deja de ser geométrico y la cuenta
 analítica se vuelve intratable. Por eso el artículo simula.
 
-### Monte Carlo (sección III.B), no implementado
+### Monte Carlo (sección III.B)
 
-El algoritmo previsto está descrito en el docstring de
-`MonteCarloMolontay.simular` y lanza `NotImplementedError`. En resumen:
-se estiman las p_i con la ecuación (7), se avanza semestre a semestre
-respetando la red y se resume la muestra con las ecuaciones (3) y (4).
-El artículo usa 10 000 estudiantes representativos.
+`MonteCarloMolontay.simular` genera la muestra de X: se leen las p_i de
+la ecuación (7), se avanza semestre a semestre respetando la red y se
+resume con las ecuaciones (3) y (4). El artículo usa 10 000 estudiantes
+representativos (`Escenario.n_estudiantes`).
 
 En el caso de ingeniería eléctrica el artículo pone probabilidad 1 a las
-electivas. Aquí no se hace. Varias electivas no tienen tasa porque no
-se ofrecen: la carrera es nueva y no hay quien las dicte. Ponerles
-probabilidad 1 diría que se aprueban, cuando el hecho es que no se
-abren. `tasa_de` devuelve `None` cuando no hay fila. Trabajo de grado
-I y II tampoco tienen tasa, y ese hueco sigue abierto.
+electivas. Aquí **no** se hace eso con electivas no ofrecidas: la tasa
+ausente significa que no se abren. En cambio, Trabajo de grado I y II
+reciben p_i = 1 por **juicio experto de Física** (nota del
+director/evaluador fuera del SIU; sin reprobaciones conocidas). Queda
+documentado en `TASAS_JUICIO_EXPERTO` y en `data/README.md`. El cupo de
+18 créditos de línea vive en la simulación, no en el grafo.
 
 Las ecuaciones (10), (11) y (12) son tres formas de subir p_i para
 aproximar el efecto de atravesar la asignatura, y la (13) es el cociente
-de esperanzas simuladas. Quedan para cuando exista la simulación.
+de esperanzas simuladas. Quedan para una etapa posterior.
 
 ## Datos que entran al grafo
 
