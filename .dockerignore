@@ -24,3 +24,4 @@ data/private
 
 # Documentos pesados
 docs/*.pdf
+docs/_build

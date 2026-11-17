@@ -33,10 +33,11 @@ dependencies = [
 [project.optional-dependencies]
 dev = ["pytest", "ruff"]
 ui = ["streamlit"]
+docs = ["sphinx>=7", "furo", "myst-parser>=2"]
 
 [project.urls]
 Homepage = "https://github.com/isabelnieto900/pensunet"
-Documentation = "https://github.com/isabelnieto900/pensunet/tree/main/docs"
+Documentation = "https://isabelnieto900.github.io/pensunet/"
 
 [tool.setuptools.packages.find]
 where = ["src"]

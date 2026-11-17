@@ -112,7 +112,8 @@ data/processed/             Tasas de aprobación agregadas por asignatura
 data/private/               Ignorado por git: no guardar microdatos
 .streamlit/config.toml      Tema claro/oscuro de la interfaz
 Dockerfile, docker-compose.yml, .github/workflows/ci.yml
-docs/                       Manual técnico y manual de usuario
+.github/workflows/docs.yml  Sphinx → GitHub Pages
+docs/                       Sphinx (conf.py, index, API) y manuales
 examples/
 tests/
 ```
@@ -120,12 +121,26 @@ tests/
 Los patrones (fachada, fábrica, adaptador y estrategia) se justifican en
 `docs/manual_tecnico.md`.
 
+## Documentación
+
+La documentación (manuales y referencia de la API generada desde los
+docstrings) se publica en <https://isabelnieto900.github.io/pensunet/>.
+Para construirla en local:
+
+```bash
+pip install -e ".[docs]"
+sphinx-build -W -b html docs docs/_build/html
+```
+
+El flujo `.github/workflows/docs.yml` la construye y la publica en cada
+push a `main`.
+
 ## Datos
 
 En el repositorio solo hay tablas agregadas o de catálogo para las cuatro
 carreras FCMN (`pensum_*.csv`, `prerequisitos_*.csv`,
 `tasas_aprobacion_*.csv`), más `ajustes_prerrequisitos.csv` y el
-catálogo de Trabajo de Grado sin tasa.
+catálogo de Trabajo de Grado (p = 1 por juicio experto).
 
 No hay registros individuales ni códigos de estudiante. Las tasas vienen
 del histórico **2023-2 a 2025-2** (2026-1 no entra). El detalle de origen
