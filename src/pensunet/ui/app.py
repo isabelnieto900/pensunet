@@ -18,6 +18,7 @@ from pensunet.dominio.indicadores import (
     camino_mas_largo,
 )
 from pensunet.dominio.visualizacion import ESCALAS_COLOR, colores_por_valor, html_de_la_red
+from pensunet.simulacion.montecarlo_molontay import creditos_electivos_del_plan
 from pensunet.ui.tablas import (
     tabla_indicadores,
     tabla_resumen_red,
@@ -343,9 +344,10 @@ def _asegurar_tasas_sesion(clave: str, simulador: SimuladorPensum) -> None:
         st.session_state.tasas_base = st.session_state.tasas_editor.copy()
 
 
-def _creditos_linea_default(clave: str) -> int:
-    """Física usa cupo de línea 18; el resto exige todos los nodos del grafo."""
-    return 18 if clave == "fisica" else 0
+def _creditos_linea_default(simulador: SimuladorPensum) -> int:
+    """Créditos electivos del plan: una opción por cupo electivo (Física: 18)."""
+    assert simulador.red is not None
+    return creditos_electivos_del_plan(simulador.red)
 
 
 def _pagina_red(clave: str, simulador: SimuladorPensum, resumen: dict, oscuro: bool) -> None:
@@ -503,8 +505,9 @@ def _pagina_simulacion(clave: str, simulador: SimuladorPensum, oscuro: bool) -> 
 
         with st.expander("Supuestos del escenario (Molontay + políticas locales)", expanded=False):
             st.caption(
-                "Parámetros de la sección III. El cupo de electivas de 18 "
-                "créditos es propio de la línea de aplicación de Física."
+                "Parámetros de la sección III. El cupo de electivas sale del plan "
+                "(una opción por cupo electivo; en Física, 18 créditos de línea). "
+                "Las electivas reprobadas no se repiten."
             )
             respetar_semestre = st.toggle(
                 "Respetar semestre recomendado",
@@ -515,16 +518,21 @@ def _pagina_simulacion(clave: str, simulador: SimuladorPensum, oscuro: bool) -> 
                 "Créditos mínimos de electivas (línea)",
                 min_value=0,
                 max_value=48,
-                value=_creditos_linea_default(clave),
+                value=_creditos_linea_default(simulador),
                 step=1,
                 help=(
-                    "En Física: cupo de línea de aplicación. "
-                    "0 = exigir todas las del grafo."
+                    "Por defecto, una opción por cupo electivo del plan "
+                    "(Física: línea de aplicación, 18). 0 = exigir todas las del grafo."
                 ),
             )
             electivas_sin_reintento = st.toggle(
                 "Electivas sin reintento al reprobar",
                 value=True,
+            )
+            opciones_excluyentes = st.toggle(
+                "Cupos de opciones: basta aprobar una (idiomas, énfasis, profundizaciones)",
+                value=True,
+                help="Asignaturas no electivas con el mismo cupo (grupo_slot) en el plan.",
             )
             max_semestres = st.number_input(
                 "Tope de semestres en la simulación",
@@ -617,6 +625,7 @@ def _pagina_simulacion(clave: str, simulador: SimuladorPensum, oscuro: bool) -> 
             electivas_sin_reintento=bool(electivas_sin_reintento),
             max_semestres=int(max_semestres),
             max_creditos_semestre=None if int(max_creditos) == 0 else int(max_creditos),
+            opciones_excluyentes=bool(opciones_excluyentes),
         )
         with slot_estado:
             barra = st.progress(0, text="Preparando la simulación…")

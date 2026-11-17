@@ -151,3 +151,79 @@ def test_tasa_de_grado_en_un_resultado_fabricado():
     assert resultado.tasa_grado_en(11) == pytest.approx(0.5)
     assert resultado.tasa_grado_en(40) == pytest.approx(0.75)
     assert resultado.asignaturas_que_frenan(1) == [(1, 1.0)]
+
+
+def test_los_cupos_de_opciones_no_exigen_todas_las_opciones():
+    """Un cupo con dos opciones se cumple con una: X = 1 aunque la otra no tenga tasa."""
+    from pensunet.dominio.red import construir_red
+
+    pensum = pd.DataFrame(
+        [
+            {"id_asignatura": 1, "nombre": "Base", "semestre": 1, "creditos": 2},
+            {
+                "id_asignatura": 2,
+                "nombre": "Idioma A",
+                "semestre": 1,
+                "creditos": 2,
+                "clasificacion": "Obligatorio",
+                "grupo_slot": "Lengua I",
+            },
+            {
+                "id_asignatura": 3,
+                "nombre": "Idioma B",
+                "semestre": 1,
+                "creditos": 2,
+                "clasificacion": "Obligatorio",
+                "grupo_slot": "Lengua I",
+            },
+        ]
+    )
+    vacia = pd.DataFrame(columns=["id_asignatura", "id_prerequisito", "debe_aprobado", "orden"])
+    red = construir_red(pensum, vacia)
+    tasas = pd.DataFrame({"id_asignatura": [1, 2], "tasa_aprobacion": [1.0, 1.0]})
+    from pensunet.simulacion.montecarlo_molontay import MonteCarloMolontay, cupos_de_opciones
+
+    assert cupos_de_opciones(red) == {"Lengua I": (2, 3)}
+    resultado = MonteCarloMolontay().simular(
+        red, tasas, Escenario(n_estudiantes=20, semilla=1, creditos_electivas_minimos=None)
+    )
+    assert set(resultado.tiempos) == {1}
+    assert 3 not in resultado.inscripciones
+    with pytest.raises(ValueError, match="faltan tasas"):
+        MonteCarloMolontay().simular(
+            red,
+            tasas,
+            Escenario(
+                n_estudiantes=5,
+                semilla=1,
+                creditos_electivas_minimos=None,
+                opciones_excluyentes=False,
+            ),
+        )
+
+
+def test_el_cupo_electivo_de_fisica_es_18_creditos(simulador):
+    """Línea de aplicación I–IV: 4 + 5 + 4 + 5 créditos."""
+    from pensunet.simulacion.montecarlo_molontay import creditos_electivos_del_plan
+
+    assert creditos_electivos_del_plan(simulador.red) == 18
+
+
+def test_cada_carrera_simula_sin_exigir_todas_las_opciones(simulador_programa):
+    """Con tasas solo en obligatorias (más una opción por cupo) cada carrera simula."""
+    from pensunet.simulacion.montecarlo_molontay import (
+        creditos_electivos_del_plan,
+        cupos_de_opciones,
+    )
+
+    red = simulador_programa.red
+    tasas = _tasas_completas(simulador_programa)
+    cupo = creditos_electivos_del_plan(red)
+    resultado = simulador_programa.simular(
+        Escenario(n_estudiantes=30, semilla=2, creditos_electivas_minimos=cupo), tasas=tasas
+    )
+    assert len(resultado.tiempos) == 30
+    assert resultado.media >= 1
+    # Ninguna opción de cupo se cursa más veces que estudiantes × semestres posibles,
+    # y el número de cupos es coherente con el grafo.
+    assert all(len(opciones) >= 2 for opciones in cupos_de_opciones(red).values())

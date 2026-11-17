@@ -83,8 +83,28 @@ Se aplican con `SimuladorPensum.cargar(aplicar_ajustes_documentados=True)`
   pasantía** (pueden cursarse a la vez). La excepción queda documentada;
   no se modela como arista débil.
 
-Con ajustes: **90 nodos, 48 aristas estrictas**, sin inconsistencias
-residuales en el grafo.
+- Reglas de Física de la etapa 2 (PR #2), restituidas como filas del
+  mismo archivo:
+  - **Excluir nodo** de los 12 cursos de segunda lengua distintos del
+    inglés: el modelo usa un solo idioma (9901 → 9902 → 9903).
+  - **Excluir nodo** de las 11 electivas de línea de aplicación sin
+    inscritos en 2023-2 a 2025-2 (no se ofrecen).
+  - **Agregar** 25141 → 25146 → 25151 (Estado sólido → Materiales →
+    Nanotecnología), 25142 → 25148 → 25153 (Modelos y gestión I → II →
+    Gestión tecnológica) y 4 → 12 (Cátedra Caldas → Democracia).
+
+Con ajustes: **67 nodos, 53 aristas estrictas**, sin inconsistencias
+residuales en el grafo. El cupo electivo (línea de aplicación I–IV) es
+de **18 créditos** y las electivas reprobadas no se repiten
+(`Escenario`).
+
+### Cupos de opciones (todas las carreras)
+
+Las asignaturas no electivas que comparten `ds_grupo_slot` (idiomas,
+énfasis de Biología, profundizaciones de Química) son **opciones de un
+mismo cupo**: en el Monte Carlo basta aprobar una. Las electivas se
+cubren por créditos (una opción por cupo electivo). No se agregan reglas
+nuevas para Química, Biología ni Matemáticas.
 
 ### Química
 

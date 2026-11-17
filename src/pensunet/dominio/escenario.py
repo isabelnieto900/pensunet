@@ -30,6 +30,10 @@ class Escenario:
       vuelve a cursar; el crédito no cuenta y se puede elegir otra.
     - ``max_semestres``: tope de la trayectoria; si no hay grado a tiempo
       la observación se censura en ese valor (no aborta la muestra).
+    - ``opciones_excluyentes``: un cupo no electivo con varias opciones
+      (mismo ``grupo_slot``: idiomas, énfasis, profundizaciones) se cumple
+      aprobando una sola opción. Con ``False`` se exigen todas, como si
+      fueran obligatorias independientes.
     - ``max_creditos_semestre``: tope de créditos inscritos por semestre.
       Con ``None`` (por defecto) no hay tope, como en el artículo. Con
       tope, se inscriben primero las obligatorias de semestre recomendado
@@ -54,6 +58,7 @@ class Escenario:
     electivas_sin_reintento: bool = True
     max_semestres: int = 40
     max_creditos_semestre: int | None = None
+    opciones_excluyentes: bool = True
 
     def __post_init__(self) -> None:
         """Exige al menos un estudiante. Ecuaciones (3) y (4): X necesita una muestra."""

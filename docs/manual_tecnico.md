@@ -234,6 +234,14 @@ Además de la muestra de X, `ResultadoSimulacion` guarda:
   estudiante. Es la versión dinámica (con tasas reales) del cuello de
   botella estructural de la ecuación (2).
 
+Cupos: las asignaturas no electivas con el mismo `grupo_slot` son
+opciones excluyentes (`Escenario.opciones_excluyentes`, por defecto
+verdadero): el estudiante elige al azar una opción elegible con p_i
+conocida y la cursa hasta aprobarla. Las electivas se cubren por
+créditos; `creditos_electivos_del_plan` suma un cupo electivo por
+`grupo_slot` (Física: 18). Las opciones y electivas sin tasa no se
+eligen; las obligatorias sin tasa impiden simular.
+
 `Escenario.max_creditos_semestre` (por defecto `None`, sin tope, como el
 artículo) limita los créditos inscritos por semestre. Con tope se
 inscriben primero las obligatorias de semestre recomendado más bajo
@@ -268,16 +276,20 @@ Los cuatro programas FCMN, el origen Cóndor/SGA, la ventana de tasas
 2023-2 a 2025-2, los ajustes documentados y el tratamiento de Trabajo
 de Grado están en `data/README.md`.
 
-Física con ajustes documentados: **90 nodos, 48 aristas estrictas**,
-DAG, duración nominal 10. El extracto crudo del SGA tiene 91 asignaturas
+Física con ajustes documentados: **67 nodos, 53 aristas estrictas**,
+DAG, duración nominal 10 (incluye las reglas de la etapa 2: solo
+inglés, sin electivas no ofrecidas y las cadenas de materiales, gestión
+y cátedras). El extracto crudo del SGA tiene 91 asignaturas
 y 46 aristas estrictas (más inconsistencias anotadas, p. ej. el cupo
 25139 sin código).
 
 Resumen de ajustes (nunca silenciosos; ver
 `data/reference/ajustes_prerrequisitos.csv`):
 
-- Física: se agregan 25140 → 25145 y TG I → TG II (salvo pasantía); se
-  excluye biosistemas (25176) y la arista al cupo 25139.
+- Física: se agregan 25140 → 25145, TG I → TG II (salvo pasantía),
+  25141 → 25146 → 25151, 25142 → 25148 → 25153 y 4 → 12; se excluyen
+  biosistemas (25176), los idiomas distintos del inglés, las electivas
+  no ofrecidas y la arista al cupo 25139.
 - Química: se conservan las aristas que invierten semestre; no se agrega
   TG I → TG II.
 - Biología y Matemáticas: candidatos faltantes de la auditoría quedan

@@ -33,7 +33,7 @@ def test_el_csv_llega_con_nombres_internos(simulador_crudo):
 
 def test_fisica_con_ajustes_excluye_biosistemas_y_suma_aristas(simulador):
     """Los ajustes documentados no reescriben el CSV; cambian el grafo de análisis."""
-    assert len(simulador.pensum) == 90
+    assert len(simulador.pensum) == 67
     assert 25176 not in set(simulador.pensum["id_asignatura"])
     assert simulador.red.grafo.has_edge(25140, 25145)
     assert simulador.red.grafo.has_edge(25149, 25154)

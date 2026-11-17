@@ -36,11 +36,19 @@ def test_la_inversion_de_semestres_queda_anotada_en_el_extracto_crudo(simulador_
 
 
 def test_fisica_con_ajustes_es_dag_sin_biosistemas(simulador):
-    """Tras ajustes: 90 nodos, 48 aristas estrictas, sin inconsistencias residuales."""
+    """Tras ajustes: 67 nodos, 53 aristas estrictas, sin inconsistencias residuales.
+
+    Reglas de Física de la etapa 2: solo inglés, sin electivas no ofrecidas y
+    cinco aristas confirmadas (materiales, gestión y cátedras).
+    """
     red = simulador.red
     assert red.es_aciclico()
-    assert red.grafo.number_of_nodes() == 90
-    assert red.grafo.number_of_edges() == 48
+    assert red.grafo.number_of_nodes() == 67
+    assert red.grafo.number_of_edges() == 53
+    confirmadas = ((25141, 25146), (25146, 25151), (25142, 25148), (25148, 25153), (4, 12))
+    for previo, siguiente in confirmadas:
+        assert red.grafo.has_edge(previo, siguiente)
+    assert not any(codigo in red.grafo for codigo in (9904, 9910, 9915, 25162, 25174))
     assert 25176 not in red.grafo
     assert red.grafo.has_edge(25140, 25145)
     assert red.grafo.has_edge(25149, 25154)
