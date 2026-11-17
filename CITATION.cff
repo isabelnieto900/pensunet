@@ -20,12 +20,13 @@ keywords:
   - simulación Monte Carlo
   - Universidad Distrital
 abstract: >-
-  Pensunet simula la red de prerrequisitos del programa de Física de la
-  Universidad Distrital a partir del modelo de flujo de estudiantes de
-  Molontay et al. (2020). La versión 0.1.0 construye el grafo, valida que
-  sea acíclico y calcula los indicadores topológicos del artículo. La
-  simulación Monte Carlo del tiempo de grado queda esbozada para una
-  etapa posterior.
+  Pensunet simula la red de prerrequisitos de los programas de Física,
+  Química, Biología y Matemáticas (FCMN) de la Universidad Distrital a
+  partir del modelo de flujo de estudiantes de Molontay et al. (2020).
+  Construye el grafo, valida que sea acíclico, calcula los indicadores
+  topológicos del artículo y la complejidad curricular, y estima la
+  distribución del tiempo de grado con una simulación Monte Carlo
+  basada en tasas de aprobación agregadas.
 preferred-citation:
   type: article
   title: "Characterizing Curriculum Prerequisite Networks by a Student Flow Approach"

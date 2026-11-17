@@ -1,8 +1,8 @@
 # Manual técnico
 
-Estado: borrador de la etapa 1. Describe la arquitectura que ya está en
-el código y el método de Molontay et al. (2020) que esa etapa alcanza a
-implementar. La simulación Monte Carlo no está programada.
+Estado: describe la arquitectura que ya está en el código y el método de
+Molontay et al. (2020) que implementa: red, indicadores, complejidad
+curricular y Monte Carlo del tiempo de grado.
 
 Referencia:
 
@@ -43,13 +43,14 @@ SimuladorPensum                 fachada (selector de programa FCMN)
     ├── ajustes                 correcciones documentadas por programa
     ├── RedPrerrequisitos       DAG con networkx
     ├── indicadores             bloqueo, posponimiento, intermediación
-    └── EstrategiaSimulacion    Monte Carlo, todavía sin algoritmo
+    ├── complejidad             retraso y complejidad (Curricular Analytics)
+    └── EstrategiaSimulacion    MonteCarloMolontay (sección III.B)
 ```
 
 El dominio no importa la capa de datos. Recibe dataframes con nombres
 internos (`id_asignatura`, `semestre`, `debe_aprobado`, `tasa_aprobacion`).
-La interfaz, cuando exista, solo debería hablar con `SimuladorPensum` y
-ofrecer un selector entre Física, Química, Biología y Matemáticas.
+La interfaz habla con `SimuladorPensum` y ofrece un selector entre
+Física, Química, Biología y Matemáticas.
 
 ## Patrones y por qué están
 
@@ -82,7 +83,7 @@ código.
 
 **Estrategia (`EstrategiaSimulacion`).** La sección III.B es un
 algoritmo intercambiable. Hoy la única estrategia es
-`MonteCarloMolontay` y su método `simular` lanza `NotImplementedError`.
+`MonteCarloMolontay`.
 Cuando haya probabilidades por estudiante u otra dinámica, se escribe
 otra estrategia sin rehacer la fachada ni el grafo.
 
@@ -223,8 +224,43 @@ representativos. Exige una tasa para cada nodo del grafo. Electivas y
 Trabajo de grado sin histórico quedan vacíos en el CSV; la interfaz
 permite completarlos antes de simular y no asigna 0 ni 1 por defecto.
 
+Además de la muestra de X, `ResultadoSimulacion` guarda:
+
+- `censurados`: qué trayectorias no se graduaron antes del tope
+  `max_semestres`; `tasa_grado_en(n)` da la proporción graduada en a lo
+  sumo n semestres (las censuradas no cuentan);
+- `reprobaciones` e `inscripciones` por asignatura en toda la muestra;
+  `asignaturas_que_frenan(n)` ordena por reprobaciones medias por
+  estudiante. Es la versión dinámica (con tasas reales) del cuello de
+  botella estructural de la ecuación (2).
+
+`Escenario.max_creditos_semestre` (por defecto `None`, sin tope, como el
+artículo) limita los créditos inscritos por semestre. Con tope se
+inscriben primero las obligatorias de semestre recomendado más bajo
+(desempate por código) y luego la electiva si cabe; una asignatura que
+sola supera el tope se permite si es la primera del semestre. Sin tope,
+la muestra es idéntica a la de la versión anterior con la misma semilla.
+
 Las ecuaciones (10), (11) y (12) (efecto de atravesar la asignatura) y
 la (13) quedan fuera de esta versión.
+
+### Complejidad curricular (Curricular Analytics)
+
+`dominio/complejidad.py` implementa las métricas de Heileman et al.
+(2018), *Curricular Analytics: A Framework for Quantifying the Impact of
+Curricular Reforms and Pedagogical Innovations* (arXiv:1811.09676), que
+usa curricularanalytics.org:
+
+- factor de bloqueo b(v): asignaturas alcanzables desde v (coincide con
+  el *blocking factor* de Molontay);
+- factor de retraso d(v): vértices del camino más largo del DAG que pasa
+  por v;
+- complejidad estructural h(v) = d(v) + b(v), y complejidad curricular
+  del plan = Σ h(v).
+
+Son medidas estructurales: no usan tasas. En la figura 1 del artículo
+(A→B→D, A→C) dan h = 6, 4, 2, 3 y un total de 15 (prueba en
+`tests/test_complejidad.py`).
 
 ## Datos que entran al grafo
 
@@ -255,4 +291,20 @@ no se usa 0 ni 1 por defecto.
 `pytest` cubre la carga y el adaptador, el DAG (regresión de Física y
 casos parametrizados por carrera: ids únicos, aciclicidad, créditos del
 plan, códigos de prerrequisito), los indicadores (incluido el currículo
-de la figura 1) y las tasas. `ruff check` cubre el estilo.
+de la figura 1), la complejidad curricular, el Monte Carlo
+(reproducibilidad con semilla, tope de créditos, reprobaciones y tasa de
+grado), las tablas de la interfaz y las tasas. `ruff check` cubre el
+estilo.
+
+## Reproducibilidad: Docker e integración continua
+
+- `Dockerfile`: imagen `python:3.12-slim` que instala el paquete en modo
+  editable con el extra `ui` (el paquete ubica `data/` relativo a
+  `src/`), copia solo los CSV agregados (`data/reference`,
+  `data/processed`; nunca `data/private`), corre como usuario sin
+  privilegios y expone Streamlit en el puerto 8501 con *healthcheck* en
+  `/_stcore/health`.
+- `docker-compose.yml`: `docker compose up --build` levanta la interfaz.
+- `.dockerignore`: deja fuera `.git`, entornos, cachés y microdatos.
+- `.github/workflows/ci.yml`: `ruff check .` y `pytest` en Python 3.10 y
+  3.12; luego construye la imagen y comprueba el *health check*.

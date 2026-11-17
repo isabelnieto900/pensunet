@@ -6,9 +6,10 @@ José de Caldas (Bogotá).
 
 Titular de los derechos de autor: **Laura Isabel Nieto Parroyo**, 2026.
 El software se presenta en la materia Desarrollo de Software Científico
-(profesor Carlos Andrés Gómez Vasco). La versión 1 cubre solo la red de
-prerrequisitos y los indicadores topológicos; la simulación Monte Carlo
-del tiempo de grado queda esbozada.
+(profesor Carlos Andrés Gómez Vasco). Esta versión cubre la red de
+prerrequisitos, los indicadores topológicos de Molontay, la complejidad
+curricular al estilo de Curricular Analytics, el Monte Carlo del tiempo
+de grado y una interfaz Streamlit, empaquetada también en Docker.
 
 ## Objetivo
 
@@ -39,7 +40,7 @@ source .venv/bin/activate
 pip install -e ".[dev]"
 ```
 
-La interfaz gráfica, prevista con Streamlit, es una dependencia opcional:
+La interfaz gráfica Streamlit es una dependencia opcional:
 
 ```bash
 pip install -e ".[ui]"
@@ -53,6 +54,21 @@ from pensunet import SimuladorPensum
 simulador = SimuladorPensum.desde_programa("fisica")  # o quimica, biologia, matematicas
 simulador.cargar()
 indicadores = simulador.indicadores()
+complejidad = simulador.complejidad()      # retraso, bloqueo y h(v) por asignatura
+```
+
+Monte Carlo del tiempo de grado (sección III.B). Toda asignatura del
+grafo necesita p_i; las que no tienen histórico (p. ej. Trabajo de Grado)
+se completan explícitamente:
+
+```python
+from pensunet.dominio.escenario import Escenario
+
+resultado = simulador.simular(
+    Escenario(n_estudiantes=2000, semilla=1, max_creditos_semestre=None),
+    tasas=tasas_completas,  # DataFrame con id_asignatura y tasa_aprobacion
+)
+resultado.media, resultado.tasa_grado_en(12), resultado.asignaturas_que_frenan(5)
 ```
 
 CLI: `python examples/ejemplo_cargar_red.py --programa quimica`.
@@ -64,12 +80,23 @@ pip install -e ".[ui]"
 python examples/ejecutar_interfaz.py
 ```
 
+Con Docker (no requiere Python local):
+
+```bash
+docker compose up --build        # o: docker build -t pensunet . && docker run -p 8501:8501 pensunet
+# abrir http://localhost:8501
+```
+
 Para ejecutar las pruebas:
 
 ```bash
 pytest
-ruff check src tests examples
+ruff check .
 ```
+
+La integración continua (`.github/workflows/ci.yml`) corre `ruff` y
+`pytest` en Python 3.10 y 3.12 y construye la imagen Docker en cada push
+a `main` y en cada pull request.
 
 ## Estructura
 
@@ -77,12 +104,14 @@ ruff check src tests examples
 src/pensunet/
   facade.py                 Fachada SimuladorPensum
   datos/                    Lector CSV, fábrica y adaptador UD
-  dominio/                  DAG, indicadores y escenario
-  simulacion/               Estrategia y esqueleto Monte Carlo
-  ui/                       Placeholder de la interfaz
+  dominio/                  DAG, indicadores, complejidad, escenario y figura
+  simulacion/               Estrategia y Monte Carlo de Molontay
+  ui/                       Interfaz Streamlit (app.py) y tablas
 data/reference/             Pensum y prerrequisitos
 data/processed/             Tasas de aprobación agregadas por asignatura
 data/private/               Ignorado por git: no guardar microdatos
+.streamlit/config.toml      Tema claro/oscuro de la interfaz
+Dockerfile, docker-compose.yml, .github/workflows/ci.yml
 docs/                       Manual técnico y manual de usuario
 examples/
 tests/
