@@ -1,13 +1,15 @@
 # Pensunet
 
-Simulador de la red de prerrequisitos del pensum de Física de la
-Universidad Distrital Francisco José de Caldas (Bogotá).
+Simulador de la red de prerrequisitos de los pensum FCMN (Física,
+Química, Biología y Matemáticas) de la Universidad Distrital Francisco
+José de Caldas (Bogotá).
 
 Titular de los derechos de autor: **Laura Isabel Nieto Parroyo**, 2026.
 El software se presenta en la materia Desarrollo de Software Científico
-(profesor Carlos Andrés Gómez Vasco). La versión 1 cubre solo la red de
-prerrequisitos y los indicadores topológicos; la simulación Monte Carlo
-del tiempo de grado queda esbozada.
+(profesor Carlos Andrés Gómez Vasco). Esta versión cubre la red de
+prerrequisitos, los indicadores topológicos de Molontay, la complejidad
+curricular al estilo de Curricular Analytics, el Monte Carlo del tiempo
+de grado y una interfaz Streamlit, empaquetada también en Docker.
 
 ## Objetivo
 
@@ -17,7 +19,7 @@ método es:
 
 > Molontay, R., Horváth, N., Bergmann, J., Szekrényes, D. y Szabó, M. (2020).
 > Characterizing Curriculum Prerequisite Networks by a Student Flow Approach.
-> *IEEE Transactions on Learning Technologies*.
+> *IEEE Transactions on Learning Technologies*, 13(3), 491–501.
 > DOI: [10.1109/TLT.2020.2981331](https://doi.org/10.1109/TLT.2020.2981331).
 
 El artículo no publica código. Esta es una implementación original a partir
@@ -38,7 +40,7 @@ source .venv/bin/activate
 pip install -e ".[dev]"
 ```
 
-La interfaz gráfica, prevista con Streamlit, es una dependencia opcional:
+La interfaz gráfica Streamlit es una dependencia opcional:
 
 ```bash
 pip install -e ".[ui]"
@@ -47,35 +49,54 @@ pip install -e ".[ui]"
 ## Uso
 
 ```python
-from pathlib import Path
-
-from pensunet.datos.fabrica import FabricaLectores
 from pensunet import SimuladorPensum
 
-raiz = Path(".")
-lector = FabricaLectores.crear(
-    "csv",
-    ruta_pensum=raiz / "data/reference/pensum_fisica.csv",
-    ruta_prerequisitos=raiz / "data/reference/prerequisitos_fisica.csv",
-    ruta_tasas=raiz / "data/processed/tasas_aprobacion_fisica.csv",
-)
-simulador = SimuladorPensum(lector)
-simulador.cargar()  # aplica las reglas confirmadas del programa
+simulador = SimuladorPensum.desde_programa("fisica")  # o quimica, biologia, matematicas
+simulador.cargar()
 indicadores = simulador.indicadores()
+complejidad = simulador.complejidad()      # retraso, bloqueo y h(v) por asignatura
 ```
 
-Un script equivalente está en `examples/ejemplo_cargar_red.py`.
-Para el extracto CSV sin reglas: `simulador.cargar(aplicar_reglas=False)`.
-La figura del DAG se genera con `examples/dibujar_red.py`.
-La llamada `simulador.simular(...)` lanza `NotImplementedError`: el Monte
-Carlo de la sección III.B se implementa en una etapa posterior.
+Monte Carlo del tiempo de grado (sección III.B). Toda asignatura del
+grafo necesita p_i; las que no tienen histórico (p. ej. Trabajo de Grado)
+se completan explícitamente:
+
+```python
+from pensunet.dominio.escenario import Escenario
+
+resultado = simulador.simular(
+    Escenario(n_estudiantes=2000, semilla=1, max_creditos_semestre=None),
+    tasas=tasas_completas,  # DataFrame con id_asignatura y tasa_aprobacion
+)
+resultado.media, resultado.tasa_grado_en(12), resultado.asignaturas_que_frenan(5)
+```
+
+CLI: `python examples/ejemplo_cargar_red.py --programa quimica`.
+
+Interfaz Streamlit (selector de carrera en la barra lateral):
+
+```bash
+pip install -e ".[ui]"
+python examples/ejecutar_interfaz.py
+```
+
+Con Docker (no requiere Python local):
+
+```bash
+docker compose up --build        # o: docker build -t pensunet . && docker run -p 8501:8501 pensunet
+# abrir http://localhost:8501
+```
 
 Para ejecutar las pruebas:
 
 ```bash
 pytest
-ruff check src tests examples
+ruff check .
 ```
+
+La integración continua (`.github/workflows/ci.yml`) corre `ruff` y
+`pytest` en Python 3.10 y 3.12 y construye la imagen Docker en cada push
+a `main` y en cada pull request.
 
 ## Estructura
 
@@ -83,13 +104,16 @@ ruff check src tests examples
 src/pensunet/
   facade.py                 Fachada SimuladorPensum
   datos/                    Lector CSV, fábrica y adaptador UD
-  dominio/                  DAG, reglas por carrera, indicadores, figura
-  simulacion/               Estrategia y esqueleto Monte Carlo
-  ui/                       Placeholder de la interfaz
+  dominio/                  DAG, indicadores, complejidad, escenario y figura
+  simulacion/               Estrategia y Monte Carlo de Molontay
+  ui/                       Interfaz Streamlit (app.py) y tablas
 data/reference/             Pensum y prerrequisitos
 data/processed/             Tasas de aprobación agregadas por asignatura
 data/private/               Ignorado por git: no guardar microdatos
-docs/                       Manual técnico y manual de usuario
+.streamlit/config.toml      Tema claro/oscuro de la interfaz
+Dockerfile, docker-compose.yml, .github/workflows/ci.yml
+.github/workflows/docs.yml  Sphinx → GitHub Pages
+docs/                       Sphinx (conf.py, index, API) y manuales
 examples/
 tests/
 ```
@@ -97,20 +121,30 @@ tests/
 Los patrones (fachada, fábrica, adaptador y estrategia) se justifican en
 `docs/manual_tecnico.md`.
 
+## Documentación
+
+La documentación (manuales y referencia de la API generada desde los
+docstrings) se publica en <https://isabelnieto900.github.io/pensunet/>.
+Para construirla en local:
+
+```bash
+pip install -e ".[docs]"
+sphinx-build -W -b html docs docs/_build/html
+```
+
+El flujo `.github/workflows/docs.yml` la construye y la publica en cada
+push a `main`.
+
 ## Datos
 
-En el repositorio solo hay tablas agregadas o de catálogo:
+En el repositorio solo hay tablas agregadas o de catálogo para las cuatro
+carreras FCMN (`pensum_*.csv`, `prerequisitos_*.csv`,
+`tasas_aprobacion_*.csv`), más `ajustes_prerrequisitos.csv` y el
+catálogo de Trabajo de Grado (p = 1 por juicio experto).
 
-- `data/reference/pensum_fisica.csv`
-- `data/reference/prerequisitos_fisica.csv`
-- `data/processed/tasas_aprobacion_fisica.csv`
-
-No hay registros individuales ni códigos de estudiante. Las tasas vienen del
-histórico **2023-2 a 2025-2** de Física y una asignatura cuenta como
-aprobada cuando `fl_aprobada` es verdadero. El detalle de cobertura, de
-materias con pocos inscritos y de las inconsistencias entre las tres tablas
-está en [`data/README.md`](data/README.md). Esas inconsistencias se
-documentan; no se corrigen dentro de los archivos.
+No hay registros individuales ni códigos de estudiante. Las tasas vienen
+del histórico **2023-2 a 2025-2** (2026-1 no entra). El detalle de origen
+Cóndor/SGA, ajustes y TG está en [`data/README.md`](data/README.md).
 
 ## Licencia
 

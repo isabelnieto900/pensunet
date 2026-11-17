@@ -1,0 +1,89 @@
+nu_periodo_formacion,id_asignatura,ds_nombre_asignatura,ds_nombre_pensum,nu_creditos,ds_clasificacion,ds_grupo_slot,ds_linea_tematica,ds_bloque_electivo
+1,4,Cátedra Francisco José de Caldas,Cátedra Francisco José de Caldas,1,Obligatorio,,,
+1,5008,Química General,Química General,3,Obligatorio,,,
+1,5020,Biofísica I,Biofísica I,3,Obligatorio,,,
+1,25306,Biología Celular,Biología Celular,3,Obligatorio,,,
+1,25307,Álgebra y Trigonometría,Álgebra y Trigonometría,2,Obligatorio,,,
+1,25308,Geología,Geología,2,Obligatorio,,,
+1,25309,Redacción Científica,Redacción Científica,2,Obligatorio,,,
+1,25310,Bioética,Bioética,2,Obligatorio,,,
+2,25320,Virología,Virología,3,Electivo,Electiva I,,Electiva I
+2,25323,Astrobiología,Astrobiología,3,Electivo,Electiva I,,Electiva I
+2,25358,Manejo Colecciones Botánicas (Herbario,Manejo Colecciones Botánicas (Herbario,3,Electivo,Electiva I,,Electiva I
+2,25360,Diversidad de Hexapoda,Diversidad de Hexapoda,3,Electivo,Electiva I,,Electiva I
+2,12,Cátedra Democracia y Ciudadanía,Cátedra Democracia y Ciudadanía,1,Obligatorio,,,
+2,5011,Química Orgánica,Química Orgánica,3,Obligatorio,,,
+2,25313,Zoología de Invertebrados,Zoología de Invertebrados,3,Obligatorio,,,
+2,25315,Botánica I,Botánica I,3,Obligatorio,,,
+2,25318,Cálculo,Cálculo,2,Obligatorio,,,
+2,25319,Biofísica II,Biofísica II,3,Obligatorio,,,
+3,9901,Segunda Lengua I - Inglés,Segunda Lengua I - Inglés,2,Obligatorio,Segunda Lengua I,,Segunda Lengua I
+3,9904,Segunda Lengua I - Francés,Segunda Lengua I - Francés,2,Obligatorio,Segunda Lengua I,,Segunda Lengua I
+3,9907,Segunda Lengua I - Alemán,Segunda Lengua I - Alemán,2,Obligatorio,Segunda Lengua I,,Segunda Lengua I
+3,9910,Segunda Lengua I - Italiano,Segunda Lengua I - Italiano,2,Obligatorio,Segunda Lengua I,,Segunda Lengua I
+3,9913,Segunda Lengua I - Portugués,Segunda Lengua I - Portugués,2,Obligatorio,Segunda Lengua I,,Segunda Lengua I
+3,25366,Sistemática integrativa,Sistemática integrativa,4,Obligatorio,Énfasis I,,Énfasis I
+3,5019,Bioquímica,Bioquímica,3,Obligatorio,,,
+3,25246,Cátedra de Contexto,Cátedra de Contexto,1,Obligatorio,,,
+3,25324,Zoología de Vertebrados,Zoología de Vertebrados,3,Obligatorio,,,
+3,25325,Botánica II,Botánica II,3,Obligatorio,,,
+3,25326,Ecuaciones Diferenciales,Ecuaciones Diferenciales,2,Obligatorio,,,
+4,9902,Segunda Lengua II - Ingles,Segunda Lengua II - Ingles,2,Obligatorio Básico,Segunda Lengua II,,Segunda Lengua II
+4,9905,Segunda Lengua II - Francés,Segunda Lengua II - Francés,2,Obligatorio Básico,Segunda Lengua II,,Segunda Lengua II
+4,9908,Segunda Lengua II - Alemán,Segunda Lengua II - Alemán,2,Obligatorio Básico,Segunda Lengua II,,Segunda Lengua II
+4,9911,Segunda Lengua II - Italiano,Segunda Lengua II - Italiano,2,Obligatorio Básico,Segunda Lengua II,,Segunda Lengua II
+4,9914,Segunda Lengua II - Portugués,Segunda Lengua II - Portugués,2,Obligatorio Básico,Segunda Lengua II,,Segunda Lengua II
+4,9917,Segunda Lengua II - Mandarín,Segunda Lengua II - Mandarín,2,Obligatorio Básico,Segunda Lengua II,,Segunda Lengua II
+4,25355,Moleculas Bioactivas,Moleculas Bioactivas,4,Electivo,Electiva II,,Electiva II
+4,25367,Bioinformática y sistemas operativos,Bioinformática y sistemas operativos,4,Obligatorio,Énfasis II,,Énfasis II
+4,25368,Sistemas de información geográfica,Sistemas de información geográfica,4,Obligatorio,Énfasis II,,Énfasis II
+4,25328,Fisiología Animal,Fisiología Animal,3,Obligatorio,,,
+4,25329,Fisiología Vegetal,Fisiología Vegetal,3,Obligatorio,,,
+4,25330,Análisis Químico,Análisis Químico,2,Obligatorio,,,
+5,25353,Diversidad y Ecología Microbiana,Diversidad y Ecología Microbiana,3,Electivo,Electiva III,,Electiva III
+5,25354,Geobiología,Geobiología,3,Electivo,Electiva III,,Electiva III
+5,25356,Briofitos,Briofitos,3,Electivo,Electiva III,,Electiva III
+5,25359,Biogeoquímica,Biogeoquímica,3,Electivo,Electiva III,,Electiva III
+5,25377,Antropología molecular y genética forense,Antropología molecular y genética forense,3,Electivo,Electiva III,,Electiva III
+5,25378,Bioensayos,Bioensayos,3,Electivo,Electiva III,,Electiva III
+5,25380,Inmunología Comparativa para Sistemas Biológicos,Inmunología Comparativa para Sistemas Biológicos,3,Electivo,Electiva III,,Electiva III
+5,25381,Modelos de especiación,Modelos de especiación,3,Electivo,Electiva III,,Electiva III
+5,25382,Macroinvertebrados Acuáticos,Macroinvertebrados Acuáticos,3,Electivo,Electiva III,,Electiva III
+5,25383,Manejo de colecciones científicas - Aves,Manejo de colecciones científicas - Aves,3,Electivo,Electiva III,,Electiva III
+5,25385,Interacciones biológicas botánicas,Interacciones biológicas botánicas,3,Electivo,Electiva III,,Electiva III
+5,25386,Introducción a la neurociencia,Introducción a la neurociencia,3,Electivo,Electiva III,,Electiva III
+5,9903,Segunda Lengua III - Inglés,Segunda Lengua III - Inglés,2,Obligatorio,Segunda Lengua III,,Segunda Lengua III
+5,9906,Segunda Lengua III - Francés,Segunda Lengua III - Francés,2,Obligatorio,Segunda Lengua III,,Segunda Lengua III
+5,9909,Segunda Lengua III - Alemán,Segunda Lengua III - Alemán,2,Obligatorio,Segunda Lengua III,,Segunda Lengua III
+5,9912,Segunda Lengua III - Italiano,Segunda Lengua III - Italiano,2,Obligatorio,Segunda Lengua III,,Segunda Lengua III
+5,9915,Segunda Lengua III - Portugués,Segunda Lengua III - Portugués,2,Obligatorio,Segunda Lengua III,,Segunda Lengua III
+5,9918,Segunda Lengua III - Mandarín,Segunda Lengua III - Mandarín,2,Obligatorio,Segunda Lengua III,,Segunda Lengua III
+5,25372,Biogeografía,Biogeografía,4,Obligatorio,Énfasis III,,Énfasis III
+5,25373,Métodos de inferencia filogenética,Métodos de inferencia filogenética,4,Obligatorio,Énfasis III,,Énfasis III
+5,25333,Biología del Desarrollo,Biología del Desarrollo,3,Obligatorio,,,
+5,25334,Microbiología,Microbiología,3,Obligatorio,,,
+5,25335,Genética,Genética,3,Obligatorio,,,
+6,25351,Ornitología,Ornitología,4,Electivo,Electiva IV,,Electiva IV
+6,25357,Fundamentos de microscopía e histotecnología,Fundamentos de microscopía e histotecnología,4,Electivo,Electiva IV,,Electiva IV
+6,25361,Biología de los Hongos,Biología de los Hongos,4,Electivo,Electiva IV,,Electiva IV
+6,25362,Herpetología,Herpetología,4,Electivo,Electiva IV,,Electiva IV
+6,25363,Botánica Sistemática,Botánica Sistemática,4,Electivo,Electiva IV,,Electiva IV
+6,25369,Citogenética y evolución del genoma,Citogenética y evolución del genoma,4,Obligatorio,Énfasis IV,,Énfasis IV
+6,25370,Biología de la conservación,Biología de la conservación,4,Obligatorio,Énfasis IV,,Énfasis IV
+6,25337,Ecología,Ecología,3,Obligatorio,,,
+6,25338,Biología Molecular,Biología Molecular,3,Obligatorio,,,
+6,25339,Bioestadística,Bioestadística,2,Obligatorio,,,
+6,25341,Practica Integrada I,Practica Integrada I,2,Obligatorio,,,
+7,25379,Mastozoología,Mastozoología,4,Electivo,Electiva V,,Electiva V
+7,25371,Biología molecular avanzada,Biología molecular avanzada,4,Obligatorio,Énfasis V,,Énfasis V
+7,25374,Restauración ecológica,Restauración ecológica,4,Obligatorio,Énfasis V,,Énfasis V
+7,25375,Ecología avanzada,Ecología avanzada,4,Obligatorio,Énfasis VI,,Énfasis VI
+7,25376,Modelado y simulación de macromoléculas,Modelado y simulación de macromoléculas,4,Obligatorio,Énfasis VI,,Énfasis VI
+7,22540,Trabajo de Grado I,Trabajo de Grado I,3,Obligatorio,,,
+7,25342,Diseño Experimental,Diseño Experimental,3,Obligatorio,,,
+8,25345,Trabajo de Grado II,Trabajo de Grado II,6,Obligatorio,,,
+8,25346,Evolución,Evolución,2,Obligatorio,,,
+8,25347,Legislación y Gestión Ambiental,Legislación y Gestión Ambiental,3,Obligatorio,,,
+8,25348,Practica Integrada II,Practica Integrada II,2,Obligatorio,,,
+8,25349,Emp-Gest. Emp.,Emp-Gest. Emp.,2,Obligatorio,,,
+8,25350,Educación Ambiental,Educación Ambiental,3,Obligatorio,,,

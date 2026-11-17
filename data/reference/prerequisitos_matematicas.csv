@@ -1,0 +1,22 @@
+id_asignatura,ds_nombre_asignatura,id_prerequisito,ds_nombre_prerequisito,nu_orden,fl_debe_aprobado
+1,Cálculo Diferencial,19901,Introducción al Cálculo,1,True
+4917,Teoría de Grupos,19912,Teoría de Conjuntos,1,True
+9902,Segunda Lengua II - Ingles,9901,Segunda Lengua I - Inglés,1,True
+9903,Segunda Lengua III - Inglés,9902,Segunda Lengua II - Ingles,1,True
+19904,Teoría de Números,19902,Fundamentos de Matemáticas,1,True
+19907,Cálculo Integral,1,Cálculo Diferencial,1,True
+19908,Álgebra Lineal,19902,Fundamentos de Matemáticas,1,True
+19911,Cálculo Vectorial,19907,Cálculo Integral,1,True
+19911,Cálculo Vectorial,19908,Álgebra Lineal,2,True
+19913,Ecuaciones Diferenciales,19907,Cálculo Integral,1,True
+19913,Ecuaciones Diferenciales,19908,Álgebra Lineal,2,True
+19914,Lógica Matemática,19903,Matemáticas Discretas,1,True
+19914,Lógica Matemática,19908,Álgebra Lineal,2,True
+19915,Análisis Matemático I,19911,Cálculo Vectorial,1,True
+19917,Teoría de Probabilidades,19912,Teoría de Conjuntos,1,True
+19918,Análisis Matemático II,19915,Análisis Matemático I,1,True
+19920,Métodos Numéricos y Computación,19913,Ecuaciones Diferenciales,1,True
+19922,Historia de la Matemática,4917,Teoría de Grupos,1,True
+19922,Historia de la Matemática,19913,Ecuaciones Diferenciales,2,True
+19922,Historia de la Matemática,19919,Topología,3,True
+19923,Análisis Vectorial,19918,Análisis Matemático II,1,True

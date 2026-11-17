@@ -81,10 +81,9 @@ def construir_red(
     ``debe_aprobado`` es falso: el artículo no considera los
     prerrequisitos débiles (los que permiten la inscripción en paralelo).
 
+    ``reglas_aplicadas`` guarda la bitácora de ajustes documentados.
     La duración nominal es el máximo semestre declarado en el pensum, que
     en el artículo es la duración para la cual se diseñó el plan.
-    ``reglas_aplicadas`` guarda la bitácora de ``preparar_tablas_analisis``
-    cuando el grafo ya no es el extracto crudo.
     """
     _exigir_columnas(pensum, ("id_asignatura", "nombre", "semestre"), "pensum")
     _exigir_columnas(

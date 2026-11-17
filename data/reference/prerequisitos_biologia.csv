@@ -1,0 +1,23 @@
+id_asignatura,ds_nombre_asignatura,id_prerequisito,ds_nombre_prerequisito,nu_orden,fl_debe_aprobado
+5011,Química Orgánica,5008,Química General,1,True
+5019,Bioquímica,5011,Química Orgánica,1,True
+25313,Zoología de Invertebrados,25306,Biología Celular,1,True
+25315,Botánica I,25306,Biología Celular,1,True
+25318,Cálculo,25307,Álgebra y Trigonometría,1,True
+25319,Biofísica II,5020,Biofísica I,1,True
+25324,Zoología de Vertebrados,25313,Zoología de Invertebrados,1,True
+25325,Botánica II,25315,Botánica I,1,True
+25326,Ecuaciones Diferenciales,25318,Cálculo,1,True
+25328,Fisiología Animal,25324,Zoología de Vertebrados,1,True
+25329,Fisiología Vegetal,25325,Botánica II,1,True
+25330,Análisis Químico,5019,Bioquímica,1,True
+25333,Biología del Desarrollo,25328,Fisiología Animal,1,True
+25334,Microbiología,25330,Análisis Químico,1,True
+25337,Ecología,25333,Biología del Desarrollo,1,True
+25337,Ecología,25334,Microbiología,2,True
+25337,Ecología,25335,Genética,3,True
+25338,Biología Molecular,25335,Genética,1,True
+25339,Bioestadística,25326,Ecuaciones Diferenciales,1,True
+25341,Practica Integrada I,25333,Biología del Desarrollo,1,True
+25341,Practica Integrada I,25335,Genética,2,True
+25342,Diseño Experimental,25339,Bioestadística,1,True

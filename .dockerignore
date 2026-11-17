@@ -1,0 +1,27 @@
+# Control de versiones y entornos
+.git
+.gitignore
+.venv
+venv
+env
+**/__pycache__
+**/*.py[cod]
+*.egg-info
+.pytest_cache
+.ruff_cache
+.mypy_cache
+build
+dist
+
+# Herramientas locales y notas que no van en la imagen
+.cursor
+.claude
+CONTEXTO_PENSUNET.md
+entrega
+
+# Microdatos: nunca entran a la imagen
+data/private
+
+# Documentos pesados
+docs/*.pdf
+docs/_build

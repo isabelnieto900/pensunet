@@ -1,0 +1,8 @@
+# Levanta la interfaz con: docker compose up --build  → http://localhost:8501
+services:
+  pensunet:
+    build: .
+    image: pensunet:local
+    ports:
+      - "8501:8501"
+    restart: unless-stopped

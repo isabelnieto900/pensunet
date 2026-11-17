@@ -1,38 +1,48 @@
-"""Datos de Física compartidos por las pruebas."""
+"""Datos FCMN compartidos por las pruebas."""
 
 from pathlib import Path
 
 import pytest
 
-from pensunet.datos.fabrica import FabricaLectores
+from pensunet.datos.programas import PROGRAMAS, Programa
 from pensunet.facade import SimuladorPensum
-
-RAIZ = Path(__file__).resolve().parents[1]
 
 
 @pytest.fixture(scope="session")
 def rutas_datos() -> dict[str, Path]:
-    """Rutas de los tres CSV que sí pueden estar en el repositorio."""
-    return {
-        "ruta_pensum": RAIZ / "data" / "reference" / "pensum_fisica.csv",
-        "ruta_prerequisitos": RAIZ / "data" / "reference" / "prerequisitos_fisica.csv",
-        "ruta_tasas": RAIZ / "data" / "processed" / "tasas_aprobacion_fisica.csv",
-    }
+    """Rutas de los tres CSV de Física."""
+    return PROGRAMAS["fisica"].rutas()
 
 
 @pytest.fixture(scope="session")
-def simulador_crudo(rutas_datos: dict[str, Path]) -> SimuladorPensum:
-    """Extracto CSV sin reglas del programa. Sección II.A y ecuación (7)."""
-    lector = FabricaLectores.crear("csv", **rutas_datos)
-    modelo = SimuladorPensum(lector)
-    modelo.cargar(aplicar_reglas=False)
+def programa_fisica() -> Programa:
+    return PROGRAMAS["fisica"]
+
+
+@pytest.fixture(scope="session")
+def simulador_crudo() -> SimuladorPensum:
+    """Extracto CSV de Física sin ajustes documentados."""
+    modelo = SimuladorPensum.desde_programa("fisica")
+    modelo.cargar(aplicar_ajustes_documentados=False)
     return modelo
 
 
 @pytest.fixture(scope="session")
-def simulador(rutas_datos: dict[str, Path]) -> SimuladorPensum:
-    """Grafo de análisis con reglas confirmadas. Sección II.A y ecuación (7)."""
-    lector = FabricaLectores.crear("csv", **rutas_datos)
-    modelo = SimuladorPensum(lector)
-    modelo.cargar(aplicar_reglas=True)
+def simulador() -> SimuladorPensum:
+    """Física con ajustes_prerrequisitos.csv aplicados."""
+    modelo = SimuladorPensum.desde_programa("fisica")
+    modelo.cargar(aplicar_ajustes_documentados=True)
+    return modelo
+
+
+@pytest.fixture(params=sorted(PROGRAMAS))
+def clave_programa(request: pytest.FixtureRequest) -> str:
+    return str(request.param)
+
+
+@pytest.fixture
+def simulador_programa(clave_programa: str) -> SimuladorPensum:
+    """Simulador con ajustes para cada carrera FCMN."""
+    modelo = SimuladorPensum.desde_programa(clave_programa)
+    modelo.cargar(aplicar_ajustes_documentados=True)
     return modelo

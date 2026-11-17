@@ -1,0 +1,40 @@
+id_asignatura,ds_nombre_asignatura,id_prerequisito,ds_nombre_prerequisito,nu_orden,fl_debe_aprobado
+2140,Diseño Experimental,25210,Estadística,1,True
+6000,Química Computacional,25238,Bioquímica I,1,True
+6014,Calculo Integral,25207,Cálculo Diferencial,1,True
+6049,Radioquimica,25225,Química Orgánica II,1,True
+6079,Química Verde,25233,Química Ambiental,1,True
+25149,Trabajo de Grado I,25234,Profundización I (Industria o Salud o Medio Ambiente),1,True
+25206,Química General II,25202,Química General I,1,True
+25207,Cálculo Diferencial,25203,Matemáticas,1,True
+25208,Física II,6002,Física I,1,True
+25209,Microbiología,25204,Biología,1,True
+25212,Química Inorgánica I,25206,Química General II,1,True
+25217,Informática y Programación Básica I,25203,Matemáticas,1,True
+25220,Química Inorgánica II,25212,Química Inorgánica I,1,True
+25221,Química Orgánica I,25206,Química General II,1,True
+25222,Espectroscopia Básica,25226,Análisis Químico Instrumental I,1,True
+25223,Fisicoquímica I,6014,Calculo Integral,1,True
+25224,Química Analítica,25206,Química General II,1,True
+25225,Química Orgánica II,25221,Química Orgánica I,1,True
+25226,Análisis Químico Instrumental I,25224,Química Analítica,1,True
+25227,Fisicoquímica II,25223,Fisicoquímica I,1,True
+25228,Procesos Químicos Industriales,25212,Química Inorgánica I,1,True
+25229,Química de los Compuestos de Coordinación,25220,Química Inorgánica II,1,True
+25230,Análisis Químico Orgánico,25225,Química Orgánica II,1,True
+25231,Análisis Químico Instrumental II,25224,Química Analítica,1,True
+25232,Química Cuántica,25227,Fisicoquímica II,1,True
+25233,Química Ambiental,25224,Química Analítica,1,True
+25234,Profundización I (Industria o Salud o Medio Ambiente),25231,Análisis Químico Instrumental II,1,True
+25235,Síntesis Química Orgánica,25230,Análisis Químico Orgánico,1,True
+25236,Espectroscopia Avanzada,25222,Espectroscopia Básica,1,True
+25237,Biología Molecular,25238,Bioquímica I,1,True
+25238,Bioquímica I,25225,Química Orgánica II,1,True
+25240,Productos Naturales,25225,Química Orgánica II,1,True
+25242,Trabajo de Grado II,25234,Profundización I (Industria o Salud o Medio Ambiente),1,True
+25250,Procesos de transferencia de masa,25234,Profundización I (Industria o Salud o Medio Ambiente),1,True
+25251,Análisis y tratamiento de aguas residuales,25234,Profundización I (Industria o Salud o Medio Ambiente),1,True
+25252,Biotecnología en salud,25234,Profundización I (Industria o Salud o Medio Ambiente),1,True
+25253,Bioensayos,25234,Profundización I (Industria o Salud o Medio Ambiente),1,True
+25259,Inmunología básica,25234,Profundización I (Industria o Salud o Medio Ambiente),1,True
+25260,Carbones,25234,Profundización I (Industria o Salud o Medio Ambiente),1,True

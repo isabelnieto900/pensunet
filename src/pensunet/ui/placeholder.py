@@ -1,13 +1,51 @@
-"""Marcador de la interfaz. La etapa 1 se usa desde Python."""
+"""Lanza la interfaz Streamlit o indica cómo instalarla."""
+
+from __future__ import annotations
+
+import shutil
+import subprocess
+import sys
+from pathlib import Path
+
+from pensunet.datos.programas import PROGRAMAS
 
 
-def ejecutar() -> None:
-    """No abre una ventana.
+def ejecutar(programa: str | None = None) -> None:
+    """Abre la interfaz Streamlit de Pensunet.
 
-    La interfaz Streamlit queda para una fase posterior. El uso actual
-    es la fachada ``SimuladorPensum`` (secciones II.A y II.B de
-    Molontay et al., 2020).
+    Requiere el extra ``ui``: ``pip install -e ".[ui]"``.
+    ``programa`` se reenvía como query param inicial del selector.
     """
-    raise NotImplementedError(
-        "La interfaz de usuario no forma parte de la etapa 1. Use SimuladorPensum desde Python."
-    )
+    if programa is not None and programa not in PROGRAMAS:
+        conocidos = ", ".join(sorted(PROGRAMAS))
+        raise ValueError(f"Programa {programa!r} desconocido. Opciones: {conocidos}.")
+    if shutil.which("streamlit") is None and not _streamlit_importable():
+        raise ModuleNotFoundError(
+            'Streamlit no está instalado. Ejecute: pip install -e ".[ui]"'
+        )
+    ruta_app = Path(__file__).resolve().parent / "app.py"
+    comando = [
+        sys.executable,
+        "-m",
+        "streamlit",
+        "run",
+        str(ruta_app),
+        "--browser.gatherUsageStats",
+        "false",
+    ]
+    if programa is not None:
+        comando.extend(["--", f"--programa={programa}"])
+    raise SystemExit(subprocess.call(comando))
+
+
+def programas_disponibles() -> list[str]:
+    """Claves del selector de carrera."""
+    return sorted(PROGRAMAS)
+
+
+def _streamlit_importable() -> bool:
+    try:
+        import streamlit  # noqa: F401
+    except ImportError:
+        return False
+    return True
