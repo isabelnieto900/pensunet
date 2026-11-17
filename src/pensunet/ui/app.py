@@ -533,6 +533,17 @@ def _pagina_simulacion(clave: str, simulador: SimuladorPensum, oscuro: bool) -> 
                 value=40,
                 step=1,
             )
+            max_creditos = st.number_input(
+                "Tope de créditos por semestre (0 = sin tope)",
+                min_value=0,
+                max_value=40,
+                value=0,
+                step=1,
+                help=(
+                    "Sin tope es el supuesto del artículo. Con tope se inscriben "
+                    "primero las obligatorias de semestre más bajo."
+                ),
+            )
 
         with st.expander("Tasas de aprobación (editables)", expanded=True):
             st.caption(
@@ -563,10 +574,28 @@ def _pagina_simulacion(clave: str, simulador: SimuladorPensum, oscuro: bool) -> 
             width="stretch",
         )
 
-    if st.button("Restablecer tasas al histórico", key="reset_tasas"):
-        st.session_state.tasas_editor = st.session_state.tasas_base.copy()
-        st.session_state.pop("editor_tasas", None)
-        st.rerun()
+    b_reset, b_tg = st.columns(2)
+    with b_reset:
+        if st.button("Restablecer tasas al histórico", key="reset_tasas", width="stretch"):
+            st.session_state.tasas_editor = st.session_state.tasas_base.copy()
+            st.session_state.pop("editor_tasas", None)
+            st.rerun()
+    with b_tg:
+        ids_tg = set(simulador.programa.ids_trabajo_grado) if simulador.programa else set()
+        if ids_tg and st.button(
+            "Usar p = 1 en Trabajo de Grado (juicio experto)",
+            key="tg_uno",
+            width="stretch",
+            help=(
+                "Opcional y explícito: solo cambia el editor de esta sesión. "
+                "El CSV deja la tasa de TG vacía."
+            ),
+        ):
+            tabla = st.session_state.tasas_editor.copy()
+            tabla.loc[tabla["id"].astype(int).isin(ids_tg), "tasa_aprobacion"] = 1.0
+            st.session_state.tasas_editor = tabla
+            st.session_state.pop("editor_tasas", None)
+            st.rerun()
 
     st.session_state.tasas_editor = editadas
 
@@ -587,6 +616,7 @@ def _pagina_simulacion(clave: str, simulador: SimuladorPensum, oscuro: bool) -> 
             ),
             electivas_sin_reintento=bool(electivas_sin_reintento),
             max_semestres=int(max_semestres),
+            max_creditos_semestre=None if int(max_creditos) == 0 else int(max_creditos),
         )
         with slot_estado:
             barra = st.progress(0, text="Preparando la simulación…")
@@ -663,12 +693,25 @@ def _pagina_simulacion(clave: str, simulador: SimuladorPensum, oscuro: bool) -> 
             f"Resultado con n = {usado.n_estudiantes}, semilla = {usado.semilla}, "
             f"tope = {usado.max_semestres} semestres."
         )
+    nominal = int(simulador.red.duracion_nominal) if simulador.red is not None else 10
+    tiene_tasa_grado = hasattr(resultado, "tasa_grado_en")
     with slot_metricas:
-        m1, m2, m3, m4 = st.columns(4)
+        m1, m2, m3, m4, m5, m6 = st.columns(6)
         m1.metric("E(X) semestres", f"{resultado.media:.2f}")
         m2.metric("Desviación", f"{resultado.desviacion:.2f}")
         m3.metric("Rango", f"{min(resultado.tiempos)} – {max(resultado.tiempos)}")
         m4.metric("Censurados", resultado.n_censurados)
+        if tiene_tasa_grado:
+            m5.metric(
+                f"Grado ≤ {nominal} sem.",
+                f"{resultado.tasa_grado_en(nominal):.0%}",
+                help="Proporción graduada en la duración nominal.",
+            )
+            m6.metric(
+                f"Grado ≤ {nominal + 2} sem.",
+                f"{resultado.tasa_grado_en(nominal + 2):.0%}",
+                help="Proporción graduada con hasta dos semestres de rezago.",
+            )
     with slot_grafica:
         xmax = None if usado is None else int(usado.max_semestres)
         st.pyplot(
@@ -682,12 +725,43 @@ def _pagina_simulacion(clave: str, simulador: SimuladorPensum, oscuro: bool) -> 
             width="stretch",
         )
     with slot_tabla:
+        if getattr(resultado, "reprobaciones", None):
+            st.markdown("##### Asignaturas que más frenan el flujo simulado")
+            st.caption(
+                "Reprobaciones medias por estudiante simulado. Una asignatura con "
+                "muchas reprobaciones y alto bloqueo es un cuello de botella real."
+            )
+            st.dataframe(
+                _tabla_frenan(resultado, simulador),
+                width="stretch",
+                hide_index=True,
+            )
         with st.expander("Frecuencias de X"):
             st.dataframe(
                 tabla_tiempos(resultado),
                 width="stretch",
                 hide_index=True,
             )
+
+
+def _tabla_frenan(resultado, simulador: SimuladorPensum, n: int = 10):
+    """Top de reprobaciones medias con nombre, p_i y bloqueo."""
+    import pandas as pd
+
+    assert simulador.red is not None
+    bloqueo = simulador.indicadores().factor_bloqueo
+    filas = []
+    for codigo, media in resultado.asignaturas_que_frenan(n):
+        filas.append(
+            {
+                "id": codigo,
+                "nombre": simulador.red.grafo.nodes[codigo].get("nombre", ""),
+                "reprobaciones_por_estudiante": round(media, 3),
+                "p_i": simulador.tasa_de(codigo),
+                "bloqueo": bloqueo.get(codigo),
+            }
+        )
+    return pd.DataFrame(filas)
 
 
 def main() -> None:

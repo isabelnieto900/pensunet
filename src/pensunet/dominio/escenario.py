@@ -30,6 +30,12 @@ class Escenario:
       vuelve a cursar; el crédito no cuenta y se puede elegir otra.
     - ``max_semestres``: tope de la trayectoria; si no hay grado a tiempo
       la observación se censura en ese valor (no aborta la muestra).
+    - ``max_creditos_semestre``: tope de créditos inscritos por semestre.
+      Con ``None`` (por defecto) no hay tope, como en el artículo. Con
+      tope, se inscriben primero las obligatorias de semestre recomendado
+      más bajo (desempate por código) y luego la electiva, mientras
+      quepan; una asignatura que sola supera el tope se permite si es la
+      primera del semestre, para no bloquear la trayectoria.
 
     El tiempo de grado es la variable aleatoria X de las ecuaciones (3)
     y (4). Este objeto no ejecuta la simulación.
@@ -47,6 +53,7 @@ class Escenario:
     creditos_electivas_minimos: int | None = 18
     electivas_sin_reintento: bool = True
     max_semestres: int = 40
+    max_creditos_semestre: int | None = None
 
     def __post_init__(self) -> None:
         """Exige al menos un estudiante. Ecuaciones (3) y (4): X necesita una muestra."""
@@ -54,5 +61,7 @@ class Escenario:
             raise ValueError("El escenario necesita al menos un estudiante representativo.")
         if self.max_semestres < 1:
             raise ValueError("El escenario necesita al menos un semestre de simulación.")
+        if self.max_creditos_semestre is not None and self.max_creditos_semestre < 1:
+            raise ValueError("El tope de créditos por semestre debe ser positivo o None.")
         if self.creditos_electivas_minimos is not None and self.creditos_electivas_minimos < 0:
             raise ValueError("El mínimo de créditos electivos no puede ser negativo.")

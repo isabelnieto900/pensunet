@@ -91,3 +91,63 @@ def test_ejecutar_avisa_si_falta_streamlit(monkeypatch):
     monkeypatch.setattr("pensunet.ui.placeholder._streamlit_importable", lambda: False)
     with pytest.raises(ModuleNotFoundError, match="Streamlit"):
         ejecutar()
+
+
+def test_sin_tope_de_creditos_la_muestra_no_cambia(simulador):
+    """``max_creditos_semestre=None`` reproduce exactamente el Monte Carlo previo."""
+    tasas = _tasas_completas(simulador)
+    base = simulador.simular(Escenario(n_estudiantes=60, semilla=5), tasas=tasas)
+    explicito = simulador.simular(
+        Escenario(n_estudiantes=60, semilla=5, max_creditos_semestre=None), tasas=tasas
+    )
+    assert base.tiempos == explicito.tiempos
+
+
+def test_el_tope_de_creditos_no_acorta_el_grado(simulador):
+    """Con un tope de créditos estricto, E(X) no puede bajar."""
+    tasas = _tasas_completas(simulador)
+    libre = simulador.simular(Escenario(n_estudiantes=150, semilla=11), tasas=tasas)
+    con_tope = simulador.simular(
+        Escenario(n_estudiantes=150, semilla=11, max_creditos_semestre=12), tasas=tasas
+    )
+    assert con_tope.media >= libre.media
+
+
+def test_el_escenario_rechaza_un_tope_de_creditos_no_positivo():
+    with pytest.raises(ValueError):
+        Escenario(max_creditos_semestre=0)
+
+
+def test_resultado_reporta_reprobaciones_y_tasa_de_grado(simulador):
+    """Las reprobaciones caen en asignaturas con p_i < 1 y la tasa de grado es monótona."""
+    tasas = _tasas_completas(simulador)
+    resultado = simulador.simular(Escenario(n_estudiantes=120, semilla=3), tasas=tasas)
+    assert len(resultado.censurados) == len(resultado.tiempos)
+    frenan = resultado.asignaturas_que_frenan(5)
+    assert frenan and all(media > 0 for _, media in frenan)
+    p = {int(f["id_asignatura"]): float(f["tasa_aprobacion"]) for _, f in tasas.iterrows()}
+    assert all(p[codigo] < 1.0 for codigo, _ in frenan)
+    assert all(
+        resultado.inscripciones[c] >= resultado.reprobaciones[c] for c in resultado.reprobaciones
+    )
+    t = simulador.red.duracion_nominal
+    assert 0.0 <= resultado.tasa_grado_en(t) <= resultado.tasa_grado_en(t + 4) <= 1.0
+    assert resultado.tasa_grado_en(10_000) == pytest.approx(
+        1 - resultado.n_censurados / len(resultado.tiempos)
+    )
+
+
+def test_tasa_de_grado_en_un_resultado_fabricado():
+    from pensunet.simulacion.estrategia import ResultadoSimulacion
+
+    resultado = ResultadoSimulacion(
+        tiempos=(10, 11, 12, 40),
+        media=18.25,
+        desviacion=0.0,
+        n_censurados=1,
+        censurados=(False, False, False, True),
+        reprobaciones={1: 4, 2: 2},
+    )
+    assert resultado.tasa_grado_en(11) == pytest.approx(0.5)
+    assert resultado.tasa_grado_en(40) == pytest.approx(0.75)
+    assert resultado.asignaturas_que_frenan(1) == [(1, 1.0)]

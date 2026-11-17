@@ -54,12 +54,16 @@ class MonteCarloMolontay(EstrategiaSimulacion):
 
         rng = np.random.default_rng(escenario.semilla)
         tiempos: list[int] = []
+        marcas: list[bool] = []
         censurados = 0
+        reprobaciones: dict[int, int] = {}
+        inscripciones: dict[int, int] = {}
         for _ in range(escenario.n_estudiantes):
             tiempo, censurado = _simular_estudiante(
-                red, tasas_por_id, escenario, rng
+                red, tasas_por_id, escenario, rng, reprobaciones, inscripciones
             )
             tiempos.append(tiempo)
+            marcas.append(censurado)
             if censurado:
                 censurados += 1
 
@@ -71,6 +75,9 @@ class MonteCarloMolontay(EstrategiaSimulacion):
             desviacion=desviacion,
             n_censurados=censurados,
             tope_semestres=escenario.max_semestres,
+            censurados=tuple(marcas),
+            reprobaciones=reprobaciones,
+            inscripciones=inscripciones,
         )
 
 
@@ -116,6 +123,8 @@ def _simular_estudiante(
     tasas_por_id: dict[int, float],
     escenario: Escenario,
     rng: np.random.Generator,
+    reprobaciones: dict[int, int] | None = None,
+    inscripciones: dict[int, int] | None = None,
 ) -> tuple[int, bool]:
     """Devuelve (X, censurado).
 
@@ -143,6 +152,14 @@ def _simular_estudiante(
     aprobadas: set[int] = set()
     electivas_abandonadas: set[int] = set()
     creditos_electivos = 0
+    tope = escenario.max_creditos_semestre
+    fallos = reprobaciones if reprobaciones is not None else {}
+    intentos = inscripciones if inscripciones is not None else {}
+
+    def registrar(codigo: int, aprobo: bool) -> None:
+        intentos[codigo] = intentos.get(codigo, 0) + 1
+        if not aprobo:
+            fallos[codigo] = fallos.get(codigo, 0) + 1
 
     for semestre in range(1, escenario.max_semestres + 1):
         candidatas_obl = [
@@ -151,8 +168,14 @@ def _simular_estudiante(
             if codigo not in aprobadas
             and _elegible(codigo, grafo, aprobadas, semestre, escenario)
         ]
+        carga = 0
+        if tope is not None:
+            candidatas_obl = _recortar_por_creditos(candidatas_obl, grafo, tope)
+            carga = sum(_creditos(grafo, codigo) for codigo in candidatas_obl)
         for codigo in candidatas_obl:
-            if rng.random() < tasas_por_id[codigo]:
+            aprobo = bool(rng.random() < tasas_por_id[codigo])
+            registrar(codigo, aprobo)
+            if aprobo:
                 aprobadas.add(codigo)
 
         if cupo is not None and creditos_electivos < cupo:
@@ -163,11 +186,19 @@ def _simular_estudiante(
                 and codigo not in electivas_abandonadas
                 and _elegible(codigo, grafo, aprobadas, semestre, escenario)
             ]
+            if tope is not None:
+                disponibles = [
+                    codigo
+                    for codigo in disponibles
+                    if carga + _creditos(grafo, codigo) <= tope
+                ]
             if disponibles:
                 # Una electiva por semestre: el cupo oficial es un slot
                 # por nivel (I–IV); no se modela carga electiva múltiple.
                 codigo = int(rng.choice(disponibles))
-                if rng.random() < tasas_por_id[codigo]:
+                aprobo = bool(rng.random() < tasas_por_id[codigo])
+                registrar(codigo, aprobo)
+                if aprobo:
                     aprobadas.add(codigo)
                     creditos = grafo.nodes[codigo].get("creditos")
                     creditos_electivos += int(creditos) if creditos is not None else 0
@@ -194,6 +225,31 @@ def _simular_estudiante(
             return semestre, True
 
     return escenario.max_semestres, True
+
+
+def _creditos(grafo, codigo: int) -> int:
+    creditos = grafo.nodes[codigo].get("creditos")
+    return int(creditos) if creditos is not None else 0
+
+
+def _recortar_por_creditos(candidatas: list[int], grafo, tope: int) -> list[int]:
+    """Obligatorias que caben en el tope, por semestre recomendado y código.
+
+    Si la primera asignatura sola supera el tope, se inscribe igual para
+    que la trayectoria no quede bloqueada para siempre.
+    """
+    ordenadas = sorted(
+        candidatas,
+        key=lambda codigo: (int(grafo.nodes[codigo].get("semestre") or 0), codigo),
+    )
+    elegidas: list[int] = []
+    carga = 0
+    for codigo in ordenadas:
+        creditos = _creditos(grafo, codigo)
+        if carga + creditos <= tope or not elegidas:
+            elegidas.append(codigo)
+            carga += creditos
+    return elegidas
 
 
 def _elegible(
