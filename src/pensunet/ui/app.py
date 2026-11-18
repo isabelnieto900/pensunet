@@ -44,7 +44,6 @@ def _sidebar() -> None:
             format_func=lambda c: etiquetas[c],
             key="selector_programa",
             on_change=_marcar_cambio_nivel,
-            help="Facultad (panorama) o una carrera (detalle).",
         )
         st.caption(f"Pensunet {__version__}")
 
@@ -58,7 +57,6 @@ def _navegacion() -> object:
         icon=":material/dashboard:",
         url_path="panorama",
         default=en_facultad,
-        help="KPIs de la facultad, tarjetas por carrera y comparación.",
     )
     resumen_p = st.Page(
         resumen.mostrar,
@@ -66,7 +64,6 @@ def _navegacion() -> object:
         icon=":material/dashboard:",
         url_path="resumen",
         default=not en_facultad,
-        help="KPIs de la carrera, tiempo simulado y materias que frenan.",
     )
     secciones = {
         "Facultad": [
@@ -76,14 +73,12 @@ def _navegacion() -> object:
                 title="Materias de la Facultad",
                 icon=":material/school:",
                 url_path="materias-facultad",
-                help="Aprobación baja, medias por carrera y materias compartidas.",
             ),
             st.Page(
                 acerca.mostrar,
                 title="Acerca de",
                 icon=":material/info:",
                 url_path="acerca",
-                help="Modelo, datos OATI, privacidad y documentación.",
             ),
         ],
         "Carrera": [
@@ -93,21 +88,18 @@ def _navegacion() -> object:
                 title="Plan de estudios",
                 icon=":material/account_tree:",
                 url_path="plan",
-                help="Mapa D3 de prerrequisitos y créditos por semestre.",
             ),
             st.Page(
                 materias.mostrar,
                 title="Materias",
                 icon=":material/menu_book:",
                 url_path="materias",
-                help="Aprobación, estructura, cuellos y tabla filtrable.",
             ),
             st.Page(
                 tiempo_grado.mostrar,
                 title="Simulación",
                 icon=":material/science:",
                 url_path="simulacion",
-                help="Escenario base y contraste al editar tasas.",
             ),
         ],
     }
