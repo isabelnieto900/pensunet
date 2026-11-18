@@ -44,6 +44,7 @@ def _sidebar() -> None:
             format_func=lambda c: etiquetas[c],
             key="selector_programa",
             on_change=_marcar_cambio_nivel,
+            help="Facultad (panorama) o una carrera (detalle).",
         )
         st.caption(f"Pensunet {__version__}")
 
