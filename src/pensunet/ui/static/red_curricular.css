@@ -1,0 +1,345 @@
+/* Visualizador propio de Pensunet (D3). Identidad UD; sin escudo ni logo. */
+@import url("https://fonts.googleapis.com/css2?family=Hind:wght@400;500;600;700&family=Titillium+Web:wght@600;700&display=swap");
+
+.pensunet-red {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  font-family: Hind, "Segoe UI", system-ui, sans-serif;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.pensunet-red:not(.embebido) {
+  overflow: auto;
+}
+
+.pensunet-red h1 {
+  font-family: "Titillium Web", Hind, sans-serif;
+  font-size: 1.25rem;
+  margin: 0 0 0.35rem;
+  padding: 0.5rem 0.25rem 0;
+}
+
+.pensunet-red .cuerpo {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.pensunet-red .panel-arriba {
+  flex: 0 0 auto;
+  z-index: 3;
+  padding: 0.4rem 0.75rem;
+  font-size: 0.82rem;
+  line-height: 1.25;
+  overflow: hidden;
+  scrollbar-width: none;
+  border-bottom: 1px solid;
+  box-sizing: border-box;
+}
+
+.pensunet-red .panel-arriba::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+.pensunet-red .panel-arriba .detalle-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1.1rem;
+  align-items: flex-start;
+  align-content: flex-start;
+  overflow: hidden;
+  height: 100%;
+}
+
+.pensunet-red .panel-arriba .dato {
+  margin: 0;
+  padding: 0;
+  border: none;
+  min-width: 0;
+  flex: 0 1 auto;
+  max-width: 100%;
+}
+
+.pensunet-red .panel-arriba .dato.titulo-materia {
+  flex: 1 1 100%;
+  min-width: 100%;
+}
+
+.pensunet-red .panel-arriba .dato.titulo-materia strong {
+  font-family: "Titillium Web", Hind, sans-serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: #8c1919;
+  padding-bottom: 0.08rem;
+  border-bottom: 2.5px solid #fdb400;
+}
+
+.pensunet-red.oscuro .panel-arriba .dato.titulo-materia strong {
+  color: #fdb400;
+  border-bottom-color: #1291c0;
+}
+
+.pensunet-red .panel-arriba .dato.hint {
+  opacity: 0.78;
+  flex: 1 1 100%;
+}
+
+.pensunet-red .panel-arriba .etiqueta {
+  opacity: 0.72;
+  font-size: 0.72rem;
+  margin-right: 0.25rem;
+}
+
+.pensunet-red .panel-arriba .dato .valor {
+  font-weight: 600;
+}
+
+.pensunet-red .vista {
+  position: relative;
+  flex: 1 1 auto;
+  overflow: hidden;
+  min-height: 0;
+}
+
+.pensunet-red .zoom-flotante {
+  position: absolute;
+  top: 0.35rem;
+  left: 0.35rem;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.2rem 0.35rem;
+  border-radius: 2px;
+  font-size: 0.8rem;
+}
+
+.pensunet-red .zoom-flotante button {
+  font: inherit;
+  min-width: 1.7rem;
+  padding: 0.12rem 0.4rem;
+  border-radius: 2px;
+  border: 1px solid;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.pensunet-red .lienzo {
+  overflow: hidden;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  cursor: grab;
+  box-sizing: border-box;
+}
+
+.pensunet-red .lienzo.arrastrando {
+  cursor: grabbing;
+}
+
+.pensunet-red svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+}
+
+.pensunet-red .columnas .columna {
+  pointer-events: none;
+}
+
+.pensunet-red .titulos-semestre {
+  pointer-events: none;
+}
+
+.pensunet-red .titulo-semestre .titulo-fondo {
+  filter: drop-shadow(0 1px 1.5px rgba(55, 52, 53, 0.12));
+}
+
+.pensunet-red .semestre {
+  font-family: "Titillium Web", Hind, sans-serif;
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.pensunet-red .caja-nombre {
+  font-family: Hind, sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  fill: #ffffff;
+  pointer-events: none;
+}
+
+.pensunet-red .caja-pie {
+  font-family: Hind, sans-serif;
+  font-size: 8px;
+  fill: #ffffff;
+  opacity: 0.95;
+  pointer-events: none;
+}
+
+.pensunet-red .nodo {
+  cursor: pointer;
+  pointer-events: all;
+}
+
+.pensunet-red .nodo rect.caja {
+  transition: opacity 0.18s ease, filter 0.18s ease, stroke-width 0.18s ease;
+  pointer-events: none;
+}
+
+.pensunet-red .nodo rect.hit {
+  pointer-events: all;
+}
+
+/* Resaltado original: solo materia + prerrequisitos + habilitadas. */
+.pensunet-red svg.atenua .nodo rect.caja {
+  opacity: 0.28;
+}
+
+.pensunet-red svg.atenua .arista.trazo {
+  opacity: 0.07;
+}
+
+.pensunet-red svg.atenua .arista.halo {
+  opacity: 0.05;
+}
+
+.pensunet-red svg.atenua .nodo.activo rect.caja,
+.pensunet-red svg.atenua .nodo.previo rect.caja,
+.pensunet-red svg.atenua .nodo.siguiente rect.caja {
+  opacity: 1;
+}
+
+.pensunet-red .nodo.previo rect.caja {
+  stroke: #fdb400 !important;
+  stroke-width: 3.4px !important;
+}
+
+.pensunet-red .nodo.siguiente rect.caja {
+  stroke: #1291c0 !important;
+  stroke-width: 3.4px !important;
+}
+
+.pensunet-red .nodo.activo rect.caja {
+  stroke: #8c1919 !important;
+  stroke-width: 3.8px !important;
+}
+
+.pensunet-red svg.atenua .arista.trazo.activa {
+  opacity: 1 !important;
+  stroke: #8c1919 !important;
+  stroke-width: 3.6px !important;
+}
+
+.pensunet-red .arista {
+  fill: none;
+  transition: opacity 0.18s ease, stroke-width 0.18s ease;
+  pointer-events: stroke;
+}
+
+.pensunet-red .arista.halo {
+  pointer-events: none;
+}
+
+.pensunet-red .arista.debil {
+  stroke-dasharray: 5 4;
+}
+
+.pensunet-red .leyenda {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem 1rem;
+  padding: 0.4rem 0.5rem 0.35rem;
+  font-size: 0.8rem;
+}
+
+.pensunet-red.embebido .leyenda {
+  position: absolute;
+  left: 0.35rem;
+  bottom: 0.3rem;
+  z-index: 2;
+  max-width: calc(100% - 1rem);
+  background: transparent;
+  pointer-events: none;
+}
+
+.pensunet-red .leyenda span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.pensunet-red .swatch {
+  width: 14px;
+  height: 14px;
+  border-radius: 2px;
+  border: 1px solid #373435;
+  display: inline-block;
+}
+
+.pensunet-red .swatch.linea {
+  width: 18px;
+  height: 0;
+  border: none;
+  border-top: 2.5px solid #373435;
+  border-radius: 0;
+  background: transparent;
+}
+
+.pensunet-red .swatch.linea.debil {
+  border-top-style: dashed;
+}
+
+.pensunet-red .swatch.cadena {
+  border-top-color: #8c1919;
+  border-top-width: 3px;
+}
+
+.pensunet-red .swatch.cuello-swatch {
+  background: #fdb400;
+  border-color: #000000;
+}
+
+.pensunet-red .swatch.camino-swatch {
+  background: #8c1919;
+  border-color: #8c1919;
+}
+
+.pensunet-red .tooltip {
+  position: absolute;
+  z-index: 5;
+  min-width: 0;
+  max-width: 220px;
+  padding: 0.28rem 0.5rem;
+  border-radius: 2px;
+  font-size: 0.78rem;
+  line-height: 1.2;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.12s ease;
+  border: 1px solid;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pensunet-red .tooltip.visible {
+  opacity: 1;
+}
+
+.pensunet-red .tooltip strong {
+  font-family: "Titillium Web", Hind, sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+}

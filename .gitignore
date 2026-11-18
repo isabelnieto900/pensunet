@@ -31,3 +31,4 @@ data/private/
 .DS_Store
 CONTEXTO_PENSUNET.md
 docs/Pensum (1).pdf
+.agents/skills/developing-with-streamlit

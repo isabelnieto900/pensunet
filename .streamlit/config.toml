@@ -1,6 +1,5 @@
-# Tema de Pensunet: papel cálido, verde azulado sobrio y acento terracota.
-# Define variantes clara y oscura para que el selector de tema de Streamlit
-# siga funcionando (Ajustes → Apariencia).
+# Tema Pensunet · identidad web Universidad Distrital (sin escudo ni logo).
+# Combinaciones: blanco/#8C1919, negro/#FDB400, #FDB400/negro, #8C1919/blanco.
 
 [server]
 headless = true
@@ -9,35 +8,74 @@ headless = true
 gatherUsageStats = false
 
 [theme]
-font = "'Source Sans 3', 'Segoe UI', sans-serif"
-headingFont = "Fraunces, Georgia, serif"
-baseRadius = "0.5rem"
+base = "light"
+primaryColor = "#8C1919"
+backgroundColor = "#FFFFFF"
+secondaryBackgroundColor = "#F5F5F5"
+textColor = "#000000"
+linkColor = "#8C1919"
+borderColor = "#98999A"
+dataframeHeaderBackgroundColor = "#8C1919"
+dataframeHeaderTextColor = "#FFFFFF"
+dataframeBorderColor = "#98999A"
 showWidgetBorder = true
 showSidebarBorder = true
-chartCategoricalColors = ["#1F6F5B", "#B35C2E", "#1A5276", "#8E6C8A", "#B9770E", "#5D6D7E"]
+baseRadius = "0.75rem"
+buttonRadius = "0.75rem"
+font = "Hind:https://fonts.googleapis.com/css2?family=Hind:wght@400;500;600;700&display=swap"
+headingFont = "Titillium Web:https://fonts.googleapis.com/css2?family=Titillium+Web:wght@600;700&display=swap"
+headingFontWeights = [700, 700, 600, 600, 600, 600]
+metricValueFontWeight = 700
+linkUnderline = false
+redColor = "#8C1919"
+orangeColor = "#FDB400"
+yellowColor = "#FDB400"
+greenColor = "#00A859"
+blueColor = "#1291C0"
+grayColor = "#98999A"
+chartCategoricalColors = ["#8C1919", "#FDB400", "#1291C0", "#00A859", "#98999A", "#373435"]
+paddingTop = "1rem"
+paddingBottom = "1.5rem"
+
+[theme.sidebar]
+backgroundColor = "#F5F5F5"
+secondaryBackgroundColor = "#EBEBEB"
+textColor = "#000000"
+borderColor = "#98999A"
+primaryColor = "#8C1919"
 
 [theme.light]
-primaryColor = "#1F6F5B"
-backgroundColor = "#FAF8F4"
-secondaryBackgroundColor = "#EFEAE1"
-textColor = "#1A2E28"
-linkColor = "#1A5276"
-borderColor = "#D9D2C5"
-dataframeHeaderBackgroundColor = "#E6E0D4"
+primaryColor = "#8C1919"
+backgroundColor = "#FFFFFF"
+secondaryBackgroundColor = "#F5F5F5"
+textColor = "#000000"
+linkColor = "#8C1919"
+borderColor = "#98999A"
+dataframeHeaderBackgroundColor = "#8C1919"
+dataframeHeaderTextColor = "#FFFFFF"
+chartCategoricalColors = ["#8C1919", "#FDB400", "#1291C0", "#00A859", "#98999A", "#373435"]
 
 [theme.light.sidebar]
-backgroundColor = "#F2EEE6"
-secondaryBackgroundColor = "#E6E0D4"
+backgroundColor = "#F5F5F5"
+secondaryBackgroundColor = "#EBEBEB"
+textColor = "#000000"
+borderColor = "#98999A"
 
 [theme.dark]
-primaryColor = "#4FB39A"
-backgroundColor = "#101815"
-secondaryBackgroundColor = "#18241F"
-textColor = "#E6EEEA"
-linkColor = "#8CC4E8"
-borderColor = "#2A3A33"
-dataframeHeaderBackgroundColor = "#1D2B25"
+primaryColor = "#8C1919"
+backgroundColor = "#1A1A1A"
+secondaryBackgroundColor = "#242424"
+textColor = "#FFFFFF"
+linkColor = "#FDB400"
+borderColor = "#373435"
+dataframeHeaderBackgroundColor = "#8C1919"
+dataframeHeaderTextColor = "#FFFFFF"
+dataframeBorderColor = "#373435"
+chartCategoricalColors = ["#8C1919", "#FDB400", "#1291C0", "#00A859", "#98999A", "#373435"]
 
 [theme.dark.sidebar]
-backgroundColor = "#0C1311"
-secondaryBackgroundColor = "#18241F"
+backgroundColor = "#141414"
+secondaryBackgroundColor = "#242424"
+textColor = "#FFFFFF"
+borderColor = "#373435"
+primaryColor = "#8C1919"

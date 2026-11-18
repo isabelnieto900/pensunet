@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pensunet"
-version = "0.1.0"
-description = "Simulador de la red de prerrequisitos de los pensum FCMN (Molontay et al., 2020)."
+version = "0.1.1"
+description = "Simulador de la red de prerrequisitos de los pensum FCMN."
 readme = "README.md"
 requires-python = ">=3.10"
 license = "MIT"
@@ -41,6 +41,13 @@ Documentation = "https://isabelnieto900.github.io/pensunet/"
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools.package-data]
+pensunet = [
+    "data/reference/*.csv",
+    "data/processed/*.csv",
+    "ui/static/*",
+]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

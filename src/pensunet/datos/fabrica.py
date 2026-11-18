@@ -7,7 +7,7 @@ from pensunet.datos.lector_csv import LectorCSV
 class FabricaLectores:
     """Fábrica de lectores de pensum, prerrequisitos y tasas.
 
-    Sección II.A y ecuación (7) de Molontay et al. (2020): ambas piezas
+    Ambas piezas
     necesitan las mismas tres tablas. En esta versión el único origen
     admitido es CSV; la fábrica concentra esa creación para que la
     fachada y los ejemplos no construyan ``LectorCSV`` a mano.

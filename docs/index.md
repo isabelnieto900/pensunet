@@ -5,14 +5,8 @@ Ciencias Matemáticas y Naturales (Física, Química, Biología y
 Matemáticas) de la Universidad Distrital Francisco José de Caldas.
 
 Pensunet representa el pensum como un grafo dirigido de prerrequisitos,
-calcula los indicadores de Molontay et al. (2020) y la complejidad
-curricular de Curricular Analytics, y estima el tiempo de grado con un
-Monte Carlo sobre tasas de aprobación agregadas.
-
-> Molontay, R., Horváth, N., Bergmann, J., Szekrényes, D. y Szabó, M. (2020).
-> Characterizing Curriculum Prerequisite Networks by a Student Flow Approach.
-> *IEEE Transactions on Learning Technologies*, 13(3), 491–501.
-> DOI: [10.1109/TLT.2020.2981331](https://doi.org/10.1109/TLT.2020.2981331).
+calcula indicadores topológicos y complejidad curricular, y estima el
+tiempo de grado con un Monte Carlo sobre tasas de aprobación agregadas.
 
 ## Uso rápido
 

@@ -9,7 +9,7 @@ from pensunet.dominio.red import construir_red, validar_aciclicidad
 
 
 def test_el_grafo_crudo_de_fisica_es_un_dag_estricto(simulador_crudo):
-    """Sección II.A: extracto Condor de Física sin ajustes (91+huérfano, 46 estrictas)."""
+    """extracto Condor de Física sin ajustes (91+huérfano, 46 estrictas)."""
     red = simulador_crudo.red
     assert red.es_aciclico()
     assert validar_aciclicidad(red.grafo)
@@ -25,7 +25,7 @@ def test_el_grafo_crudo_de_fisica_es_un_dag_estricto(simulador_crudo):
 
 
 def test_la_inversion_de_semestres_queda_anotada_en_el_extracto_crudo(simulador_crudo):
-    """Sección II.A: 25176 está en el semestre 7 y su prerrequisito débil en el 9."""
+    """25176 está en el semestre 7 y su prerrequisito débil en el 9."""
     textos = " ".join(simulador_crudo.red.inconsistencias)
     assert "25176" in textos
     assert "25145" in textos
@@ -57,7 +57,7 @@ def test_fisica_con_ajustes_es_dag_sin_biosistemas(simulador):
 
 
 def test_los_niveles_siguen_la_cadena_de_prerrequisitos(simulador):
-    """Sección II.A: el semestre mínimo es el largo de la cadena, no el del plan."""
+    """el semestre mínimo es el largo de la cadena, no el del plan."""
     niveles = simulador.red.niveles()
     assert niveles[25102] == 1
     assert niveles[25106] == 2
@@ -72,13 +72,13 @@ def test_los_niveles_siguen_la_cadena_de_prerrequisitos(simulador):
 
 
 def test_el_segundo_curriculo_de_la_figura_1_tiene_estos_niveles():
-    """Sección II.A, figura 1: A en el primer semestre y D en el tercero."""
+    """A en el primer semestre y D en el tercero."""
     niveles = curriculo_figura_1().niveles()
     assert niveles == {1: 1, 2: 2, 3: 2, 4: 3}
 
 
 def test_un_ciclo_no_se_acepta_como_pensum():
-    """Sección II.A: un ciclo haría que dos asignaturas se exigieran mutuamente."""
+    """un ciclo haría que dos asignaturas se exigieran mutuamente."""
     pensum = pd.DataFrame(
         [
             {"id_asignatura": 1, "nombre": "A", "semestre": 1},

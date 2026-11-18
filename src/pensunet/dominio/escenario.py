@@ -15,11 +15,11 @@ CUPO_DEL_PLAN = _CupoDelPlan()
 
 @dataclass(frozen=True)
 class Escenario:
-    """Supuestos de la sección III de Molontay et al. (2020), más políticas locales.
+    """Supuestos de la simulación del tiempo de grado, más políticas locales.
 
-    El artículo simula 10 000 estudiantes representativos. Cada supuesto
-    de abajo está activo en ese modelo y se guarda aquí para que no
-    queden implícitos:
+    Por defecto se simulan 10 000 estudiantes representativos. Cada
+    supuesto de abajo está activo en el escenario base y se guarda
+    aquí para que no queden implícitos:
 
     - una asignatura no se cursa antes de su semestre recomendado;
     - el estudiante intenta en el primer semestre en que los
@@ -30,13 +30,13 @@ class Escenario:
     - las obligatorias se vuelven a inscribir hasta aprobarlas;
     - no hay semestres pasivos.
 
-    Políticas de Física (no del artículo BME):
+    Políticas locales del plan FCMN:
 
     - ``creditos_electivas_minimos``: cupo de créditos electivos. Por
       defecto ``CUPO_DEL_PLAN``: se toma el del plan
       (``creditos_electivos_del_plan``: Física 18, Química 10, Biología
       18, Matemáticas 12). Un entero lo sustituye; con ``None`` se
-      exige aprobar todos los nodos electivos (más cercano al paper).
+      exige aprobar todos los nodos electivos.
     - ``electivas_sin_reintento``: si se reprueba una electiva, no se
       vuelve a cursar; el crédito no cuenta y se puede elegir otra.
     - ``max_semestres``: tope de la trayectoria; si no hay grado a tiempo
@@ -46,14 +46,14 @@ class Escenario:
       aprobando una sola opción. Con ``False`` se exigen todas, como si
       fueran obligatorias independientes.
     - ``max_creditos_semestre``: tope de créditos inscritos por semestre.
-      Con ``None`` (por defecto) no hay tope, como en el artículo. Con
+      Con ``None`` (por defecto) no hay tope. Con
       tope, se inscriben primero las obligatorias de semestre recomendado
       más bajo (desempate por código) y luego la electiva, mientras
       quepan; una asignatura que sola supera el tope se permite si es la
       primera del semestre, para no bloquear la trayectoria.
 
-    El tiempo de grado es la variable aleatoria X de las ecuaciones (3)
-    y (4). Este objeto no ejecuta la simulación.
+    El tiempo de grado es la variable aleatoria X (distribución y
+    esperanza). Este objeto no ejecuta la simulación.
     """
 
     n_estudiantes: int = 10_000
@@ -72,7 +72,7 @@ class Escenario:
     opciones_excluyentes: bool = True
 
     def __post_init__(self) -> None:
-        """Exige al menos un estudiante. Ecuaciones (3) y (4): X necesita una muestra."""
+        """Exige al menos un estudiante: X necesita una muestra."""
         if self.n_estudiantes < 1:
             raise ValueError("El escenario necesita al menos un estudiante representativo.")
         if self.max_semestres < 1:

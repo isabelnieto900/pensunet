@@ -12,7 +12,7 @@ from pensunet.dominio.indicadores import (
 
 
 def test_la_figura_1_recupera_el_posponimiento_del_articulo():
-    """Sección II.B: en el segundo currículo, A, B y D valen 1 y C vale 1/2."""
+    """en el segundo currículo, A, B y D valen 1 y C vale 1/2."""
     red = curriculo_figura_1()
     indicadores = calcular_indicadores(red)
     assert indicadores.duracion_nominal == 3
@@ -40,7 +40,7 @@ def test_la_ecuacion_2_marca_cuellos_por_grado():
 
 
 def test_bloqueo_y_posponimiento_en_cadenas_conocidas_de_fisica(simulador):
-    """Sección II.B sobre el inglés, Física I y TG con ajustes documentados."""
+    """Sobre el inglés, Física I y TG con ajustes documentados."""
     indicadores = simulador.indicadores()
     bloqueo = indicadores.factor_bloqueo
     posponimiento = indicadores.factor_posponimiento

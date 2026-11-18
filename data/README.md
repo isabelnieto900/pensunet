@@ -36,8 +36,7 @@ Programas: `fisica` (plan 327), `quimica` (328), `biologia` (329),
 - Ventana del histórico agregado: **2023-2 a 2025-2**. El periodo 2026-1
   está incompleto en la base y **no entra**.
 - Criterio de aprobación: `fl_aprobada` verdadero. La tasa es el cociente
-  de la ecuación (7) de Molontay et al. (2020), *IEEE TLT* 13(3):491–501,
-  DOI 10.1109/TLT.2020.2981331:
+  (aprobados entre inscritos):
 
 ```text
 tasa_aprobacion ≈ n_aprobados / n_inscritos

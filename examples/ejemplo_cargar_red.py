@@ -1,6 +1,6 @@
 """Carga un pensum FCMN e imprime un resumen de la red.
 
-Sección II.A y sección II.B de Molontay et al. (2020): construye el DAG
+Construye el DAG
 y muestra bloqueo, posponimiento e intermediación. No simula.
 
 Uso::
@@ -60,7 +60,7 @@ def main() -> None:
         for texto in simulador.ajustes_aplicados:
             print(f"  - {texto}")
 
-    print("Mayor factor de bloqueo (sección II.B):")
+    print("Mayor factor de bloqueo:")
     ordenados = sorted(indicadores.factor_bloqueo.items(), key=lambda par: par[1], reverse=True)
     for identificador, bloqueo in ordenados[:5]:
         print(f"  {identificador} {nombres[identificador]}: {bloqueo}")

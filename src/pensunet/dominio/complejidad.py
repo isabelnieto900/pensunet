@@ -3,11 +3,11 @@
 Métricas de Heileman et al. (2018), *Curricular Analytics: A Framework
 for Quantifying the Impact of Curricular Reforms and Pedagogical
 Innovations* (arXiv:1811.09676), que usa la plataforma
-curricularanalytics.org. Complementan los indicadores de Molontay et
-al. (2020, sección II.B) y se calculan sobre el mismo DAG:
+curricularanalytics.org. Complementan los indicadores topológicos
+de la red y se calculan sobre el mismo DAG:
 
 - factor de bloqueo b(v): asignaturas alcanzables desde v (es el mismo
-  *blocking factor* de Molontay; se reutiliza ``factor_bloqueo``);
+  *blocking factor*; se reutiliza ``factor_bloqueo``);
 - factor de retraso d(v): número de asignaturas del camino más largo
   del DAG que pasa por v (cuenta vértices, no aristas);
 - complejidad estructural h(v) = d(v) + b(v);
