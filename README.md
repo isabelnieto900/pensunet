@@ -3,32 +3,15 @@
 Simulador de la red de prerrequisitos de los pensum FCMN (Física,
 Química, Biología y Matemáticas) de la Universidad Distrital Francisco
 José de Caldas (Bogotá).
-
-Titular de los derechos de autor: **Laura Isabel Nieto Parroyo**, 2026.
-El software se presenta en la materia Desarrollo de Software Científico
-(profesor Carlos Andrés Gómez Vasco). Esta versión cubre la red de
-prerrequisitos, los indicadores topológicos de Molontay, la complejidad
+Esta versión cubre la red de
+prerrequisitos, los indicadores topológicos, la complejidad
 curricular al estilo de Curricular Analytics, el Monte Carlo del tiempo
 de grado y una interfaz Streamlit, empaquetada también en Docker.
 
 ## Objetivo
 
 Pensunet representa el pensum como un grafo dirigido de prerrequisitos y
-calcula indicadores de cuello de botella curricular. La referencia de
-método es:
-
-> Molontay, R., Horváth, N., Bergmann, J., Szekrényes, D. y Szabó, M. (2020).
-> Characterizing Curriculum Prerequisite Networks by a Student Flow Approach.
-> *IEEE Transactions on Learning Technologies*, 13(3), 491–501.
-> DOI: [10.1109/TLT.2020.2981331](https://doi.org/10.1109/TLT.2020.2981331).
-
-El artículo no publica código. Esta es una implementación original a partir
-de sus definiciones y ecuaciones (secciones II y III). Cada función del
-paquete indica en su docstring la ecuación o la sección que implementa.
-
-Fases que **no** forman parte de esta versión: probabilidades distintas por
-estudiante, el modelo SIR de Zhang, el enfoque de Castaldi y la
-retroalimentación entre las escalas macro y micro.
+calcula indicadores de cuello de botella curricular
 
 ## Instalación
 
@@ -135,23 +118,8 @@ sphinx-build -W -b html docs docs/_build/html
 El flujo `.github/workflows/docs.yml` la construye y la publica en cada
 push a `main`.
 
-## Datos
-
-En el repositorio solo hay tablas agregadas o de catálogo para las cuatro
-carreras FCMN (`pensum_*.csv`, `prerequisitos_*.csv`,
-`tasas_aprobacion_*.csv`), más `ajustes_prerrequisitos.csv` y el
-catálogo de Trabajo de Grado (p = 1 por juicio experto).
-
-No hay registros individuales ni códigos de estudiante. Las tasas vienen
-del histórico **2023-2 a 2025-2** (2026-1 no entra). El detalle de origen
-Cóndor/SGA, ajustes y TG está en [`data/README.md`](data/README.md).
 
 ## Licencia
 
 Se incluye una licencia MIT provisional
-([LICENSE](LICENSE)). **La licencia definitiva está por confirmar con el
-director del proyecto y con la Universidad Distrital** antes del registro
-del 18 de noviembre de 2026. Hasta esa confirmación, no debe asumirse que
-la MIT es la licencia institucional del trabajo.
-
-Cómo citar el software y el artículo: [CITATION.cff](CITATION.cff).
+([LICENSE](LICENSE)). 
