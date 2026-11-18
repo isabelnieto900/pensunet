@@ -6,7 +6,7 @@ import networkx as nx
 
 from pensunet.dominio.red import RedPrerrequisitos
 
-# Umbrales por defecto de la ecuación (2): grado de entrada, de salida y total.
+# Umbrales por defecto: grado de entrada, de salida y total.
 UMBRAL_ENTRADA_CUELLO = 2
 UMBRAL_SALIDA_CUELLO = 2
 UMBRAL_TOTAL_CUELLO = 4
@@ -16,12 +16,12 @@ UMBRAL_TOTAL_CUELLO = 4
 class IndicadoresTopologicos:
     """Bloqueo, posponimiento, intermediación y cuellos de botella.
 
-    Sección II.B, ecuación (1) y ecuación (2) de Molontay et al. (2020).
+    Indicadores topológicos de bloqueo y posponimiento.
     ``repeticiones_sin_retraso`` es la k de la definición del factor de
     posponimiento: se puede reprobar la asignatura k veces sin alargar
     el grado, y el factor es 1/(k + 1).
     ``cuellos_de_botella`` son los nodos que superan los umbrales de
-    grado de la ecuación (2).
+    grado de entrada/salida/total.
     ``camino_mas_largo`` es una cadena máxima de prerrequisitos en el DAG
     (el camino crítico topológico).
     """
@@ -38,7 +38,7 @@ class IndicadoresTopologicos:
 def factor_bloqueo(red: RedPrerrequisitos) -> dict[int, int]:
     """Cuenta los descendientes de cada asignatura.
 
-    Sección II.B de Molontay et al. (2020), *blocking factor*: el factor
+    *Blocking factor*: el factor
     de bloqueo es n si la asignatura tiene exactamente n descendientes.
     No es el grado de salida: también entran los descendientes indirectos.
     La propia asignatura no se cuenta.
@@ -52,10 +52,10 @@ def factor_posponimiento(
 ) -> dict[int, float]:
     """Calcula el factor de posponimiento 1/(k + 1).
 
-    Sección II.B de Molontay et al. (2020), *deferment factor*. k es el
+    *Deferment factor*. k es el
     máximo de reprobaciones que todavía permiten graduarse en la duración
     nominal del plan. A la reprobación k + 1 el grado se alarga al menos
-    un semestre. En el ejemplo del artículo, un factor 1/3 significa que
+    un semestre. Un factor 1/3 significa que
     se puede reprobar dos veces y a la tercera el grado aumenta.
 
     En esta red::
@@ -67,8 +67,8 @@ def factor_posponimiento(
 
     T es la duración nominal. Cada arista hacia un descendiente exige un
     semestre adicional después de aprobar v. No se puede intentar v antes
-    de s(v): el artículo, sección III, no permite cursar una asignatura
-    antes del semestre recomendado ni antes de sus prerrequisitos.
+    de s(v): el escenario base no permite cursar una asignatura antes
+    del semestre recomendado ni antes de sus prerrequisitos.
     """
     _, holgura = _holgura(red, duracion)
     return {nodo: 1.0 / (k + 1) for nodo, k in holgura.items()}
@@ -77,16 +77,15 @@ def factor_posponimiento(
 def intermediacion(red: RedPrerrequisitos, normalizada: bool = False) -> dict[int, float]:
     """Calcula la intermediación de cada asignatura.
 
-    Ecuación (1) de Molontay et al. (2020), sección II.B::
+    Intermediación sobre caminos más cortos entre pares de nodos::
 
         b_v = suma_{s ≠ v, t ≠ v} de sigma_st(v) / sigma_st
 
     ``sigma_st`` es el número de caminos más cortos de s a t y
     ``sigma_st(v)`` cuántos de ellos pasan por v. Con ``normalizada``
-    en falso se devuelve esa suma. La tabla III del artículo publica
-    valores del orden de 10^-3, coherentes con dividir la ecuación (1)
-    por (n - 1)(n - 2) en un grafo dirigido; ese es el resultado cuando
-    ``normalizada`` es verdadero.
+    en falso se devuelve esa suma. Con ``normalizada`` verdadero se
+    divide por (n - 1)(n - 2) en un grafo dirigido (valores típicos
+    del orden de 10^-3).
     """
     cruda = nx.betweenness_centrality(red.grafo, normalized=normalizada)
     return {int(nodo): float(valor) for nodo, valor in cruda.items()}
@@ -98,13 +97,13 @@ def cuellos_de_botella(
     umbral_salida: int = UMBRAL_SALIDA_CUELLO,
     umbral_total: int = UMBRAL_TOTAL_CUELLO,
 ) -> tuple[int, ...]:
-    """Identifica cuellos de botella por grado (ecuación (2)).
+    """Identifica cuellos de botella por grado de entrada/salida/total.
 
-    Sección II.B de Molontay et al. (2020). Una asignatura es cuello de
+    Una asignatura es cuello de
     botella si su grado de entrada supera ``umbral_entrada``, su grado
     de salida supera ``umbral_salida`` o la suma de ambos supera
     ``umbral_total``. Los umbrales por defecto (2, 2, 4) siguen el
-    ejemplo del artículo; se pueden ajustar al comparar planes.
+    valores típicos de referencia; se pueden ajustar al comparar planes.
     """
     seleccionados: list[int] = []
     for nodo in red.grafo:
@@ -122,9 +121,9 @@ def cuellos_de_botella(
 def camino_mas_largo(red: RedPrerrequisitos) -> tuple[int, ...]:
     """Una cadena máxima de prerrequisitos en el DAG.
 
-    Sección II.A–II.B: en un grafo acíclico el camino más largo mide la
-    profundidad crítica del pensum (cuántas asignaturas hay que encadenar
-    en serie). Si hay varios, NetworkX devuelve uno.
+    En un grafo acíclico el camino más largo mide la profundidad crítica
+    del pensum (cuántas asignaturas hay que encadenar en serie). Si hay
+    varios, NetworkX devuelve uno.
     """
     if red.grafo.number_of_nodes() == 0:
         return ()
@@ -140,7 +139,7 @@ def calcular_indicadores(
 ) -> IndicadoresTopologicos:
     """Reúne bloqueo, posponimiento, intermediación y cuellos de botella.
 
-    Sección II.B, ecuación (1) y ecuación (2) de Molontay et al. (2020).
+    Indicadores topológicos de bloqueo y posponimiento.
     """
     duracion_nominal, holgura = _holgura(red, duracion)
     return IndicadoresTopologicos(
@@ -163,7 +162,7 @@ def _holgura(
     red: RedPrerrequisitos,
     duracion: int | None,
 ) -> tuple[int, dict[int, int]]:
-    """Devuelve T y la k de cada asignatura. Sección II.B."""
+    """Devuelve T y la k de cada asignatura."""
     duracion_nominal = red.duracion_nominal if duracion is None else duracion
     profundidad = _profundidad_posterior(red.grafo)
     holgura: dict[int, int] = {}
@@ -178,8 +177,8 @@ def _holgura(
 def _profundidad_posterior(grafo: nx.DiGraph) -> dict[int, int]:
     """Aristas del camino más largo que sale de cada nodo.
 
-    Sección II.B: esos semestres adicionales hay que reservarlos para
-    los descendientes antes de cerrar la duración nominal.
+    Esos semestres adicionales hay que reservarlos para los
+    descendientes antes de cerrar la duración nominal.
     """
     profundidad = {int(nodo): 0 for nodo in grafo}
     for nodo in reversed(list(nx.topological_sort(grafo))):

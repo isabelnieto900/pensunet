@@ -1,4 +1,4 @@
-"""Monte Carlo del tiempo de grado (sección III.B)."""
+"""Monte Carlo del tiempo de grado."""
 
 from __future__ import annotations
 
@@ -136,6 +136,14 @@ def test_resultado_reporta_reprobaciones_y_tasa_de_grado(simulador):
     assert resultado.tasa_grado_en(10_000) == pytest.approx(
         1 - resultado.n_censurados / len(resultado.tiempos)
     )
+    tabla = resultado.tabla_asignaturas_que_frenan(simulador.red, n=5)
+    assert list(tabla.columns) == [
+        "id_asignatura",
+        "nombre",
+        "reprobaciones_por_estudiante",
+    ]
+    assert len(tabla) == len(frenan)
+    assert tabla["nombre"].astype(str).str.len().gt(0).all()
 
 
 def test_tasa_de_grado_en_un_resultado_fabricado():
@@ -152,6 +160,17 @@ def test_tasa_de_grado_en_un_resultado_fabricado():
     assert resultado.tasa_grado_en(11) == pytest.approx(0.5)
     assert resultado.tasa_grado_en(40) == pytest.approx(0.75)
     assert resultado.asignaturas_que_frenan(1) == [(1, 1.0)]
+    resumen = resultado.resumen(semestres_a_tiempo=12)
+    assert list(resumen.columns) == [
+        "estudiantes",
+        "semestres_esperados",
+        "dispersion",
+        "min_semestres",
+        "max_semestres",
+        "sin_grado_a_tiempo",
+        "pct_grado_en_12",
+    ]
+    assert float(resumen.loc[0, "pct_grado_en_12"]) == pytest.approx(75.0)
 
 
 def test_los_cupos_de_opciones_no_exigen_todas_las_opciones():
@@ -182,16 +201,16 @@ def test_los_cupos_de_opciones_no_exigen_todas_las_opciones():
     vacia = pd.DataFrame(columns=["id_asignatura", "id_prerequisito", "debe_aprobado", "orden"])
     red = construir_red(pensum, vacia)
     tasas = pd.DataFrame({"id_asignatura": [1, 2], "tasa_aprobacion": [1.0, 1.0]})
-    from pensunet.simulacion.montecarlo_molontay import MonteCarloMolontay, cupos_de_opciones
+    from pensunet.simulacion.montecarlo import MonteCarloTiempoGrado, cupos_de_opciones
 
     assert cupos_de_opciones(red) == {"Lengua I": (2, 3)}
-    resultado = MonteCarloMolontay().simular(
+    resultado = MonteCarloTiempoGrado().simular(
         red, tasas, Escenario(n_estudiantes=20, semilla=1, creditos_electivas_minimos=None)
     )
     assert set(resultado.tiempos) == {1}
     assert 3 not in resultado.inscripciones
     with pytest.raises(ValueError, match="faltan tasas"):
-        MonteCarloMolontay().simular(
+        MonteCarloTiempoGrado().simular(
             red,
             tasas,
             Escenario(
@@ -205,14 +224,14 @@ def test_los_cupos_de_opciones_no_exigen_todas_las_opciones():
 
 def test_el_cupo_electivo_de_fisica_es_18_creditos(simulador):
     """Línea de aplicación I–IV: 4 + 5 + 4 + 5 créditos."""
-    from pensunet.simulacion.montecarlo_molontay import creditos_electivos_del_plan
+    from pensunet.simulacion.montecarlo import creditos_electivos_del_plan
 
     assert creditos_electivos_del_plan(simulador.red) == 18
 
 
 def test_cada_carrera_simula_sin_exigir_todas_las_opciones(simulador_programa):
     """Con tasas solo en obligatorias (más una opción por cupo) cada carrera simula."""
-    from pensunet.simulacion.montecarlo_molontay import (
+    from pensunet.simulacion.montecarlo import (
         creditos_electivos_del_plan,
         cupos_de_opciones,
     )
@@ -237,7 +256,7 @@ def test_cada_carrera_simula_sin_exigir_todas_las_opciones(simulador_programa):
 def test_el_cupo_electivo_por_defecto_es_el_del_plan(clave: str, esperado: int):
     """La API usa el cupo de cada plan; un entero o None lo sustituyen."""
     from pensunet.dominio.escenario import CUPO_DEL_PLAN
-    from pensunet.simulacion.montecarlo_molontay import (
+    from pensunet.simulacion.montecarlo import (
         creditos_electivos_del_plan,
         resolver_cupo_electivo,
     )

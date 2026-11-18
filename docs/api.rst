@@ -31,7 +31,7 @@ Simulación
 
 .. automodule:: pensunet.simulacion.estrategia
 
-.. automodule:: pensunet.simulacion.montecarlo_molontay
+.. automodule:: pensunet.simulacion.montecarlo
 
 Datos
 -----

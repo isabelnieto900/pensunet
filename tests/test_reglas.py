@@ -9,7 +9,7 @@ from pensunet.dominio.reglas_pensum import (
     SLOTS_GENERICOS_LINEA,
     preparar_tablas_analisis,
 )
-from pensunet.simulacion.montecarlo_molontay import creditos_electivos_del_plan
+from pensunet.simulacion.montecarlo import creditos_electivos_del_plan
 
 
 def test_el_grafo_de_analisis_aplica_las_reglas_confirmadas(simulador):

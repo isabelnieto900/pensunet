@@ -44,7 +44,7 @@ SimuladorPensum                 fachada (selector de programa FCMN)
     ├── RedPrerrequisitos       DAG con networkx
     ├── indicadores             bloqueo, posponimiento, intermediación
     ├── complejidad             retraso y complejidad (Curricular Analytics)
-    └── EstrategiaSimulacion    MonteCarloMolontay (sección III.B)
+    └── EstrategiaSimulacion    MonteCarloTiempoGrado (sección III.B)
 ```
 
 El dominio no importa la capa de datos. Recibe dataframes con nombres
@@ -83,7 +83,7 @@ código.
 
 **Estrategia (`EstrategiaSimulacion`).** La sección III.B es un
 algoritmo intercambiable. Hoy la única estrategia es
-`MonteCarloMolontay`.
+`MonteCarloTiempoGrado`.
 Cuando haya probabilidades por estudiante u otra dinámica, se escribe
 otra estrategia sin rehacer la fachada ni el grafo.
 
@@ -219,7 +219,7 @@ analítica se vuelve intratable. Por eso el artículo simula.
 
 ### Monte Carlo (sección III.B)
 
-`MonteCarloMolontay.simular` estima p(x) y E(X) con estudiantes
+`MonteCarloTiempoGrado.simular` estima p(x) y E(X) con estudiantes
 representativos. Exige p_i para cada obligatoria. Trabajo de Grado
 usa p = 1 por juicio experto, leído de `trabajo_de_grado.csv` y
 `juicio_experto.csv` (`datos/juicio_experto.py`); no es un valor por

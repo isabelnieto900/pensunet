@@ -8,7 +8,7 @@ from pensunet.datos.fabrica import FabricaLectores
 
 
 def test_el_csv_llega_con_nombres_internos(simulador_crudo):
-    """Sección II.A y ecuación (7): el adaptador renombra, no reescribe cifras."""
+    """el adaptador renombra, no reescribe cifras."""
     pensum = simulador_crudo.pensum
     prerrequisitos = simulador_crudo.prerequisitos
     assert list(pensum["id_asignatura"]).count(4) == 1
@@ -41,14 +41,14 @@ def test_fisica_con_ajustes_excluye_biosistemas_y_suma_aristas(simulador):
 
 
 def test_el_adaptador_rechaza_una_columna_que_falta():
-    """Sin las columnas de la universidad no hay nodos para la sección II.A."""
+    """Sin las columnas de la universidad no hay nodos."""
     tabla = pd.DataFrame({"id_asignatura": [1]})
     with pytest.raises(ValueError, match="pensum"):
         AdaptadorUD().adaptar_pensum(tabla)
 
 
 def test_el_adaptador_interpreta_booleanos_escritos_como_texto():
-    """Sección II.A: debe_aprobado distingue el prerrequisito estricto del débil."""
+    """debe_aprobado distingue el prerrequisito estricto del débil."""
     tabla = pd.DataFrame(
         [
             {
@@ -67,7 +67,7 @@ def test_el_adaptador_interpreta_booleanos_escritos_como_texto():
 
 
 def test_la_fabrica_crea_csv_y_rechaza_un_tipo_desconocido(rutas_datos):
-    """La fábrica solo admite csv. Sección II.A y ecuación (7)."""
+    """La fábrica solo admite csv. """
     lector = FabricaLectores.crear("csv", **rutas_datos)
     assert len(lector.leer_pensum()) == 91
     with pytest.raises(ValueError, match="solo admite 'csv'"):

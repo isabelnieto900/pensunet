@@ -13,14 +13,14 @@ from pensunet.dominio.indicadores import IndicadoresTopologicos, calcular_indica
 from pensunet.dominio.red import RedPrerrequisitos, construir_red
 from pensunet.dominio.reglas import FabricaReglas, ReglasCarrera
 from pensunet.simulacion.estrategia import EstrategiaSimulacion, ResultadoSimulacion
-from pensunet.simulacion.montecarlo_molontay import MonteCarloMolontay
+from pensunet.simulacion.montecarlo import MonteCarloTiempoGrado
 
 
 class SimuladorPensum:
     """Punto de entrada de Pensunet.
 
-    Reúne la lectura de datos, el DAG de la sección II.A, los indicadores
-    de la sección II.B (ecuación (1) incluida) y la estrategia de
+    Reúne la lectura de datos, el DAG, los indicadores
+    topológicos (intermediación incluida) y la estrategia de
     simulación de las ecuaciones (3) y (4). Quien use el paquete no
     necesita conocer los subsistemas; la interfaz y los scripts hablan
     solo con esta clase.
@@ -34,7 +34,7 @@ class SimuladorPensum:
         reglas: ReglasCarrera | None = None,
     ) -> None:
         self._lector = lector
-        self._estrategia = estrategia if estrategia is not None else MonteCarloMolontay()
+        self._estrategia = estrategia if estrategia is not None else MonteCarloTiempoGrado()
         self._programa = (
             None
             if programa is None
@@ -77,7 +77,7 @@ class SimuladorPensum:
     ) -> RedPrerrequisitos:
         """Lee las tres tablas y construye el DAG.
 
-        Sección II.A y ecuación (7) de Molontay et al. (2020). Con
+        Con
         ``aplicar_ajustes_documentados`` se aplica la ``ReglasCarrera`` del
         simulador (por defecto, las filas del programa en
         ``ajustes_prerrequisitos.csv`` y las tasas por juicio experto de
@@ -105,14 +105,14 @@ class SimuladorPensum:
     def indicadores(self) -> IndicadoresTopologicos:
         """Calcula bloqueo, posponimiento, intermediación y cuellos.
 
-        Sección II.B, ecuación (1) y ecuación (2).
+        Bloqueo, posponimiento, intermediación y cuellos de botella.
         """
         return calcular_indicadores(self._exigir_red())
 
     def complejidad(self) -> ComplejidadCurricular:
         """Bloqueo, retraso y complejidad estructural (Curricular Analytics).
 
-        Heileman et al. (2018); complementa la sección II.B de Molontay.
+        Heileman et al. (2018); complementa los indicadores topológicos.
         """
         return calcular_complejidad(self._exigir_red())
 

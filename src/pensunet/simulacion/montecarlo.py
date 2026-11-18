@@ -1,4 +1,4 @@
-"""Monte Carlo del tiempo de grado (Molontay et al. 2020, sección III.B)."""
+"""Monte Carlo del tiempo hasta el grado."""
 
 from __future__ import annotations
 
@@ -14,17 +14,12 @@ from pensunet.dominio.red import RedPrerrequisitos
 from pensunet.simulacion.estrategia import EstrategiaSimulacion, ResultadoSimulacion
 
 
-class MonteCarloMolontay(EstrategiaSimulacion):
+class MonteCarloTiempoGrado(EstrategiaSimulacion):
     """Simula estudiantes representativos para estimar p(x) y E(X).
-
-    Molontay et al. (2020), sección III.B. El artículo muestra que la
-    esperanza del máximo de geométricas (ecuaciones (8) y (9)) deja de
-    ser tratable en cuanto los caminos se anidan, y por eso aproxima
-    p(x) y E(X) —ecuaciones (3) y (4)— simulando estudiantes.
 
     Pasos:
 
-    1. Estimar p_i con la ecuación (7) (tabla de tasas).
+    1. Tomar p_i de la tabla de tasas de aprobación.
     2. Cada semestre, inscribir las obligatorias cuyo semestre
        recomendado ya llegó y cuyos prerrequisitos estrictos están
        aprobados; reintentar hasta aprobar.
@@ -37,9 +32,9 @@ class MonteCarloMolontay(EstrategiaSimulacion):
        conocida y la cursa hasta aprobarla; las demás opciones no se
        exigen (``Escenario.opciones_excluyentes``).
     5. X es el semestre en que se cumplen obligatorias, cupos y el mínimo
-       de créditos electivos. El artículo usa 10 000 réplicas.
+       de créditos electivos.
 
-    No se copia la convención BME de fijar p_i = 1 en electivas. Las
+    No se fija p_i = 1 en electivas por convención. Las
     obligatorias deben traer p_i en ``tasas``; Trabajo de Grado la trae
     por juicio experto desde ``trabajo_de_grado.csv`` y ``juicio_experto.csv``
     (``ReglasDocumentadas``). Aquí no se inventa 0 ni 1.
@@ -51,7 +46,7 @@ class MonteCarloMolontay(EstrategiaSimulacion):
         tasas: pd.DataFrame,
         escenario: Escenario,
     ) -> ResultadoSimulacion:
-        """Estima la muestra de X. Ecuaciones (3), (4) y (7), sección III.B.
+        """Estima la muestra de tiempos hasta el grado.
 
         Si una trayectoria no se gradúa dentro de ``max_semestres`` (o
         agota electivas), se censura en ese tope: la simulación termina
@@ -91,7 +86,7 @@ class MonteCarloMolontay(EstrategiaSimulacion):
 
 
 def _mapa_tasas(tasas: pd.DataFrame) -> dict[int, float]:
-    """Convierte la tabla de la ecuación (7) en un diccionario id → p_i."""
+    """Convierte la tabla de tasas en un diccionario id → p_i."""
     resultado: dict[int, float] = {}
     for fila in tasas.to_dict(orient="records"):
         identificador = int(fila["id_asignatura"])
@@ -233,7 +228,7 @@ def _estructura_del_plan(red: RedPrerrequisitos, escenario: Escenario) -> _Plan:
     en_cupos = {codigo for opciones in cupos.values() for codigo in opciones}
     obligatorias = {int(nodo) for nodo in grafo.nodes} - electivas - en_cupos
     if escenario.creditos_electivas_minimos is None:
-        # Comportamiento tipo paper: todas las electivas del grafo se exigen.
+        # Con cupo None: todas las electivas del grafo se exigen.
         obligatorias |= electivas
         electivas = set()
     return _Plan(

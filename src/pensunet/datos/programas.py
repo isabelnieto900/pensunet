@@ -5,7 +5,21 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 
-RAIZ_DATOS = Path(__file__).resolve().parents[3] / "data"
+
+def _raiz_datos() -> Path:
+    """Resuelve ``data/`` instalada en el paquete o en la raíz del repo."""
+    aqui = Path(__file__).resolve()
+    candidatos = (
+        aqui.parents[1] / "data",  # site-packages/pensunet/data o src/pensunet/data
+        aqui.parents[3] / "data",  # editable: <repo>/data
+    )
+    for candidato in candidatos:
+        if (candidato / "reference").is_dir() and (candidato / "processed").is_dir():
+            return candidato
+    return candidatos[0]
+
+
+RAIZ_DATOS = _raiz_datos()
 
 
 @dataclass(frozen=True)

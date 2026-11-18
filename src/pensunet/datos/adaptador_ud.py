@@ -39,12 +39,12 @@ class AdaptadorUD:
     """Adapta el esquema de la Universidad Distrital al modelo interno.
 
     No modifica cifras ni identificadores. Solo renombra y tipa, para que
-    el grafo de la sección II.A y la estimación de la ecuación (7) no
+    el grafo de prerrequisitos y la estimación de tasas no
     dependan de los nombres ``ds_`` y ``nu_`` del sistema académico.
     """
 
     def adaptar_pensum(self, tabla: pd.DataFrame) -> pd.DataFrame:
-        """Adapta el pensum. Sección II.A: cada fila será un nodo."""
+        """Adapta el pensum. cada fila será un nodo."""
         adaptada = _renombrar(tabla, _COLUMNAS_PENSUM, "pensum")
         adaptada["id_asignatura"] = _entero(adaptada["id_asignatura"])
         adaptada["nombre"] = _texto_obligatorio(adaptada["nombre"])
@@ -58,10 +58,10 @@ class AdaptadorUD:
         return adaptada
 
     def adaptar_prerequisitos(self, tabla: pd.DataFrame) -> pd.DataFrame:
-        """Adapta las aristas. Sección II.A: i prerrequisito de j.
+        """Adapta las aristas. i prerrequisito de j.
 
         ``debe_aprobado`` conserva el criterio estricto o débil. El
-        artículo no usa los prerrequisitos débiles al armar el grafo.
+        modelo base no usa los prerrequisitos débiles al armar el grafo.
         """
         adaptada = _renombrar(tabla, _COLUMNAS_PRERREQUISITOS, "prerrequisitos")
         adaptada["id_asignatura"] = _entero(adaptada["id_asignatura"])

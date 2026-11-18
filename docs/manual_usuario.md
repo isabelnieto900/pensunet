@@ -46,3 +46,26 @@ Matemáticas). Hay tres secciones:
 
 También puedes cargar desde Python o el CLI
 `examples/ejemplo_cargar_red.py --programa …` (ver `README.md`).
+
+## Modelo y ecuaciones
+
+La red de prerrequisitos, los indicadores topológicos (bloqueo,
+posponimiento, intermediación, cuellos de botella) y el Monte Carlo del
+tiempo de grado siguen las definiciones y ecuaciones de:
+
+> Molontay, R., Horváth, N., Bergmann, J., Szekrényes, D. y Szabó, M. (2020).
+> Characterizing Curriculum Prerequisite Networks by a Student Flow Approach.
+> *IEEE Transactions on Learning Technologies*, 13(3), 491–501.
+> DOI: [10.1109/TLT.2020.2981331](https://doi.org/10.1109/TLT.2020.2981331).
+
+En resumen:
+
+- **Tasa de aprobación** \(p_i\): proporción de inscritos que aprueban la
+  asignatura \(i\) en el histórico agregado.
+- **Tiempo de grado** \(X\): semestre en el que un estudiante representativo
+  cumple obligatorias, cupos y el mínimo de créditos electivos.
+- **Distribución y esperanza**: \(p(x) = P(X = x)\) y \(E(X)\) se estiman
+  por Monte Carlo (estudiantes simulados con las \(p_i\) del escenario).
+
+El detalle de implementación y la correspondencia con las secciones del
+artículo están en `docs/manual_tecnico.md`.

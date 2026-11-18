@@ -9,7 +9,7 @@ import pandas as pd
 class RedPrerrequisitos:
     """Pensum representado como grafo dirigido acíclico.
 
-    Sección II.A de Molontay et al. (2020): los nodos son asignaturas y
+    Los nodos son asignaturas y
     hay una arista de i a j cuando i es prerrequisito estricto de j. Un
     ciclo significaría que dos asignaturas se exigen mutuamente, así que
     el grafo tiene que ser un DAG.
@@ -33,13 +33,13 @@ class RedPrerrequisitos:
         self._asignar_niveles()
 
     def es_aciclico(self) -> bool:
-        """Confirma que el grafo es un DAG. Sección II.A."""
+        """Confirma que el grafo es un DAG."""
         return validar_aciclicidad(self.grafo)
 
     def niveles(self) -> dict[int, int]:
         """Semestre mínimo de cada asignatura según los prerrequisitos.
 
-        Sección II.A y supuesto de la sección III: una asignatura no puede
+        una asignatura no puede
         cursarse antes de que sus prerrequisitos estén aprobados. El nivel
         es 1 si no tiene prerrequisitos y, si los tiene, uno más que el
         mayor nivel de ellos. No sustituye al semestre escrito en el plan:
@@ -48,7 +48,7 @@ class RedPrerrequisitos:
         return {int(nodo): int(datos["nivel"]) for nodo, datos in self.grafo.nodes(data=True)}
 
     def _asignar_niveles(self) -> None:
-        """Escribe el nivel en cada nodo. Sección II.A."""
+        """Escribe el nivel en cada nodo."""
         for nodo in nx.topological_sort(self.grafo):
             previos = list(self.grafo.predecessors(nodo))
             if not previos:
@@ -61,7 +61,7 @@ class RedPrerrequisitos:
 def validar_aciclicidad(grafo: nx.DiGraph) -> bool:
     """Indica si el grafo de prerrequisitos es acíclico.
 
-    Sección II.A de Molontay et al. (2020): si hubiera un ciclo, alguna
+    Si hubiera un ciclo, alguna
     asignatura tendría que estar aprobada para poder cursar otra y al revés.
     """
     return nx.is_directed_acyclic_graph(grafo)
@@ -75,15 +75,15 @@ def construir_red(
 ) -> RedPrerrequisitos:
     """Construye el DAG a partir del pensum y de la tabla de aristas.
 
-    Sección II.A de Molontay et al. (2020). La arista sale del
+    La arista sale del
     prerrequisito y llega a la asignatura que lo exige. Con
     ``solo_prerrequisitos_estrictos`` se omiten las filas en las que
-    ``debe_aprobado`` es falso: el artículo no considera los
+    ``debe_aprobado`` es falso: el modelo base no considera los
     prerrequisitos débiles (los que permiten la inscripción en paralelo).
 
     ``reglas_aplicadas`` guarda la bitácora de ajustes documentados.
     La duración nominal es el máximo semestre declarado en el pensum, que
-    en el artículo es la duración para la cual se diseñó el plan.
+    es la duración para la cual se diseñó el plan.
     """
     _exigir_columnas(pensum, ("id_asignatura", "nombre", "semestre"), "pensum")
     _exigir_columnas(
@@ -133,7 +133,7 @@ def _agregar_arista(
     inconsistencias: list[str],
     excluidos: list[tuple[int, int]],
 ) -> None:
-    """Agrega i → j o registra por qué no entra al grafo. Sección II.A."""
+    """Agrega i → j o registra por qué no entra al grafo."""
     id_asignatura = int(fila["id_asignatura"])
     id_prerequisito = int(fila["id_prerequisito"])
     estricto = bool(fila["debe_aprobado"])
@@ -168,7 +168,7 @@ def _asegurar_nodo(
     nombre: object,
     inconsistencias: list[str],
 ) -> None:
-    """Crea un nodo ausente del pensum y lo deja anotado. Sección II.A."""
+    """Crea un nodo ausente del pensum y lo deja anotado."""
     if identificador in grafo:
         return
     texto = str(nombre).strip() if nombre is not None else ""
@@ -197,7 +197,7 @@ def _revisar_orden_de_semestres(
 ) -> None:
     """Anota si el plan ubica el prerrequisito demasiado tarde.
 
-    Sección II.A: un prerrequisito estricto tiene que poder aprobarse
+    un prerrequisito estricto tiene que poder aprobarse
     antes. Un prerrequisito débil admite el mismo semestre, no uno posterior.
     """
     semestre_prerequisito = grafo.nodes[id_prerequisito].get("semestre")
@@ -248,7 +248,7 @@ def _entero_opcional(valor: object) -> int | None:
 
 
 def _ausente(valor: object) -> bool:
-    """Reconoce None, pd.NA y NaN de numpy. Sección II.A: no se inventa el dato."""
+    """Reconoce None, pd.NA y NaN de numpy. No se inventa el dato."""
     if valor is None:
         return True
     try:
@@ -265,11 +265,11 @@ def _exigir_columnas(tabla: pd.DataFrame, columnas: Iterable[str], nombre: str) 
 
 
 def _mensaje_ciclo(grafo: nx.DiGraph) -> str:
-    """Describe un ciclo. Sección II.A: el pensum no puede exigirlo."""
+    """Describe un ciclo. El pensum no puede exigirlo."""
     ciclo = nx.find_cycle(grafo)
     tramo = " → ".join(str(origen) for origen, _ in ciclo)
     cierre = ciclo[-1][1]
     return (
         "La red de prerrequisitos tiene un ciclo y no es un DAG "
-        f"(Molontay et al., 2020, sección II.A): {tramo} → {cierre}."
+        f"ciclo en la red de prerrequisitos: {tramo} → {cierre}."
     )

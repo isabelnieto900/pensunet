@@ -1,4 +1,4 @@
-"""Currículos pequeños tomados del artículo, para no depender solo de Física."""
+"""Currículos pequeños de prueba, para no depender solo de Física."""
 
 import pandas as pd
 
@@ -8,7 +8,7 @@ from pensunet.dominio.red import RedPrerrequisitos, construir_red
 def curriculo_figura_1() -> RedPrerrequisitos:
     """Segundo currículo de la figura 1: A bloquea a B y a C, y B bloquea a D.
 
-    Sección II.A y sección II.B de Molontay et al. (2020).
+    Construye la red e indicadores para figuras de prueba.
     """
     pensum = pd.DataFrame(
         [

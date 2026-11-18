@@ -132,7 +132,7 @@ def test_catalogo_juicio_experto_documenta_25234_y_19927():
 def test_quimica_y_matematicas_producen_graduados_con_el_cupo_del_plan():
     """Con p = 1 por juicio experto, ambas carreras dejan de quedar bloqueadas."""
     from pensunet.dominio.escenario import Escenario
-    from pensunet.simulacion.montecarlo_molontay import creditos_electivos_del_plan
+    from pensunet.simulacion.montecarlo import creditos_electivos_del_plan
 
     for clave in ("quimica", "matematicas"):
         simulador = SimuladorPensum.desde_programa(clave)

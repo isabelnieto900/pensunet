@@ -4,7 +4,7 @@ from pensunet.dominio.visualizacion import dibujar_red, exportar_red_html, html_
 
 
 def test_dibujar_red_escribe_un_png(tmp_path, simulador):
-    """Sección II.A: la figura se guarda sin abrir una ventana."""
+    """la figura se guarda sin abrir una ventana."""
     destino = tmp_path / "red.png"
     ruta = dibujar_red(simulador.red, ruta=destino, titulo="Prueba")
     assert ruta == destino
@@ -21,15 +21,17 @@ def test_exportar_red_html_incluye_nodos_y_aristas(tmp_path, simulador):
     assert "25102" in texto
     assert "arista" in texto
     assert "seleccionar" in texto
+    assert "cdn.jsdelivr.net/npm/d3@7" in texto
 
 
 def test_html_embebido_sin_titulo_de_pagina(simulador):
     """La versión embebida se integra en Streamlit sin título duplicado."""
     texto = html_de_la_red(simulador.red, titulo="Solo archivo", embebido=True)
     assert "pensunet-red" in texto and "embebido" in texto
-    assert "#ffffff" in texto or "background:" in texto
+    assert "#ffffff" in texto.lower() or "#FFFFFF" in texto or "background:" in texto
     assert "<h1>Solo archivo</h1>" not in texto
     assert "<!DOCTYPE html>" in texto
+    assert "data-payload=" in texto
 
 
 def test_html_embebido_oscuro_usa_texto_claro(simulador):
@@ -41,8 +43,8 @@ def test_html_embebido_oscuro_usa_texto_claro(simulador):
         oscuro=True,
     )
     assert "embebido" in texto and "oscuro" in texto
-    assert "#e8eeeb" in texto
-    assert "#1c2421" in texto
+    assert "#FFFFFF" in texto or "#ffffff" in texto
+    assert "#1A1A1A" in texto
 
 
 def test_html_embebido_incluye_zoom_cuellos_y_camino(simulador):
@@ -67,13 +69,20 @@ def test_html_embebido_incluye_zoom_cuellos_y_camino(simulador):
         },
     )
     assert 'id="z-fit"' in texto
-    assert "panel-lado" in texto
+    assert "panel-arriba" in texto
     assert "pointer-events: none" in texto
+    assert "cdn.jsdelivr.net/npm/d3@7" in texto
     if cuellos:
-        assert "nodo cuello" in texto
+        # data-payload va escapado para el atributo HTML.
+        assert (
+            '"cuello": true' in texto
+            or '"cuello":true' in texto
+            or "&quot;cuello&quot;: true" in texto
+            or "&quot;cuello&quot;:true" in texto
+        )
         assert "Cuello de botella" in texto
     assert "Camino más largo" in texto
-    assert "#c0392b" in texto
+    assert "#8C1919" in texto
 
 
 def test_colores_por_valor_interpola_y_marca_faltantes():

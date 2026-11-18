@@ -1,7 +1,7 @@
 """Contrato de reglas por programa académico.
 
 Pensunet está pensado para toda la Universidad Distrital. El núcleo
-(sección II.A de Molontay et al., 2020) confía en el extracto de
+confía en el extracto de
 prerrequisitos. Las correcciones locales —materias no ofrecidas, aristas
 que el SGA no cargó, slots genéricos— son propias de cada carrera y las
 valida quien conoce ese plan. No son reglas universales.

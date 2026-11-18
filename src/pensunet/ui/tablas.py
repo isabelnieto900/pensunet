@@ -56,7 +56,7 @@ def tabla_indicadores(
 
 
 def tabla_tiempos(resultado: ResultadoSimulacion) -> pd.DataFrame:
-    """Frecuencias de X para el histograma (ecuación (3))."""
+    """Frecuencias de X para el histograma."""
     serie = pd.Series(resultado.tiempos, name="semestres")
     conteo = serie.value_counts().sort_index()
     return pd.DataFrame(
