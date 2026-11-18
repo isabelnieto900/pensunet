@@ -13,7 +13,7 @@ from pensunet.ui.compartido import (
     indicadores_cacheados,
     simulador_actual,
 )
-from pensunet.ui.estilo import COLORES_CARRERA, PALETA_CATEGORICA
+from pensunet.ui.estilo import PALETA_CATEGORICA
 from pensunet.ui.tablas import tabla_indicadores, tabla_resumen_red
 
 
@@ -141,5 +141,3 @@ def mostrar() -> None:
             height=420,
             alt="Indicadores por materia",
         )
-
-    del COLORES_CARRERA  # import kept for possible future sparkline colors
